@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="row">
-                <form class="col s12 login-form" method="POST" action="{{ urlFor('auth:login.post') }}" v-on:submit.prevent="postData">
+                <form class="col s12 login-form" method="POST" action="{{ urlFor('auth:login.post') }}" @submit.prevent="postData">
                     <div class="row">
                         <div class="input-field col s12">
                             <input id="identifier" name="identifier" type="text" class="validate">
@@ -45,3 +45,37 @@
         margin : 0 auto;
     }
 </style>
+<script>
+    var login = new Vue({
+        el     : '.login-form',
+        data   : {
+            loading: false,
+            success: false
+        },
+        methods: {
+            postData: function () {
+                var vm  = this;
+                var url = vm.$el.action || '';
+
+                if (vm.loading)
+                    return;
+
+                vm.loading = true;
+
+                $.ajax({
+                           url   : url,
+                           method: 'post',
+                           data  : $(vm.$el).serialize()
+                       })
+                 .done(function () {
+                     Materialize.toast("You've been logged in!", 1500, 'success', function () {
+                         window.location.reload();
+                     });
+                 })
+                 .always(function () {
+                     vm.loading = false;
+                 });
+            }
+        }
+    });
+</script>
