@@ -434,7 +434,7 @@ class User extends Eloquent {
      * @return int The type of the User
      */
     public function getType(): int {
-        return $this->permissions()->type;
+        return $this->permissions->type;
     }
 
     /**
@@ -443,7 +443,7 @@ class User extends Eloquent {
      * @return bool
      */
     public function isTeacher(): bool {
-        return $this->isType('student');
+        return $this->isType('teacher');
     }
 
     /**
@@ -615,9 +615,9 @@ class User extends Eloquent {
      */
     public function getBasicInfo(bool $withPermission = FALSE, bool $withData = FALSE): array {
         $return = [
-            'uuid'     => $this->uuid,
-            'name'     => $this->name,
-            'email'    => $this->email,
+            'uuid'  => $this->uuid,
+            'name'  => $this->name,
+            'email' => $this->email,
         ];
 
         if ($withPermission) {
