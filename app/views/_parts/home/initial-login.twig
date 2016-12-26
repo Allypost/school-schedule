@@ -1,0 +1,47 @@
+<div class="valign-wrapper initial-login">
+    <div class="valign">
+        <div class="row login-container">
+            <div class="row">
+                <div class="col s12">
+                    <h2>Login</h2>
+                </div>
+            </div>
+            <div class="row">
+                <form class="col s12 login-form" method="POST" action="{{ urlFor('auth:login.post') }}" v-on:submit.prevent="postData">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="identifier" name="identifier" type="text" class="validate">
+                            <label for="identifier">Your ID</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="password" name="password" type="password" class="validate">
+                            <label for="password">Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 right-align">
+                            <button class="btn btn-large waves-effect" v-bind:class="{ 'btn-loading': loading }">Login</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .initial-login {
+        height : 100vh;
+    }
+
+    .initial-login .valign {
+        width : 100%;
+    }
+
+    .row.login-container {
+        width  : 50%;
+        margin : 0 auto;
+    }
+</style>

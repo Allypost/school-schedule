@@ -1,0 +1,28 @@
+User:
+	- ID (school provided)
+	- Name (full middle last)
+	- DOB
+	- Sex
+
+
+Student:
+	= Lessons they attend
+
+	~ Notified of cancelled lessons
+	~ Notified of due homework 3 days before and when due date is added
+
+
+Teacher:
+	= Lessons they teach
+
+	~ Add lessons
+	~ View students in lessons they own
+	~ Flag cancellations
+	~ Flag homework as due (up to 3 days before due date)
+
+
+Lesson:
+	- Date and time
+	- Subject
+	- Status (canceled / not)
+	- Homework (due / not)

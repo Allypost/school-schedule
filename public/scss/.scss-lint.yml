@@ -1,0 +1,38 @@
+linters:
+  VendorPrefix:
+    enabled: false
+  QualifyingElement:
+    enabled: false
+  Comment:
+    enabled: false
+  PlaceholderInExtend:
+    enabled: false
+  HexLength:
+    style: long
+  ColorVariable:
+    enabled: false
+  IdSelector:
+    enabled: false
+  SelectorDepth:
+    enabled: false
+  NestingDepth:
+    enabled: false
+  Indentation:
+    character: tab
+    width: 1
+  PropertySortOrder:
+    order: concentric
+    separate_groups: true
+  SpaceAfterPropertyName:
+    enabled: false
+  SpaceAfterPropertyColon:
+    style: at_least_one_space
+  SpaceAfterVariableName:
+    enabled: false
+      #style: at_least_one_space
+  SpaceAfterVariableColon:
+    style: at_least_one_space
+  StringQuotes:
+    enabled: false
+  UrlQuotes:
+    enabled: true

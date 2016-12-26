@@ -1,0 +1,71 @@
+.bold,
+.fat {
+    font-weight : bold !important;
+}
+
+.bolder,
+.fatter {
+    font-weight : bolder !important;
+}
+
+.standard,
+.normal {
+    font-weight : 400 !important;
+}
+
+.slim,
+.thin {
+    font-weight : 300 !important;
+}
+
+.slimmer,
+.thinner {
+    font-weight : 200 !important;
+}
+
+.skinny {
+    font-weight : 100 !important;
+}
+
+.noselect,
+.no-select {
+    @include user-select(none);
+}
+
+.no-interact {
+    @extend .no-select;
+    cursor                : default !important;
+    -webkit-touch-callout : none !important;
+}
+
+.strike {
+    text-decoration : line-through;
+}
+
+.huge {
+    font-size : 5.8em;
+}
+
+.large {
+    font-size : 3.5em;
+}
+
+.medium {
+    font-size : 1.8em;
+}
+
+.standard {
+    font-size : 1em;
+}
+
+.small {
+    font-size : .8em;
+}
+
+.smaller {
+    font-size : .5em;
+}
+
+.smallest {
+    font-size : #{$pi / 10}em;
+}

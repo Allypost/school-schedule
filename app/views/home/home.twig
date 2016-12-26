@@ -1,0 +1,47 @@
+<html>
+<head>
+    {% include '_parts/head.twig' %}
+</head>
+<body>
+<div class="container">
+    {% if app.auth %}
+        <div class="valign-wrapper">
+            <h5 class="valign">Hello, {{ app.auth.name }}!</h5>
+            <h5 class="valign"><a href="{{ urlFor('auth:logout') }}">Logout</a></h5>
+        </div>
+    {% else %}
+        {% include '_parts/home/initial-login.twig' %}
+    {% endif %}
+</div>
+{% include '_parts/foot.twig' %}
+<script>
+    var login = new Vue({
+        el     : '.login-form',
+        data   : {
+            loading   : false,
+            success   : false
+        },
+        methods: {
+            postData: function () {
+                var vm  = this;
+                var url = vm.$el.action || '';
+
+                if (vm.loading)
+                    return;
+
+                vm.loading = true;
+
+                $.ajax({
+                           url   : url,
+                           method: 'post',
+                           data  : $(vm.$el).serialize()
+                       })
+                 .always(function () {
+                     vm.loading = false;
+                 });
+            }
+        }
+    });
+</script>
+</body>
+</html>

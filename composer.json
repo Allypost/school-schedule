@@ -1,0 +1,28 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Allypost\\": "app/Allypost"
+    }
+  },
+  "require": {
+    "slim/slim": "^2.0",
+    "slim/views": "0.1.*",
+    "twig/twig": "^1.0",
+    "illuminate/database": "^5.0",
+    "illuminate/events": "^5.0",
+    "illuminate/filesystem": "^5.0",
+    "illuminate/console": "^5.0",
+    "illuminate/pagination": "^5.2",
+    "mtdowling/cron-expression": "^1.1",
+    "symfony/var-dumper": "^3.0",
+    "symfony/process": "^3.0",
+    "ircmaxell/random-lib": "^1.0",
+    "hassankhan/config": "0.8.*",
+    "psr/log": "^1.0",
+    "nesbot/carbon": "^1.21",
+    "alexgarrett/violin": "^2.2",
+    "ramsey/uuid": "^3.4",
+    "moontoast/math": "^1.1",
+    "google/recaptcha": "^1.1"
+  }
+}

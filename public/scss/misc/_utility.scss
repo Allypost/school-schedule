@@ -1,0 +1,10 @@
+.add-text {
+    position : relative;
+
+    &::before {
+        display       : inline-block;
+        padding-right : .5em;
+        content       : attr(data-added-text);
+    }
+
+}
