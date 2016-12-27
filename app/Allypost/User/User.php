@@ -42,7 +42,6 @@ class User extends Eloquent {
     ];
 
     protected $hidden = [
-        //'id',
         'password',
         'remember_identifier',
         'remember_token',
@@ -612,6 +611,14 @@ class User extends Eloquent {
     public function data() {
         return $this->hasOne('Allypost\User\UserData', 'user_id', 'id');
     }
+
+    public function attendee() {
+        return $this->hasMany('Allypost\Lessons\Attendee');
+    }
+
+    public function lessons() {
+        return $this->hasMany('Allypost\Lessons\Lesson', 'owner');
+    }
     /* ########################################## */
     /* # </Wrappers for Eloquent relationships> # */
     /* ########################################## */
@@ -741,14 +748,6 @@ class User extends Eloquent {
         });
 
         return new Collection($lessons);
-    }
-
-    public function attendee() {
-        return $this->hasMany('Allypost\Lessons\Attendee');
-    }
-
-    public function lessons() {
-        return $this->hasMany('Allypost\Lessons\Lesson', 'owner');
     }
 
     /**
