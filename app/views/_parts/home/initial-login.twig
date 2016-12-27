@@ -49,10 +49,11 @@
     var login = new Vue({
         el     : '.login-form',
         data   : {
-            loading   : false,
-            success   : false,
-            btnSuccess: false,
-            btnError  : false
+            loading    : false,
+            success    : false,
+            btnSuccess : false,
+            btnError   : false,
+            btnInterval: null
         },
         methods: {
             postData: function () {
@@ -72,14 +73,27 @@
                        })
                  .done(function () {
                      vm.btnSuccess = true;
-                     Materialize.toast("You've been logged in!", 1500, 'success');
-                     window.setTimeout(function () {
-                         vm.btnSuccess = false;
-                     }, 1500);
+                     Materialize.toast("You've been logged in!", 1500, 'status success');
                      window.location.reload();
+                 })
+                 .fail(function (d) {
+                     var data     = d.responseJSON || { errors: [ 'Something went wrong!' ] };
+                     var messages = data.errors;
+
+                     vm.btnError = true;
+
+                     for (var message in messages) {
+                         if (messages.hasOwnProperty(message))
+                             Materialize.toast(messages[ message ], 1500, 'status error');
+                     }
                  })
                  .always(function () {
                      vm.loading = false;
+                     window.clearInterval(vm.btnInterval);
+                     vm.btnInterval = window.setTimeout(function () {
+                         vm.btnSuccess = false;
+                         vm.btnError   = false;
+                     }, 1500);
                  });
             }
         }
