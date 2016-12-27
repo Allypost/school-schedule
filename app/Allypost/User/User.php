@@ -41,6 +41,11 @@ class User extends Eloquent {
     protected $hidden = [
         //'id',
         'password',
+        'remember_identifier',
+        'remember_token',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
     protected static $domainNames = [
