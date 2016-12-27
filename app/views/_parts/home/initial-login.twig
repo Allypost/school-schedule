@@ -22,7 +22,7 @@
                     </div>
                     <div class="row">
                         <div class="col s12 right-align">
-                            <button class="btn btn-large waves-effect" v-bind:class="{ 'btn-loading': loading, 'btn-success': btnSuccess }">Login</button>
+                            <button class="btn btn-large waves-effect" :class="{ 'btn-loading': loading, 'btn-success': btnSuccess }">Login</button>
                         </div>
                     </div>
                     <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
