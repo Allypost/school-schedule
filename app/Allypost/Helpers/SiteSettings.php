@@ -7,8 +7,9 @@ use Slim\Slim;
 
 class SiteSettings extends Eloquent {
 
-    const CACHE_KEY = ':settings:';
-    const CACHE_FOR = 60 * 60 * 24 * 7;
+    const CACHE_PREFIX = 'ibrahim-is-useful';
+    const CACHE_KEY    = ':ibrahim-is-useful:settings:';
+    const CACHE_FOR    = 60 * 60 * 24 * 7;
     protected $table    = 'settings';
     protected $fillable = [
         'setting',
