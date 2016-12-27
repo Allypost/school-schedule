@@ -1,11 +1,15 @@
 <div class="center-align">
     <nav class="topbar">
-        {#<a href="{{ urlFor('lessons:home') }}">Lessons</a>
-        <a href="javascript:void(0)">Notifications</a>
-        <a href="{{ urlFor('auth:logout') }}">Sign Out</a>#}
-        <a href="/lessons/"><i class="material-icons">event</i></a>
-        <a href="javascript:void(0)"><i class="material-icons">notifications</i></a>
-        <a href="/api/auth/logout"><i class="material-icons">&#xE8AC;</i></a>
+        <div class="hide-on-small-only">
+            <a class="topbar-link" href="{{ urlFor('lessons:home') }}">Lessons</a>
+            <a class="topbar-link" href="javascript:void(0)">Notifications</a>
+            <a class="topbar-link" href="{{ urlFor('auth:logout') }}">Sign Out</a>
+        </div>
+        <div class="hide-on-med-and-up">
+            <a class="topbar-icon" href="/lessons/"><i class="material-icons">event</i></a>
+            <a class="topbar-icon" href="javascript:void(0)"><i class="material-icons">notifications</i></a>
+            <a class="topbar-icon" href="/api/auth/logout"><i class="material-icons">&#xE8AC;</i></a>
+        </div>
     </nav>
 </div>
 <div class="no-interact top-user-info">Logged in as <i style="text-decoration: underline;">{{ app.auth.name }}</i>, <i>{{ app.auth.getTypeString() }}</i></div>
