@@ -2,8 +2,11 @@
 
 namespace Allypost\User;
 
+use Allypost\Lessons\Lesson;
 use Allypost\Security\LoginAttempts;
 use Carbon\Carbon;
+use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Slim\Slim;
 
@@ -45,7 +48,7 @@ class User extends Eloquent {
         'remember_token',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     protected static $domainNames = [
@@ -719,6 +722,33 @@ class User extends Eloquent {
             'reasons'         => $messages,
             'loginsRemaining' => $remaining,
         ];
+    }
+
+    /**
+     * Get lessons that the user is attending
+     *
+     * @param int $id User ID
+     *
+     * @return Collection The lessons
+     */
+    public function attending(int $id = 0): Collection {
+        $sql     = 'SELECT * FROM `lessons` INNER JOIN `lessons_attendees` ON `lessons_attendees`.`lesson_id` = `lessons`.`id` WHERE `lessons_attendees`.`user_id` = :id';
+        $sqlID   = $id ?: $this->id;
+        $lessons = DB::select($sql, [ 'id' => $sqlID ]);
+
+        array_walk($lessons, function (&$lesson) {
+            $lesson = new Lesson((array) $lesson);
+        });
+
+        return new Collection($lessons);
+    }
+
+    public function attendee() {
+        return $this->hasMany('Allypost\Lessons\Attendee');
+    }
+
+    public function lessons() {
+        return $this->hasMany('Allypost\Lessons\Lesson', 'owner');
     }
 
     /**
