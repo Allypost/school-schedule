@@ -1,8 +1,11 @@
 <div class="center-align">
     <nav class="topbar">
-        <a href="javascript:void(0)">Lessons</a>
+        {#<a href="{{ urlFor('lessons:home') }}">Lessons</a>
         <a href="javascript:void(0)">Notifications</a>
-        <a href="{{ urlFor('auth:logout') }}">Sign Out</a>
+        <a href="{{ urlFor('auth:logout') }}">Sign Out</a>#}
+        <a href="/lessons/"><i class="material-icons">event</i></a>
+        <a href="javascript:void(0)"><i class="material-icons">notifications</i></a>
+        <a href="/api/auth/logout"><i class="material-icons">&#xE8AC;</i></a>
     </nav>
 </div>
 <div class="no-interact top-user-info">Logged in as <i style="text-decoration: underline;">{{ app.auth.name }}</i>, <i>{{ app.auth.getTypeString() }}</i></div>
