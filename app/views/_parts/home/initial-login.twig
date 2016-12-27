@@ -66,11 +66,13 @@
 
                 vm.loading = true;
 
-                $.ajax({
-                           url   : url,
-                           method: method,
-                           data  : $(vm.$el).serialize()
-                       })
+                var config = {
+                    url   : url,
+                    method: method,
+                    data  : $(vm.$el).serialize()
+                };
+
+                $.ajax(config)
                  .done(function () {
                      vm.btnSuccess = true;
                      Materialize.toast("You've been logged in!", 1500, 'status success');
