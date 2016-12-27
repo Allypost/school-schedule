@@ -3,10 +3,11 @@
 namespace Allypost\Lessons;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Slim\Slim;
 
-class Lessons extends Eloquent {
+class Attendee extends Eloquent {
 
-    protected $table = 'lessons';
+    protected $table = 'lessons_attendees';
 
     # <PRESETS>
     protected $fillable = [
@@ -24,11 +25,20 @@ class Lessons extends Eloquent {
         'created_at',
         'updated_at',
         'deleted_at',
+        'id',
     ];
 
     # </PRESETS>
 
-    public function owner() {
-        return $this->belongsTo('Allypost\User\User', 'id', 'owner');
+    public function lesson() {
+        return $this->belongsTo('Allypost\Lessons\Lesson', 'id', 'lesson_id');
+    }
+
+    public function user() {
+        return $this->hasOne('Allypost\User\User', 'id', 'user_id');
+    }
+
+    public function app() {
+        return Slim::getInstance();
     }
 }
