@@ -22,7 +22,7 @@
                     </div>
                     <div class="row">
                         <div class="col s12 right-align">
-                            <button class="btn btn-large waves-effect" v-bind:class="{ 'btn-loading': loading }">Login</button>
+                            <button class="btn btn-large waves-effect" v-bind:class="{ 'btn-loading': loading, 'btn-success': btnSuccess }">Login</button>
                         </div>
                     </div>
                     <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
@@ -49,13 +49,16 @@
     var login = new Vue({
         el     : '.login-form',
         data   : {
-            loading: false,
-            success: false
+            loading   : false,
+            success   : false,
+            btnSuccess: false,
+            btnError  : false
         },
         methods: {
             postData: function () {
-                var vm  = this;
-                var url = vm.$el.action || '';
+                var vm     = this;
+                var url    = vm.$el.action || '';
+                var method = vm.$el.method || 'post';
 
                 if (vm.loading)
                     return;
@@ -64,13 +67,16 @@
 
                 $.ajax({
                            url   : url,
-                           method: 'post',
+                           method: method,
                            data  : $(vm.$el).serialize()
                        })
                  .done(function () {
-                     Materialize.toast("You've been logged in!", 1500, 'success', function () {
-                         window.location.reload();
-                     });
+                     vm.btnSuccess = true;
+                     Materialize.toast("You've been logged in!", 1500, 'success');
+                     window.setTimeout(function () {
+                         vm.btnSuccess = false;
+                     }, 1500);
+                     window.location.reload();
                  })
                  .always(function () {
                      vm.loading = false;

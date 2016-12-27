@@ -438,6 +438,22 @@ class User extends Eloquent {
     }
 
     /**
+     * Get name of User type
+     *
+     * @param int $type User type
+     *
+     * @return string Name of User type
+     */
+    public function getTypeString(int $type = -1): string {
+        $types = array_flip($this::TYPES);
+
+        if ($type < 0)
+            $type = $this->getType();
+
+        return $types[ $type ] ?? 'unknown';
+    }
+
+    /**
      * Check whether the current User is a teacher
      *
      * @return bool

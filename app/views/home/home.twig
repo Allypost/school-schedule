@@ -3,16 +3,17 @@
     {% include '_parts/head.twig' %}
 </head>
 <body>
-<div class="container">
-    {% if app.auth %}
-        <div class="valign-wrapper">
-            <h5 class="valign">Hello, {{ app.auth.name }}!</h5>
-            <h5 class="valign"><a href="{{ urlFor('auth:logout') }}">Logout</a></h5>
-        </div>
-    {% else %}
+{#<div class="progress" style="margin: 0;">
+    <div class="indeterminate"></div>
+</div>#}
+{% if app.auth %}
+    {% include '_parts/topbar.twig' %}
+{% endif %}
+<main class="container">
+    {% if not app.auth %}
         {% include '_parts/home/initial-login.twig' %}
     {% endif %}
-</div>
+</main>
 {% include '_parts/foot.twig' %}
 </body>
 </html>

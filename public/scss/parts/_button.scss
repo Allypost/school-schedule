@@ -26,6 +26,7 @@
     &.btn-success {
         color          : transparent !important;
         pointer-events : none;
+        background     : #4caf50;
 
         &::after {
             content     : "\E876";
@@ -38,7 +39,7 @@
             width       : 20px;
             height      : 20px;
             font-family : 'Material Icons', sans-serif;
-            color       : #2e7d32;
+            color       : #ffffff;
             padding     : 0;
             line-height : 30px;
             font-size   : 30px;

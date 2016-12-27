@@ -1,0 +1,17 @@
+<div class="center-align">
+    <nav class="topbar">
+        <a href="javascript:void(0)">Lessons</a>
+        <a href="javascript:void(0)">Notifications</a>
+        <a href="{{ urlFor('auth:logout') }}">Sign Out</a>
+    </nav>
+</div>
+<div class="no-interact top-user-info">Logged in as <i style="text-decoration: underline;">{{ app.auth.name }}</i>, <i>{{ app.auth.getTypeString() }}</i></div>
+<style>
+    .top-user-info {
+        opacity  : .5;
+        display  : inline-block;
+        position : absolute;
+        top      : 0;
+        right    : .5em;
+    }
+</style>

@@ -3,5 +3,7 @@ body {
     font-family             : "Helvetica Neue", "Calibri Light", Roboto, sans-serif;
     -webkit-font-smoothing  : antialiased;
     -moz-osx-font-smoothing : grayscale;
-    letter-spacing          : 0.02em;
+    letter-spacing          : -.03142em;
+    text-rendering          : geometricPrecision;
+    word-spacing            : .0873em;
 }
