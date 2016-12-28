@@ -16,6 +16,9 @@ class Lesson extends Eloquent {
         'subject',
         'status',
         'due',
+        'period',
+        'day',
+        'week',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -53,6 +56,10 @@ class Lesson extends Eloquent {
 
     public function attendees() {
         return $this->hasMany('Allypost\Lessons\Attendee')->with('user');
+    }
+
+    public function schedule() {
+        return $this->hasMany('Allypost\Lessons\Schedule');
     }
 
     public function app() {
