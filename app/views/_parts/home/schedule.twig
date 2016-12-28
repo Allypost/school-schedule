@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col s12">
-        <div class="schedule row">
+        <div class="schedule z-depth-2 row">
             <div class="row schedule-week week-{{ week }}">
                 <div class="row schedule-header">
                     <div class="col offset-s1"></div>
@@ -43,7 +43,7 @@
             </div>
         </div>
         <script>
-            var classes  = {{ classes|json_encode|raw }};
+            //var classes  = {{ classes|json_encode|raw }};
             var schedule = new Vue({
                 el     : '.schedule',
                 data   : {
@@ -65,18 +65,24 @@
                 }
             });
 
-            for (var c in classes) {
-                if (!classes.hasOwnProperty(c))
-                    continue;
-                var cl  = classes[ c ];
-                var $el = $('div[data-day=' + cl.day + '][data-week=' + cl.week + '][data-period=' + cl.period + ']');
-                console.log(cl, $el);
-                $el.text(cl.name);
-            }
+            $.get('{{ urlFor('api:lessons:schedule') }}')
+             .done(function (d) {
+                 var classes = d.data;
+                 for (var c in classes) {
+                     if (!classes.hasOwnProperty(c))
+                         continue;
+                     var cl  = classes[ c ];
+                     var $el = $('div[data-day=' + cl.day + '][data-week=' + cl.week + '][data-period=' + cl.period + ']');
+                     $el.text(cl.name);
+                 }
+             })
+             .fail(function () {
+                Materialize.toast("Couldn't get schedule!", 3000, 'status error');
+             });
         </script>
         <style>
             .schedule {
-                border  : 3px solid rgba(0, 0, 0, .2);
+                /*border  : 3px solid rgba(0, 0, 0, .2);*/
                 padding : 1em;
             }
 
