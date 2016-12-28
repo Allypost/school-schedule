@@ -63,6 +63,14 @@
                 opacity : 1;
             }
 
+            .topbar-badge {
+
+                &::before {
+                    transform : rotate(180deg);
+                }
+
+            }
+
         }
 
     }
@@ -86,21 +94,31 @@
     }
 
     .topbar-badge {
-        display       : inline-block;
-        position      : absolute;
-        top           : 0;
-        left          : 95%;
-        font-size     : 0.6em;
-        font-weight   : bold;
-        color         : #f44336;
-        height        : 1.5em;
-        line-height   : .9em;
-        padding       : .3em;
-        border        : 2px solid;
-        border-bottom : transparent;
-        border-left   : transparent;
-        border-radius : 0 .2em 0 0;
+        display     : inline-block;
+        position    : absolute;
+        top         : 0;
+        left        : 95%;
+        font-size   : 0.6em;
+        font-weight : bold;
+        color       : #f44336;
+        height      : 1.5em;
+        line-height : .9em;
+        padding     : .3em;
         @include trans(opacity .2s);
+
+        &::before {
+            content       : '';
+            border        : 2px solid;
+            border-bottom : transparent;
+            border-left   : transparent;
+            border-radius : 0 .2em 0 0;
+            width         : 90%;
+            height        : 80%;
+            position      : absolute;
+            top           : 10%;
+            left          : 5%;
+            @include trans(transform .3s ease-out);
+        }
 
         &:empty {
             opacity : 0;
