@@ -2,17 +2,28 @@
     <div class="col s12">
         <div class="schedule z-depth-2 row">
             {% raw %}
-                <div class="row schedule-week" :class="'week-' + week" :data-week="week" v-for="(days, week) in sch">
+                <div class="row schedule-week"
+                     :class="'week-' + week" :data-week="week + ':'"
+                     v-for="(days, week) in schedule">
                     <div class="row schedule-header">
                         <div class="col offset-s1"></div>
-                        <div class="col s2 schedule-day" v-for="(periods, day) in days">{{ day | capitalize }}</div>
+                        <div class="col s2 schedule-day"
+                             v-for="(periods, day) in days">
+                            {{ day | capitalize }}
+                        </div>
                     </div>
                     <div class="row schedule-days">
                         <div class="col offset-s1"></div>
-                        <div class="col s2 schedule-day" v-for="(periods, day) in days">
-                            <div class="col s12 schedule-hour" v-for="(data, period) in periods" :data-day="day" :data-week="week" :data-period="period"
-                                 @click="pingy($event.srcElement)">
-                                {{ data.hasClass ? data.name : '/' }}
+                        <div class="col s2 schedule-day"
+                             v-for="(periods, day) in days">
+                            <div class="col s12 schedule-hour"
+                                 v-for="(data, period) in periods">
+                                <span :data-day="day" :data-week="week" :data-period="period" v-if="!data.owned">
+                                    {{ data.hasClass ? data.name : '/' }}
+                                </span>
+                                <span :data-day="day" :data-week="week" :data-period="period" v-if="data.owned">
+                                    &rarr; {{ data.hasClass ? data.name : '/' }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -54,17 +65,17 @@
 
                         var p = periods[ period ];
 
-                        scheduleMatrix[ w ][ d ][ p ] = { hasClass: false };
+                        scheduleMatrix[ w ][ d ][ p ] = { hasClass: false, owned: false };
                     }
                 }
             }
 
-            var schedule = new Vue({
+            var scheduleVM = new Vue({
                 el     : '.schedule',
                 data   : {
-                    week: '{{ week }}',
-                    days: {{ days|json_encode|raw }},
-                    sch : scheduleMatrix
+                    week    : '{{ week }}',
+                    days    : {{ days|json_encode|raw }},
+                    schedule: scheduleMatrix
                 },
                 filters: {
                     lower     : function (el) {
@@ -107,7 +118,6 @@
         </script>
         <style>
             .schedule {
-                /*border  : 3px solid rgba(0, 0, 0, .2);*/
                 padding : 1em;
             }
 
@@ -142,24 +152,28 @@
                 opacity       : .4;
             }
 
-            .schedule .schedule-week.week-a::before,
-            .schedule .schedule-week.week-b::before {
+            .schedule .row.schedule-week {
+                margin : 1em 0;
+            }
+
+            .schedule .row.schedule-week:first-child {
+                margin-top : 0;
+            }
+
+            .schedule .row.schedule-week:last-child {
+                margin-bottom : 0;
+            }
+
+            .schedule .schedule-week::before {
                 display     : table-cell;
                 position    : absolute;
+                content     : attr(data-week);
                 left        : 0;
                 height      : 100%;
                 line-height : 2.5em;
                 font-size   : 4em;
                 font-weight : 100;
                 opacity     : .2;
-            }
-
-            .schedule .schedule-week.week-a::before {
-                content : 'A:';
-            }
-
-            .schedule .schedule-week.week-b::before {
-                content : 'B:';
             }
 
             .schedule .schedule-hour:last-child {
