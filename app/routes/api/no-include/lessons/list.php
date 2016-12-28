@@ -24,3 +24,11 @@ $app->get('/teaching', $loggedIn(), function () use ($app) {
 
     say('lessons teaching', $data);
 })->name('api:lessons:teaching');
+
+$app->get('/schedule', $loggedIn(), function () use ($app) {
+    $u = $app->auth;
+
+    $data = $u->schedule()->toArray();
+
+    say('lessons schedule', $data);
+})->name('api:lessons:schedule');
