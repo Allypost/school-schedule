@@ -1,0 +1,144 @@
+<div class="row">
+    <div class="col s12">
+        <div class="schedule row">
+            <div class="row schedule-week week-{{ week }}">
+                <div class="row schedule-header">
+                    <div class="col offset-s1"></div>
+                    {% for day in days %}
+                        <div class="col s2 schedule-day">{{ day }}</div>
+                    {% endfor %}
+                </div>
+                <div class="row schedule-days">
+                    <div class="col offset-s1"></div>
+                    {% for day in days %}
+                        <div class="col s2 schedule-day">
+                            {% for period in 1..5 %}
+                                <div class="col s12 schedule-hour" data-day="{{ day | lower }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row"></div>
+
+            {% set week = week == 'a' ? 'b' : 'a' %}
+            <div class="row schedule-week week-{{ week }}">
+                <div class="row schedule-header">
+                    <div class="col offset-s1"></div>
+                    {% for day in days %}
+                        <div class="col s2 schedule-day">{{ day }}</div>
+                    {% endfor %}
+                </div>
+                <div class="row schedule-days">
+                    <div class="col offset-s1"></div>
+                    {% for day in days %}
+                        <div class="col s2 schedule-day">
+                            {% for period in 1..5 %}
+                                <div class="col s12 schedule-hour" data-day="{{ day | lower }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <script>
+            var classes  = {{ classes|json_encode|raw }};
+            var schedule = new Vue({
+                el     : '.schedule',
+                data   : {
+                    week    : '{{ week }}',
+                    days    : {{ days|json_encode|raw }},
+                    subjects: [ 'Inf', 'Mat', 'TZK', 'Kem', 'Bio', 'Hrv', 'Geo', 'Fiz', 'PIG', 'NjJ', 'Fil' ]
+                },
+                filters: {
+                    lower: function (el) {
+                        return el.toString().toLowerCase();
+                    }
+                },
+                methods: {
+                    pingy: function (el) {
+                        var data = el.dataset;
+
+                        console.log(data.day + '-' + data.week + '-' + data.period)
+                    }
+                }
+            });
+
+            for (var c in classes) {
+                if (!classes.hasOwnProperty(c))
+                    continue;
+                var cl  = classes[ c ];
+                var $el = $('div[data-day=' + cl.day + '][data-week=' + cl.week + '][data-period=' + cl.period + ']');
+                console.log(cl, $el);
+                $el.text(cl.name);
+            }
+        </script>
+        <style>
+            .schedule {
+                border  : 3px solid rgba(0, 0, 0, .2);
+                padding : 1em;
+            }
+
+            .schedule .schedule-header .schedule-day {
+                font-weight : bold;
+                text-align  : center;
+                font-size   : 1.5em;
+                border-top  : 0 transparent;
+            }
+
+            .schedule .schedule-day {
+                border        : 1px solid #ddd;
+                border-bottom : 0 transparent;
+            }
+
+            .schedule .schedule-hour {
+                border-bottom : 1px solid #ddd;
+                text-align    : center;
+                position      : relative;
+            }
+
+            .schedule .schedule-hour::before {
+                content       : attr(data-period);
+                display       : inline-block;
+                position      : absolute;
+                left          : 0;
+                top           : .2em;
+                border-right  : 1px solid;
+                padding       : 0 .5em;
+                line-height   : .9em;
+                border-radius : 2px;
+                opacity       : .4;
+            }
+
+            .schedule .schedule-week.week-a::before,
+            .schedule .schedule-week.week-b::before {
+                display     : table-cell;
+                position    : absolute;
+                left        : 0;
+                height      : 100%;
+                line-height : 2.5em;
+                font-size   : 4em;
+                font-weight : 100;
+                opacity     : .2;
+            }
+
+            .schedule .schedule-week.week-a::before {
+                content : 'A:';
+            }
+
+            .schedule .schedule-week.week-b::before {
+                content : 'B:';
+            }
+
+            .schedule .schedule-hour:last-child {
+                border-bottom : 0 transparent;
+            }
+
+            .schedule .schedule-header, .schedule .schedule-days, .schedule .schedule-week {
+                position : relative;
+                margin   : 0;
+            }
+        </style>
+    </div>
+</div>
