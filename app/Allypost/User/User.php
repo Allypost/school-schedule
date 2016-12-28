@@ -751,16 +751,17 @@ class User extends Eloquent {
     }
 
     public function schedule(int $id = 0): Collection {
-        $sql = 'SELECT `lessons`.*, `schedule`.`week` , `schedule`.`day`, `schedule`.`period`
+        $sql = 'SELECT `lessons`.*, `schedule`.`week` , `schedule`.`day`, `schedule`.`period`, (`lessons`.`owner` = ?) AS `owned`
                         FROM `lessons`
                         INNER JOIN `schedule`
                           ON `schedule`.`lesson_id` = `lessons`.`id`
                         INNER JOIN `lessons_attendees`
                           ON `lessons_attendees`.`lesson_id` = `lessons`.`id`
-                        WHERE `lessons_attendees`.`user_id` = :id';
+                        WHERE `lessons_attendees`.`user_id` = ?
+                        OR `lessons`.`owner` = ?';
 
         $sqlID    = $id ?: $this->id;
-        $schedule = DB::select($sql, [ 'id' => $sqlID ]);
+        $schedule = DB::select($sql, [ $sqlID, $sqlID, $sqlID ]);
 
         array_walk($schedule, function (&$lesson) {
             $lesson = new Lesson((array) $lesson);

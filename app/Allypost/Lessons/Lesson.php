@@ -19,6 +19,7 @@ class Lesson extends Eloquent {
         'period',
         'day',
         'week',
+        'owned',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -31,7 +32,11 @@ class Lesson extends Eloquent {
     ];
 
     protected $dates = [
-        'due'
+        'due',
+    ];
+
+    protected $casts = [
+        'owned' => 'boolean',
     ];
 
     # </PRESETS>
