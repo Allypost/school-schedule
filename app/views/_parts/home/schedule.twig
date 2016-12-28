@@ -5,7 +5,7 @@
                 <div class="row schedule-header">
                     <div class="col offset-s1"></div>
                     {% for day in days %}
-                        <div class="col s2 schedule-day">{{ day }}</div>
+                        <div class="col s2 schedule-day">{{ day | capitalize }}</div>
                     {% endfor %}
                 </div>
                 <div class="row schedule-days">
@@ -13,7 +13,7 @@
                     {% for day in days %}
                         <div class="col s2 schedule-day">
                             {% for period in 1..5 %}
-                                <div class="col s12 schedule-hour" data-day="{{ day | lower }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
+                                <div class="col s12 schedule-hour" data-day="{{ day }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
                             {% endfor %}
                         </div>
                     {% endfor %}
@@ -27,7 +27,7 @@
                 <div class="row schedule-header">
                     <div class="col offset-s1"></div>
                     {% for day in days %}
-                        <div class="col s2 schedule-day">{{ day }}</div>
+                        <div class="col s2 schedule-day">{{ day | capitalize }}</div>
                     {% endfor %}
                 </div>
                 <div class="row schedule-days">
@@ -35,7 +35,7 @@
                     {% for day in days %}
                         <div class="col s2 schedule-day">
                             {% for period in 1..5 %}
-                                <div class="col s12 schedule-hour" data-day="{{ day | lower }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
+                                <div class="col s12 schedule-hour" data-day="{{ day }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
                             {% endfor %}
                         </div>
                     {% endfor %}
@@ -46,9 +46,8 @@
             var schedule = new Vue({
                 el     : '.schedule',
                 data   : {
-                    week    : '{{ week }}',
-                    days    : {{ days|json_encode|raw }},
-                    subjects: [ 'Inf', 'Mat', 'TZK', 'Kem', 'Bio', 'Hrv', 'Geo', 'Fiz', 'PIG', 'NjJ', 'Fil' ]
+                    week: '{{ week }}',
+                    days: {{ days|json_encode|raw }}
                 },
                 filters: {
                     lower: function (el) {
@@ -76,7 +75,7 @@
                  }
              })
              .fail(function () {
-                Materialize.toast("Couldn't get schedule!", 3000, 'status error');
+                 Materialize.toast("Couldn't get schedule!", 3000, 'status error');
              });
         </script>
         <style>
