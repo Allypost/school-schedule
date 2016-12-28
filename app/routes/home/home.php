@@ -9,9 +9,8 @@ $app->get('/', function () use ($app) {
         return;
     }
 
-    $classes = $u->schedule();
     $week    = ((int) (date('W'))) % 2 == 0 ? 'a' : 'b';
     $days    = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri' ];
 
-    $app->render('home/home.twig', compact('classes', 'week', 'days'));
+    $app->render('home/home.twig', compact('week', 'days'));
 });
