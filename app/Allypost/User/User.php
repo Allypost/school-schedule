@@ -739,7 +739,7 @@ class User extends Eloquent {
      * @return Collection The lessons
      */
     public function attending(int $id = 0): Collection {
-        $sql     = 'SELECT * FROM `lessons` INNER JOIN `lessons_attendees` ON `lessons_attendees`.`lesson_id` = `lessons`.`id` WHERE `lessons_attendees`.`user_id` = :id';
+        $sql     = 'SELECT `lessons`.* FROM `lessons` INNER JOIN `lessons_attendees` ON `lessons_attendees`.`lesson_id` = `lessons`.`id` WHERE `lessons_attendees`.`user_id` = :id';
         $sqlID   = $id ?: $this->id;
         $lessons = DB::select($sql, [ 'id' => $sqlID ]);
 
@@ -748,6 +748,25 @@ class User extends Eloquent {
         });
 
         return new Collection($lessons);
+    }
+
+    public function schedule(int $id = 0): Collection {
+        $sql = 'SELECT `lessons`.*, `schedule`.`week` , `schedule`.`day`, `schedule`.`period`
+                        FROM `lessons`
+                        INNER JOIN `schedule`
+                          ON `schedule`.`lesson_id` = `lessons`.`id`
+                        INNER JOIN `lessons_attendees`
+                          ON `lessons_attendees`.`lesson_id` = `lessons`.`id`
+                        WHERE `lessons_attendees`.`user_id` = :id';
+
+        $sqlID    = $id ?: $this->id;
+        $schedule = DB::select($sql, [ 'id' => $sqlID ]);
+
+        array_walk($schedule, function (&$lesson) {
+            $lesson = new Lesson((array) $lesson);
+        });
+
+        return new Collection($schedule);
     }
 
     /**
