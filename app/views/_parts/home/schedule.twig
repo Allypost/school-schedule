@@ -2,7 +2,7 @@
     <div class="col s12">
         <div class="schedule z-depth-2 row">
             {% raw %}
-                <div class="row schedule-week" :class="'week-' + week" v-for="(days, week) in sch">
+                <div class="row schedule-week" :class="'week-' + week" :data-week="week" v-for="(days, week) in sch">
                     <div class="row schedule-header">
                         <div class="col offset-s1"></div>
                         <div class="col s2 schedule-day" v-for="(periods, day) in days">{{ day | capitalize }}</div>
@@ -22,7 +22,7 @@
         <script>
             var scheduleMatrix = {};
 
-            var weeks   = [ 'a', 'b' ];
+            var weeks   = [ 1, 2 ];
             var days    = {{ days|json_encode|raw }};
             var periods = Array.apply(null, Array(5)).map(function (_, i) {
                 return i + 1;

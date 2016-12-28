@@ -9,7 +9,7 @@ $app->get('/', function () use ($app) {
         return;
     }
 
-    $week = ((int) (date('W'))) % 2 == 0 ? 'a' : 'b';
+    $week = ((int) (date('W'))) % 2 + 1;
     $days = [ 'mon', 'tue', 'wed', 'thu', 'fri' ];
 
     $app->render('home/home.twig', compact('week', 'days'));
