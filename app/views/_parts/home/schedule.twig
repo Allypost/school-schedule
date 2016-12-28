@@ -1,77 +1,104 @@
 <div class="row">
     <div class="col s12">
         <div class="schedule z-depth-2 row">
-            <div class="row schedule-week week-{{ week }}">
-                <div class="row schedule-header">
-                    <div class="col offset-s1"></div>
-                    {% for day in days %}
-                        <div class="col s2 schedule-day">{{ day | capitalize }}</div>
-                    {% endfor %}
-                </div>
-                <div class="row schedule-days">
-                    <div class="col offset-s1"></div>
-                    {% for day in days %}
-                        <div class="col s2 schedule-day">
-                            {% for period in 1..5 %}
-                                <div class="col s12 schedule-hour" data-day="{{ day }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
-                            {% endfor %}
+            {% raw %}
+                <div class="row schedule-week" :class="'week-' + week" v-for="(days, week) in sch">
+                    <div class="row schedule-header">
+                        <div class="col offset-s1"></div>
+                        <div class="col s2 schedule-day" v-for="(periods, day) in days">{{ day | capitalize }}</div>
+                    </div>
+                    <div class="row schedule-days">
+                        <div class="col offset-s1"></div>
+                        <div class="col s2 schedule-day" v-for="(periods, day) in days">
+                            <div class="col s12 schedule-hour" v-for="(data, period) in periods" :data-day="day" :data-week="week" :data-period="period"
+                                 @click="pingy($event.srcElement)">
+                                {{ data.hasClass ? data.name : '/' }}
+                            </div>
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
-            </div>
-
-            <div class="row"></div>
-
-            {% set week = week == 'a' ? 'b' : 'a' %}
-            <div class="row schedule-week week-{{ week }}">
-                <div class="row schedule-header">
-                    <div class="col offset-s1"></div>
-                    {% for day in days %}
-                        <div class="col s2 schedule-day">{{ day | capitalize }}</div>
-                    {% endfor %}
-                </div>
-                <div class="row schedule-days">
-                    <div class="col offset-s1"></div>
-                    {% for day in days %}
-                        <div class="col s2 schedule-day">
-                            {% for period in 1..5 %}
-                                <div class="col s12 schedule-hour" data-day="{{ day }}" data-week="{{ week }}" data-period="{{ period }}" @click="pingy($event.srcElement)">/</div>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+            {% endraw %}
         </div>
         <script>
+            var scheduleMatrix = {};
+
+            var weeks   = [ 'a', 'b' ];
+            var days    = {{ days|json_encode|raw }};
+            var periods = Array.apply(null, Array(5)).map(function (_, i) {
+                return i + 1;
+            });
+
+            for (var week in weeks) {
+                if (!weeks.hasOwnProperty(week))
+                    continue;
+
+                var w = weeks[ week ];
+
+                if (!scheduleMatrix[ w ])
+                    scheduleMatrix[ w ] = {};
+
+
+                for (var day in days) {
+                    if (!days.hasOwnProperty(day))
+                        continue;
+
+                    var d = days[ day ];
+
+                    if (!scheduleMatrix[ w ][ d ])
+                        scheduleMatrix[ w ][ d ] = {};
+
+
+                    for (var period in periods) {
+                        if (!periods.hasOwnProperty(period))
+                            continue;
+
+                        var p = periods[ period ];
+
+                        scheduleMatrix[ w ][ d ][ p ] = { hasClass: false };
+                    }
+                }
+            }
+
             var schedule = new Vue({
                 el     : '.schedule',
                 data   : {
                     week: '{{ week }}',
-                    days: {{ days|json_encode|raw }}
+                    days: {{ days|json_encode|raw }},
+                    sch : scheduleMatrix
                 },
                 filters: {
-                    lower: function (el) {
+                    lower     : function (el) {
                         return el.toString().toLowerCase();
+                    },
+                    capitalize: function (value) {
+                        if (!value) return '';
+                        value = value.toString();
+                        return value.charAt(0).toUpperCase() + value.slice(1);
                     }
                 },
                 methods: {
                     pingy: function (el) {
                         var data = el.dataset;
-
-                        console.log(data.day + '-' + data.week + '-' + data.period)
+                        console.log(data.day + '-' + data.week + '-' + data.period);
                     }
                 }
             });
 
             $.get('{{ urlFor('api:lessons:schedule') }}')
-             .done(function (d) {
-                 var classes = d.data;
+             .done(function (data) {
+                 var classes = data.data;
                  for (var c in classes) {
                      if (!classes.hasOwnProperty(c))
                          continue;
-                     var cl  = classes[ c ];
-                     var $el = $('div[data-day=' + cl.day + '][data-week=' + cl.week + '][data-period=' + cl.period + ']');
-                     $el.text(cl.name);
+
+                     var cl = classes[ c ];
+                     var w  = cl.week;
+                     var d  = cl.day;
+                     var p  = cl.period;
+
+                     cl.hasClass = true;
+
+                     scheduleMatrix[ w ][ d ][ p ] = cl;
                  }
              })
              .fail(function () {
