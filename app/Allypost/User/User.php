@@ -6,6 +6,7 @@ use Allypost\Lessons\Lesson;
 use Allypost\Security\LoginAttempts;
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Slim\Slim;
@@ -750,24 +751,23 @@ class User extends Eloquent {
         return new Collection($lessons);
     }
 
-    public function schedule(int $id = 0): Collection {
-        $sql = 'SELECT `lessons`.*, `schedule`.`week` , `schedule`.`day`, `schedule`.`period`, (`lessons`.`owner` = ?) AS `owned`
-                        FROM `lessons`
-                        INNER JOIN `schedule`
-                          ON `schedule`.`lesson_id` = `lessons`.`id`
-                        INNER JOIN `lessons_attendees`
-                          ON `lessons_attendees`.`lesson_id` = `lessons`.`id`
-                        WHERE `lessons_attendees`.`user_id` = ?
-                        OR `lessons`.`owner` = ?';
+    /**
+     * Get schedule for user
+     *
+     * @param int $id User ID
+     *
+     * @return Builder Query Builder object
+     */
+    public function schedule(int $id = 0): Builder {
+        $sqlID = $id ?: $this->id;
+        $query = (new Lesson())
+            ->select('lessons.*', 'schedule.week', 'schedule.day', 'schedule.period', DB::raw('lessons.owner = ' . $sqlID . ' as owned'))
+            ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id')
+            ->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
+            ->where('lessons_attendees.user_id', $sqlID)
+            ->orWhere('lessons.owner', $sqlID);
 
-        $sqlID    = $id ?: $this->id;
-        $schedule = DB::select($sql, [ $sqlID, $sqlID, $sqlID ]);
-
-        array_walk($schedule, function (&$lesson) {
-            $lesson = new Lesson((array) $lesson);
-        });
-
-        return new Collection($schedule);
+        return $query;
     }
 
     /**
