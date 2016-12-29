@@ -30,7 +30,7 @@ class Schedule extends Eloquent {
     # </PRESETS>
 
     public function lesson() {
-        return $this->belongsTo('Allypost\Lessons\Lesson', 'id', 'lesson_id');
+        return $this->belongsTo('Allypost\Lessons\Lesson');
     }
 
     public function user() {
