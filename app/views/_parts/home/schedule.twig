@@ -17,13 +17,32 @@
                         <div class="col s2 schedule-day"
                              v-for="(periods, day) in days">
                             <div class="col s12 schedule-hour"
+                                 :data-period="period"
                                  v-for="(data, period) in periods">
-                                <span :data-day="day" :data-week="week" :data-period="period" v-if="!data.owned">
-                                    {{ data.hasClass ? data.name : '/' }}
-                                </span>
-                                <span :data-day="day" :data-week="week" :data-period="period" v-if="data.owned">
-                                    &rarr; {{ data.hasClass ? data.name : '/' }}
-                                </span>
+                                <template v-if="isTeacher">
+                                    <span :data-day="day" :data-week="week" :data-period="period">
+                                        <template v-if="!data.owned && data.hasClass">
+                                            {{ data.name }}
+                                        </template>
+                                        <template v-else>
+                                            <span class="schedule-hour-loading hide"></span>
+                                            <select onChange="scheduleVM.subjectChange(this, this.options)" class="browser-default">
+                                                <option value="-1">/</option>
+                                                <option :selected="data.subject == subject.subject"
+                                                        :value="subject.id" :data-subject="JSON.stringify(subject)"
+                                                        v-for="subject in teaching">
+                                                    {{ subject.name  }}
+                                                </option>
+                                            </select>
+                                            <input type="hidden" :value="JSON.stringify({data: data})">
+                                        </template>
+                                    </span>
+                                </template>
+                                <template v-else>
+                                    <span :data-day="day" :data-week="week" :data-period="period" :data-status="data.status">
+                                        {{ data.hasClass ? data.name : '/' }}
+                                    </span>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -65,7 +84,7 @@
 
                         var p = periods[ period ];
 
-                        scheduleMatrix[ w ][ d ][ p ] = { hasClass: false, owned: false };
+                        scheduleMatrix[ w ][ d ][ p ] = { hasClass: false, owned: false, isLoading: false, subject: -1 };
                     }
                 }
             }
@@ -73,9 +92,11 @@
             var scheduleVM = new Vue({
                 el     : '.schedule',
                 data   : {
-                    week    : '{{ week }}',
-                    days    : {{ days|json_encode|raw }},
-                    schedule: scheduleMatrix
+                    week     : '{{ week }}',
+                    days     : {{ days|json_encode|raw }},
+                    schedule : scheduleMatrix,
+                    teaching : [],
+                    isTeacher: {{ app.auth.isTeacher()|json_encode|raw }}
                 },
                 filters: {
                     lower     : function (el) {
@@ -88,9 +109,52 @@
                     }
                 },
                 methods: {
-                    pingy: function (el) {
-                        var data = el.dataset;
-                        console.log(data.day + '-' + data.week + '-' + data.period);
+                    pingy           : function (el) {
+                        console.log(el);
+                    },
+                    subjectChange   : function (el, options) {
+                        var subject = Number(options[ options.selectedIndex ].value);
+
+                        var $d = $(el.parentNode);
+
+                        var w = $d.attr('data-week');
+                        var d = $d.attr('data-day');
+                        var p = $d.attr('data-period');
+
+                        var data = {
+                            lesson_id: subject,
+                            week     : w,
+                            day      : d,
+                            period   : p
+                        };
+
+                        this.subjectPropagate(data, $d.parent());
+                    },
+                    subjectDisable  : function ($el) {
+                        $el.find('.schedule-hour-loading').removeClass('hide');
+                        $el.find('select').attr('disabled', 'disabled');
+                    },
+                    subjectEnable   : function ($el) {
+                        $el.find('.schedule-hour-loading').addClass('hide');
+                        $el.find('select').removeAttr('disabled', 'disabled');
+                    },
+                    subjectPropagate: function (data, $el) {
+                        this.subjectDisable($el);
+
+                        var vm = this;
+
+                        data[ '{{ csrf_key }}' ] = '{{ csrf_token }}';
+
+                        $.ajax(
+                            {
+                                url   : '{{ urlFor('api:lessons:update') }}',
+                                method: 'POST',
+                                data  : data
+                            }
+                         )
+                         .always(function () {
+                             vm.subjectEnable($el);
+                         });
                     }
                 }
             });
@@ -107,83 +171,25 @@
                      var d  = cl.day;
                      var p  = cl.period;
 
-                     cl.hasClass = true;
+                     cl[ 'isLoading' ] = false;
+                     cl[ 'hasClass' ]  = true;
 
-                     scheduleMatrix[ w ][ d ][ p ] = cl;
+                     scheduleVM.schedule[ w ][ d ][ p ] = cl;
                  }
              })
              .fail(function () {
                  Materialize.toast("Couldn't get schedule!", 3000, 'status error');
              });
+            {% if app.auth.isTeacher() %}
+            $.get('{{ urlFor('api:lessons:teaching') }}')
+             .done(function (data) {
+                 scheduleVM.teaching = data.data;
+             })
+             .fail(function () {
+                 Materialize.toast("Couldn't get classes!", 3000, 'status error');
+             });
+            {% endif %}
         </script>
-        <style>
-            .schedule {
-                padding : 1em;
-            }
-
-            .schedule .schedule-header .schedule-day {
-                font-weight : bold;
-                text-align  : center;
-                font-size   : 1.5em;
-                border-top  : 0 transparent;
-            }
-
-            .schedule .schedule-day {
-                border        : 1px solid #ddd;
-                border-bottom : 0 transparent;
-            }
-
-            .schedule .schedule-hour {
-                border-bottom : 1px solid #ddd;
-                text-align    : center;
-                position      : relative;
-            }
-
-            .schedule .schedule-hour::before {
-                content       : attr(data-period);
-                display       : inline-block;
-                position      : absolute;
-                left          : 0;
-                top           : .2em;
-                border-right  : 1px solid;
-                padding       : 0 .5em;
-                line-height   : .9em;
-                border-radius : 2px;
-                opacity       : .4;
-            }
-
-            .schedule .row.schedule-week {
-                margin : 1em 0;
-            }
-
-            .schedule .row.schedule-week:first-child {
-                margin-top : 0;
-            }
-
-            .schedule .row.schedule-week:last-child {
-                margin-bottom : 0;
-            }
-
-            .schedule .schedule-week::before {
-                display     : table-cell;
-                position    : absolute;
-                content     : attr(data-week);
-                left        : 0;
-                height      : 100%;
-                line-height : 2.5em;
-                font-size   : 4em;
-                font-weight : 100;
-                opacity     : .2;
-            }
-
-            .schedule .schedule-hour:last-child {
-                border-bottom : 0 transparent;
-            }
-
-            .schedule .schedule-header, .schedule .schedule-days, .schedule .schedule-week {
-                position : relative;
-                margin   : 0;
-            }
-        </style>
+        <link rel="stylesheet" href="/css/schedule.css?_t={{ date().timestamp }}">
     </div>
 </div>
