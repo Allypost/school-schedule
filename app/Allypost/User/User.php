@@ -760,9 +760,10 @@ class User extends Eloquent {
         $query = (new Lesson())
             ->select('lessons.*', 'schedule.week', 'schedule.day', 'schedule.period', DB::raw('lessons.owner = ' . $sqlID . ' as owned'))
             ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id')
-            ->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
-            ->where('lessons_attendees.user_id', $sqlID)
-            ->orWhere('lessons.owner', $sqlID);
+            ->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id');
+
+        if ($this->isStudent())
+            return $query->where('lessons_attendees.user_id', $sqlID);
 
         return $query;
     }
