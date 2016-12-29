@@ -15,6 +15,7 @@ $app->group('/api', function () use ($app, $loggedIn, $admin, $guest, $cache) {
 
     $app->group('/lessons', function () use ($app, $loggedIn, $admin, $guest, $cache) {
         require_once 'no-include/lessons/list.php';
+        require_once 'no-include/lessons/update.php';
     });
 
 });
