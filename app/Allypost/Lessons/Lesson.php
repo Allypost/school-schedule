@@ -14,7 +14,6 @@ class Lesson extends Eloquent {
         'owner',
         'name',
         'subject',
-        'status',
         'due',
         'period',
         'day',

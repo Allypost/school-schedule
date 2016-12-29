@@ -15,6 +15,7 @@ class Schedule extends Eloquent {
         'day',
         'week',
         'period',
+        'status',
         'created_at',
         'updated_at',
         'deleted_at',
