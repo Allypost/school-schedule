@@ -1,34 +1,38 @@
 <?php
 
-$app->get('/', $loggedIn(), function () use ($app) {
-    $u = $app->auth;
+$app->group('/list', function () use ($app, $loggedIn, $admin, $guest, $cache) {
 
-    $teaching  = $u->lessons()->get()->toArray();
-    $attending = $u->attending()->toArray();
+    $app->get('/', $loggedIn(), function () use ($app) {
+        $u = $app->auth;
 
-    say('lessons all', compact('teaching', 'attending'));
-})->name('api:lessons:all');
+        $teaching  = $u->lessons()->get()->toArray();
+        $attending = $u->attending()->toArray();
 
-$app->get('/attending', $loggedIn(), function () use ($app) {
-    $u = $app->auth;
+        say('lessons all', compact('teaching', 'attending'));
+    })->name('api:lessons:all');
 
-    $data = $u->attending()->toArray();
+    $app->get('/attending', $loggedIn(), function () use ($app) {
+        $u = $app->auth;
 
-    say('lessons attending', $data);
-})->name('api:lessons:attending');
+        $data = $u->attending()->toArray();
 
-$app->get('/teaching', $loggedIn(), function () use ($app) {
-    $u = $app->auth;
+        say('lessons attending', $data);
+    })->name('api:lessons:attending');
 
-    $data = $u->lessons()->get()->toArray();
+    $app->get('/teaching', $loggedIn(), function () use ($app) {
+        $u = $app->auth;
 
-    say('lessons teaching', $data);
-})->name('api:lessons:teaching');
+        $data = $u->lessons()->get()->toArray();
 
-$app->get('/schedule', $loggedIn(), function () use ($app) {
-    $u = $app->auth;
+        say('lessons teaching', $data);
+    })->name('api:lessons:teaching');
 
-    $data = $u->schedule()->toArray();
+    $app->get('/schedule', $loggedIn(), function () use ($app) {
+        $u = $app->auth;
 
-    say('lessons schedule', $data);
-})->name('api:lessons:schedule');
+        $data = $u->schedule()->toArray();
+
+        say('lessons schedule', $data);
+    })->name('api:lessons:schedule');
+
+});
