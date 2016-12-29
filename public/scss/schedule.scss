@@ -47,13 +47,30 @@
             text-align    : center;
             position      : relative;
 
-            & > span > select {
-                margin          : 0 auto;
-                border          : none;
-                height          : initial;
-                width           : auto;
-                padding         : 1px 0;
-                text-align-last : center;
+            & > span {
+
+                &[data-status]::after {
+                    content    : attr(data-status);
+                    display    : block;
+                    position   : absolute;
+                    top        : 50%;
+                    margin-top : -.75em;
+                    right      : -.8em;
+                    font-size  : .8em;
+                    color      : #ffeb3b;
+                    background : #424242;
+                    padding    : 0 .5em;
+                }
+
+                & > select {
+                    margin          : 0 auto;
+                    border          : none;
+                    height          : initial;
+                    width           : auto;
+                    padding         : 1px 0;
+                    text-align-last : center;
+                }
+
             }
 
             .schedule-hour-loading {
