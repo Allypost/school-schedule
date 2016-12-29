@@ -34,7 +34,6 @@
                                                     {{ subject.name  }}
                                                 </option>
                                             </select>
-                                            <input type="hidden" :value="JSON.stringify({data: data})">
                                         </template>
                                     </span>
                                 </template>
@@ -180,6 +179,7 @@
              .fail(function () {
                  Materialize.toast("Couldn't get schedule!", 3000, 'status error');
              });
+
             {% if app.auth.isTeacher() %}
             $.get('{{ urlFor('api:lessons:teaching') }}')
              .done(function (data) {
