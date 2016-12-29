@@ -3,7 +3,7 @@
 $app->get('/', function () use ($app) {
     try {
         $u         = $app->auth;
-        $attending = $u->attending();
+        $attending = $u->attending()->get();
         $teaching  = $u->lessons()->get();
 
         dd(compact('attending', 'teaching'));
