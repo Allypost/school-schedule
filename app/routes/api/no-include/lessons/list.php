@@ -30,7 +30,7 @@ $app->group('/list', function () use ($app, $loggedIn, $admin, $guest, $cache) {
     $app->get('/schedule', $loggedIn(), function () use ($app) {
         $u = $app->auth;
 
-        $data = $u->schedule()->toArray();
+        $data = $u->schedule()->get()->toArray();
 
         say('lessons schedule', $data);
     })->name('api:lessons:schedule');
