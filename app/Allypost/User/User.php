@@ -7,7 +7,6 @@ use Allypost\Security\LoginAttempts;
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Slim\Slim;
 
@@ -737,18 +736,16 @@ class User extends Eloquent {
      *
      * @param int $id User ID
      *
-     * @return Collection The lessons
+     * @return Builder Query Builder object
      */
-    public function attending(int $id = 0): Collection {
-        $sql     = 'SELECT `lessons`.* FROM `lessons` INNER JOIN `lessons_attendees` ON `lessons_attendees`.`lesson_id` = `lessons`.`id` WHERE `lessons_attendees`.`user_id` = :id';
-        $sqlID   = $id ?: $this->id;
-        $lessons = DB::select($sql, [ 'id' => $sqlID ]);
+    public function attending(int $id = 0): Builder {
+        $sqlID = $id ?: $this->id;
+        $query = (new Lesson())
+            ->select('lessons.*')
+            ->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
+            ->where('lessons_attendees.user_id', $sqlID);
 
-        array_walk($lessons, function (&$lesson) {
-            $lesson = new Lesson((array) $lesson);
-        });
-
-        return new Collection($lessons);
+        return $query;
     }
 
     /**
