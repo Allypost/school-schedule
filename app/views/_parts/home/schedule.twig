@@ -17,7 +17,7 @@
                         <div class="col s2 schedule-day"
                              v-for="(periods, day) in days">
                             <div class="col s12 schedule-hour"
-                                 :data-period="period"
+                                 :data-period="period" :class="{ 'schedule-teacher': isTeacher }"
                                  v-for="(data, period) in periods">
                                 <template v-if="isTeacher">
                                     <span :data-day="day" :data-week="week" :data-period="period">
@@ -25,22 +25,31 @@
                                             {{ data.name }}
                                         </template>
                                         <template v-else>
-                                            <span class="schedule-hour-loading hide"></span>
-                                            <select onChange="scheduleVM.subjectChange(this, this.options)" class="browser-default">
-                                                <option value="-1">/</option>
-                                                <option :selected="data.subject == subject.subject"
-                                                        :value="subject.id" :data-subject="JSON.stringify(subject)"
-                                                        v-for="subject in teaching">
-                                                    {{ subject.name  }}
-                                                </option>
+                                            <span class="schedule-hour-loading"
+                                                  v-if="data.isLoading"></span>
+                                            <select class="browser-default"
+                                                    :disabled="data.isLoading"
+                                                    @change="subjectChange($event.currentTarget.options, data, { week: week, day: day, period: period })">
+                                                <option :value="subject.id" :selected="data.subject == subject.subject"
+                                                        v-for="subject in teaching">{{ subject.name }}</option>
                                             </select>
+                                            <span class="schedule-status dropdown-button"
+                                                  :class="'status-' + (data.status ? data.status : 'normal') | lower"
+                                                  :data-activates="'dropdown-' + week + '-' + day + '-' + period"
+                                                  v-show="data.hasClass && !data.isLoading">!</span>
+                                            <ul class='dropdown-content'
+                                                :id="'dropdown-' + week + '-' + day + '-' + period">
+                                                <li @click="setStatus(data, status, { week: week, day: day, period: period })"
+                                                    v-for="(status, name) in statuses">
+                                                    <a :class="'status-' + name | lower">{{ name }}</a>
+                                                </li>
+                                            </ul>
                                         </template>
                                     </span>
                                 </template>
                                 <template v-else>
-                                    <span :data-day="day" :data-week="week" :data-period="period" :data-status="data.status">
-                                        {{ data.hasClass ? data.name : '/' }}
-                                    </span>
+                                    <span
+                                            :data-day="day" :data-week="week" :data-period="period" :data-status="data.status">{{ data.hasClass ? data.name : '/' }}</span>
                                 </template>
                             </div>
                         </div>
@@ -83,7 +92,20 @@
 
                         var p = periods[ period ];
 
-                        scheduleMatrix[ w ][ d ][ p ] = { hasClass: false, owned: false, isLoading: false, subject: -1 };
+                        scheduleMatrix[ w ][ d ][ p ] = {
+                            id       : null,
+                            owner    : null,
+                            name     : '',
+                            subject  : '',
+                            status   : '',
+                            due      : null,
+                            week     : null,
+                            day      : null,
+                            period   : null,
+                            owned    : false,
+                            hasClass : false,
+                            isLoading: false
+                        };
                     }
                 }
             }
@@ -94,8 +116,9 @@
                     week     : '{{ week }}',
                     days     : {{ days|json_encode|raw }},
                     schedule : scheduleMatrix,
-                    teaching : [],
-                    isTeacher: {{ app.auth.isTeacher()|json_encode|raw }}
+                    teaching : {},
+                    isTeacher: {{ app.auth.isTeacher()|json_encode|raw }},
+                    statuses : { Cancelled: "Cancelled", Normal: "" }
                 },
                 filters: {
                     lower     : function (el) {
@@ -108,51 +131,97 @@
                     }
                 },
                 methods: {
-                    pingy           : function (el) {
-                        console.log(el);
-                    },
-                    subjectChange   : function (el, options) {
-                        var subject = Number(options[ options.selectedIndex ].value);
-
-                        var $d = $(el.parentNode);
+                    getLocation     : function ($dataSpan) {
+                        var $d = $dataSpan;
 
                         var w = $d.attr('data-week');
                         var d = $d.attr('data-day');
                         var p = $d.attr('data-period');
 
-                        var data = {
-                            lesson_id: subject,
-                            week     : w,
-                            day      : d,
-                            period   : p
-                        };
-
-                        this.subjectPropagate(data, $d.parent());
+                        return {
+                            week  : w,
+                            day   : d,
+                            period: p
+                        }
                     },
-                    subjectDisable  : function ($el) {
-                        $el.find('.schedule-hour-loading').removeClass('hide');
-                        $el.find('select').attr('disabled', 'disabled');
-                    },
-                    subjectEnable   : function ($el) {
-                        $el.find('.schedule-hour-loading').addClass('hide');
-                        $el.find('select').removeAttr('disabled', 'disabled');
-                    },
-                    subjectPropagate: function (data, $el) {
-                        this.subjectDisable($el);
+                    subjectChange   : function (options, data, location) {
+                        var newSubject = options[ options.selectedIndex ];
+                        var nsID       = Number(newSubject.value);
+                        var nsName     = newSubject.innerText;
 
-                        var vm = this;
+                        data.week      = location.week;
+                        data.day       = location.day;
+                        data.period    = location.period;
+                        data.subject   = nsName;
+                        data.hasClass  = true;
+                        data.owned     = true;
+                        data.isLoading = true;
 
-                        data[ '{{ csrf_key }}' ] = '{{ csrf_token }}';
+                        location.subject = nsID;
 
-                        $.ajax(
-                            {
-                                url   : '{{ urlFor('api:lessons:update') }}',
-                                method: 'POST',
-                                data  : data
+                        this.subjectPropagate(location, function (d, status) {
+                            console.log(d, status);
+
+                            data.isLoading = false;
+
+                            if (status == 'error') {
+                                Materialize.toast('An error occured', 3000, 'status error');
+                                return;
                             }
-                         )
-                         .always(function () {
-                             vm.subjectEnable($el);
+
+                            d = d.data.new;
+
+                            if (d.lesson_id < 0) {
+                                data.hasClass = false;
+                                data.owned    = false;
+                                return;
+                            }
+
+                            if (!d.lesson)
+                                d.lesson = {
+                                    name : nsName,
+                                    owner: null
+                                };
+
+                            data.name     = d.lesson.name;
+                            data.owner    = d.lesson.owner;
+                            data.hasClass = true;
+                            data.owned    = true;
+                            data.status   = d.status;
+                        });
+                    },
+                    setStatus       : function (data, newStatus, location) {
+                        data.status    = newStatus;
+                        data.isLoading = true;
+
+                        location.status = newStatus;
+
+                        this.statusPropagate(location, function (d, status) {
+                            console.log(d, status);
+
+                            data.isLoading = false;
+
+                            if (status == 'error') {
+                                Materialize.toast('An error occured', 3000, 'status error');
+                                return;
+                            }
+                        });
+                    },
+                    statusPropagate : function (data, cb) {
+                        this.dataPropagate(data, '{{ urlFor('api:lessons:update:status') }}', cb);
+                    },
+                    subjectPropagate: function (data, cb) {
+                        this.dataPropagate(data, '{{ urlFor('api:lessons:update') }}', cb);
+                    },
+                    dataPropagate   : function (data, url, cb) {
+                        data[ $('meta[name="csrf_key"]').attr('content') ] = $('meta[name="csrf"]').attr('content');
+
+                        $.post(url, data)
+                         .done(function (data) {
+                             cb(data, 'success');
+                         })
+                         .fail(function (data) {
+                             cb(data, 'error');
                          });
                     }
                 }
@@ -175,6 +244,7 @@
 
                      scheduleVM.schedule[ w ][ d ][ p ] = cl;
                  }
+                 scheduleVM.$forceUpdate();
              })
              .fail(function () {
                  Materialize.toast("Couldn't get schedule!", 3000, 'status error');
@@ -183,12 +253,31 @@
             {% if app.auth.isTeacher() %}
             $.get('{{ urlFor('api:lessons:teaching') }}')
              .done(function (data) {
-                 scheduleVM.teaching = data.data;
+                 var d                    = data.data;
+                 scheduleVM.teaching[ 0 ] = {
+                     due    : null,
+                     id     : -1,
+                     name   : '/',
+                     owner  : -1,
+                     status : '',
+                     subject: ''
+                 };
+
+                 for (var id in d) {
+                     if (!d.hasOwnProperty(id))
+                         continue;
+                     var subject = d[ id ];
+
+                     scheduleVM.teaching[ subject.id ] = subject;
+                 }
+
+                 scheduleVM.$forceUpdate();
              })
              .fail(function () {
                  Materialize.toast("Couldn't get classes!", 3000, 'status error');
              });
             {% endif %}
+
         </script>
         <link rel="stylesheet" href="/css/schedule.css?_t={{ date().timestamp }}">
     </div>
