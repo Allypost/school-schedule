@@ -223,59 +223,79 @@
                          .fail(function (data) {
                              cb(data, 'error');
                          });
+                    },
+                    fetchSchedule   : function (cb) {
+                        var vm = this;
+                        $.get('{{ urlFor('api:lessons:schedule') }}')
+                         .done(function (data) {
+                             cb(data, vm);
+                         })
+                         .fail(function () {
+                             Materialize.toast("Couldn't get schedule!", 3000, 'status error');
+                         });
+                    },
+                    setSchedule     : function (classes) {
+                        for (var c in classes) {
+                            if (!classes.hasOwnProperty(c))
+                                continue;
+
+                            var cl = classes[ c ];
+                            var w  = cl.week;
+                            var d  = cl.day;
+                            var p  = cl.period;
+
+                            cl[ 'isLoading' ] = false;
+                            cl[ 'hasClass' ]  = true;
+
+                            this.schedule[ w ][ d ][ p ] = cl;
+                        }
+
+                        this.$forceUpdate();
+                    },
+                    fetchTeaching   : function (cb) {
+                        var vm = this;
+                        $.get('{{ urlFor('api:lessons:teaching') }}')
+                         .done(function (data) {
+                             cb(data, vm);
+                         })
+                         .fail(function () {
+                             Materialize.toast("Couldn't get classes!", 3000, 'status error');
+                         });
+                    },
+                    setTeaching     : function (data) {
+                        for (var id in data) {
+                            if (!data.hasOwnProperty(id))
+                                continue;
+
+                            var subject = data[ id ];
+
+                            this.teaching[ subject.id ] = subject;
+                        }
+
+                        this.$forceUpdate();
                     }
                 }
             });
 
-            $.get('{{ urlFor('api:lessons:schedule') }}')
-             .done(function (data) {
-                 var classes = data.data;
-                 for (var c in classes) {
-                     if (!classes.hasOwnProperty(c))
-                         continue;
-
-                     var cl = classes[ c ];
-                     var w  = cl.week;
-                     var d  = cl.day;
-                     var p  = cl.period;
-
-                     cl[ 'isLoading' ] = false;
-                     cl[ 'hasClass' ]  = true;
-
-                     scheduleVM.schedule[ w ][ d ][ p ] = cl;
-                 }
-                 scheduleVM.$forceUpdate();
-             })
-             .fail(function () {
-                 Materialize.toast("Couldn't get schedule!", 3000, 'status error');
-             });
+            scheduleVM.fetchSchedule(function (data, vm) {
+                vm.setSchedule(data.data);
+            });
 
             {% if app.auth.isTeacher() %}
-            $.get('{{ urlFor('api:lessons:teaching') }}')
-             .done(function (data) {
-                 var d                    = data.data;
-                 scheduleVM.teaching[ 0 ] = {
-                     due    : null,
-                     id     : -1,
-                     name   : '/',
-                     owner  : -1,
-                     status : '',
-                     subject: ''
-                 };
+            scheduleVM.fetchTeaching(function (data, vm) {
+                var d = data.data;
 
-                 for (var id in d) {
-                     if (!d.hasOwnProperty(id))
-                         continue;
-                     var subject = d[ id ];
+                vm.teaching[ 0 ] = {
+                    due    : null,
+                    id     : -1,
+                    name   : '/',
+                    owner  : -1,
+                    status : '',
+                    subject: ''
+                };
 
-                     scheduleVM.teaching[ subject.id ] = subject;
-                 }
-
-                 scheduleVM.$forceUpdate();
-             })
-             .fail(function () {
-                 Materialize.toast("Couldn't get classes!", 3000, 'status error');
-             });
+                vm.setTeaching(d);
+            });
             {% endif %}
 
         </script>
