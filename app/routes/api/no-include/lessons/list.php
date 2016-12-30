@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 $app->group('/list', function () use ($app, $loggedIn, $admin, $guest, $cache) {
 
     $app->get('/', $loggedIn(), function () use ($app) {
@@ -34,5 +36,14 @@ $app->group('/list', function () use ($app, $loggedIn, $admin, $guest, $cache) {
 
         say('lessons schedule', $data);
     })->name('api:lessons:schedule');
+
+    $app->get('/schedule/:time', $loggedIn(), function ($time) use ($app) {
+        $u    = $app->auth;
+        $time = Carbon::createFromTimestampUTC($time);
+
+        $data = $u->schedule()->where('schedule.updated_at', '>', $time)->get()->toArray();
+
+        say('lessons schedule', $data);
+    })->name('api:lessons:schedule:recent');
 
 });
