@@ -47,6 +47,39 @@
             text-align    : center;
             position      : relative;
 
+            .schedule-status {
+                position      : absolute;
+                top           : 50%;
+                margin-top    : -.57em;
+                right         : .1em;
+                height        : 1.2em;
+                width         : 1.2em;
+                padding       : .29em;
+                border-radius : 50%;
+                line-height   : .65em;
+                font-weight   : bold;
+                font-family   : monospace;
+                cursor        : pointer;
+            }
+
+            .status-cancelled {
+                background : #424242 !important;
+                color      : #ffeb3b !important;
+            }
+
+            a.status-cancelled:hover {
+                background : #212121 !important;
+            }
+
+            .status-normal {
+                background : #00bcd4 !important;
+                color      : #ffffff !important;
+            }
+
+            a.status-normal:hover {
+                background : #0097a7 !important;
+            }
+
             & > span {
 
                 &[data-status]::after {
