@@ -21,8 +21,10 @@ $app->post('/', function () use ($app) {
     if ($lesson->owner && $lesson->owner != $u->id)
         err('lessons not owned', [ 'You don\'t teach that lesson' ]);
 
-    if ($lesson->id && $lesson->id == $lessonID)
-        say('lessons update', compact('old', 'lesson', 'entry', 'lessonID', 'location'));
+    if ($lesson->id && $lesson->id == $lessonID) {
+        $new = $entry->toArray();
+        say('lessons update', compact('old', 'new'));
+    }
 
     $entry->lesson_id = $lessonID;
 
