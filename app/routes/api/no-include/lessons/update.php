@@ -36,7 +36,7 @@ $app->post('/', function () use ($app) {
     $new = $entry->toArray();
 
     $data = compact('old', 'new');
-    $app->log->log('lessons update', $data);
+    $app->log->log('lessons ' . ($lessonID < 1) ? 'delete' : 'update', $data);
 
     say('lessons update', $data);
 })->name('api:lessons:update');
