@@ -40,3 +40,46 @@ $app->post('/', function () use ($app) {
 
     say('lessons update', $data);
 })->name('api:lessons:update');
+
+$app->post('/status', function () use ($app) {
+    try {
+        $s = new Schedule();
+        $r = $app->request;
+        $u = $app->auth;
+
+        $status   = $r->post('status');
+        $location = [
+            'week'   => (int) $r->post('week'),
+            'day'    => $r->post('day'),
+            'period' => (int) $r->post('period'),
+        ];
+
+        $entry = $s->where($location)->with('lesson')->first();
+        $old   = $entry->toArray();
+
+        if (!$entry)
+            err('lessons status not found', [ 'The lesson does not exist' ]);
+
+        $lesson = $entry->lesson;
+
+        if ($lesson->owner != $u->id)
+            err('lessons status not owned', [ 'You don\'t teach that lesson' ]);
+
+        if ($entry->status == $status) {
+            $new = $entry->toArray();
+            say('lessons update', compact('old', 'new'));
+        }
+
+        $entry->status = $status;
+
+        $entry->save();
+        $new = $entry->toArray();
+
+        $data = compact('old', 'new');
+        $app->log->log('lessons status update', $data);
+
+        say('lessons update', $data);
+    } catch (\Throwable $e) {
+        dd($e);
+    }
+})->name('api:lessons:status');
