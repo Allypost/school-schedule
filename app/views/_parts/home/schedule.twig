@@ -118,7 +118,8 @@
                     schedule : scheduleMatrix,
                     teaching : {},
                     isTeacher: {{ app.auth.isTeacher()|json_encode|raw }},
-                    statuses : { Cancelled: "Cancelled", Normal: "" }
+                    statuses : { Cancelled: "Cancelled", Normal: "" },
+                    lastFetch: 0
                 },
                 filters: {
                     lower     : function (el) {
@@ -221,13 +222,19 @@
                          });
                     },
                     highlightClass  : function (cls) {
-                        //console.log(cls);
+                        console.log(cls);
                     },
-                    fetchSchedule   : function (cb) {
-                        var vm = this;
-                        $.get('{{ urlFor('api:lessons:schedule') }}')
+                    fetchSchedule   : function (cb, recent) {
+                        var vm  = this;
+                        var url = '{{ urlFor('api:lessons:schedule') }}';
+
+                        if (recent)
+                            url += '/' + this.lastFetch;
+
+                        $.get(url)
                          .done(function (data) {
-                             cb(data, vm);
+                             cb(data, vm, recent);
+                             vm.lastFetch = Math.floor(new Date().getTime() / 1000);
                          })
                          .fail(function () {
                              Materialize.toast("Couldn't get schedule!", 3000, 'status error');
@@ -247,7 +254,7 @@
                             cl[ 'hasClass' ]             = true;
                             this.schedule[ w ][ d ][ p ] = cl;
 
-                            if (notify && false)
+                            if (notify)
                                 this.highlightClass(this.schedule[ w ][ d ][ p ]);
                         }
 
@@ -302,7 +309,7 @@
             window.setInterval(function () {
                 scheduleVM.fetchSchedule(function (data, vm) {
                     vm.setSchedule(data.data, true);
-                });
+                }, true);
             }, 5000);
 
         </script>
