@@ -66,6 +66,10 @@ class Lesson extends Eloquent {
         return $this->hasMany('Allypost\Lessons\Schedule');
     }
 
+    public function notifications() {
+        return $this->hasMany('Allypost\Lessons\Notification');
+    }
+
     public function app() {
         return Slim::getInstance();
     }
