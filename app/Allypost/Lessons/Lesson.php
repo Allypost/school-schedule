@@ -67,7 +67,9 @@ class Lesson extends Eloquent {
     }
 
     public function notifications() {
-        return $this->hasMany('Allypost\Lessons\Notification');
+        $app = $this->app();
+
+        return $this->hasMany('Allypost\Lessons\Notification')->where('created_at', '>', $app->auth->data->notification_seen);
     }
 
     public function app() {
