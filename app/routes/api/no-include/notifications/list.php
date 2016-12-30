@@ -8,7 +8,7 @@ $app->get('/count', function () use ($app) {
     $count = $n->mine()->count();
 
     say('notifications list count', compact('count'));
-});
+})->name('api:notifications:count');
 
 $app->get('/', function () use ($app) {
     $n = new Notification();
