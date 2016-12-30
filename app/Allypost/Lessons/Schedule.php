@@ -16,6 +16,7 @@ class Schedule extends Eloquent {
         'week',
         'period',
         'status',
+        'hasClass',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -26,6 +27,10 @@ class Schedule extends Eloquent {
         'updated_at',
         'deleted_at',
         'id',
+    ];
+
+    protected $casts = [
+        'hasClass' => 'boolean',
     ];
 
     # </PRESETS>

@@ -19,6 +19,7 @@ class Lesson extends Eloquent {
         'day',
         'week',
         'owned',
+        'hasClass',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -35,7 +36,8 @@ class Lesson extends Eloquent {
     ];
 
     protected $casts = [
-        'owned' => 'boolean',
+        'owned'    => 'boolean',
+        'hasClass' => 'boolean',
     ];
 
     # </PRESETS>
