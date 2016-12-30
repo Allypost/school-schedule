@@ -132,17 +132,11 @@
                     }
                 },
                 methods: {
-                    getLocation     : function ($dataSpan) {
-                        var $d = $dataSpan;
-
-                        var w = $d.attr('data-week');
-                        var d = $d.attr('data-day');
-                        var p = $d.attr('data-period');
-
+                    getLocation     : function (subject) {
                         return {
-                            week  : w,
-                            day   : d,
-                            period: p
+                            week  : subject.week,
+                            day   : subject.day,
+                            period: subject.period
                         }
                     },
                     subjectChange   : function (options, data, location) {
@@ -222,7 +216,16 @@
                          });
                     },
                     highlightClass  : function (cls) {
-                        console.log(cls);
+                        var l  = this.getLocation(cls);
+                        var cl = 'schedule-hour-highlight';
+                        var id = "span[data-week='{0}'][data-day='{1}'][data-period='{2}']".format(l.week, l.day, l.period);
+
+                        var $el = $(id).parent();
+
+                        $el.addClass(cl);
+                        setTimeout(function () {
+                            $el.removeClass(cl);
+                        }, 850);
                     },
                     fetchSchedule   : function (cb, recent) {
                         var vm  = this;

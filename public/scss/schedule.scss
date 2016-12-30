@@ -47,6 +47,12 @@
             text-align    : center;
             position      : relative;
 
+            &.schedule-hour-highlight {
+                -webkit-animation : highlight .8s;
+                -o-animation      : highlight .8s;
+                animation         : highlight .8s;
+            }
+
             .schedule-status {
                 position      : absolute;
                 top           : 50%;
@@ -148,5 +154,14 @@
     .schedule-week {
         position : relative;
         margin   : 0;
+    }
+}
+
+@keyframes highlight {
+    0% {
+        background : #fff59d;
+    }
+    100% {
+        background : inherit;
     }
 }
