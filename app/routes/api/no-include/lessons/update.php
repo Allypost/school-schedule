@@ -8,7 +8,7 @@ $app->post('/', function () use ($app) {
         $r = $app->request;
         $u = $app->auth;
 
-        $lessonID = (int) $r->post('lesson_id');
+        $lessonID = (int) $r->post('lesson_id') ?: $r->post('subject');
         $location = [
             'week'   => (int) $r->post('week'),
             'day'    => $r->post('day'),
