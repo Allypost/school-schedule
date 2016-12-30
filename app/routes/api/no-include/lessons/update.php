@@ -34,5 +34,9 @@ $app->post('/', function () use ($app) {
         $entry->save();
 
     $new = $entry->toArray();
-    say('lessons update', compact('old', 'new'));
+
+    $data = compact('old', 'new');
+    $app->log->log('lessons update', $data);
+
+    say('lessons update', $data);
 })->name('api:lessons:update');
