@@ -78,7 +78,7 @@ $app->post('/status', function () use ($app) {
         $data = compact('old', 'new');
         $app->log->log('lessons status update', $data);
 
-        say('lessons update', $data);
+        say('lessons status update', $data);
     } catch (\Throwable $e) {
         dd($e);
     }
