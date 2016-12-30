@@ -160,8 +160,6 @@
                         location.subject = nsID;
 
                         this.subjectPropagate(location, function (d, status) {
-                            console.log(d, status);
-
                             data.isLoading = false;
 
                             if (status == 'error') {
@@ -197,8 +195,6 @@
                         location.status = newStatus;
 
                         this.statusPropagate(location, function (d, status) {
-                            console.log(d, status);
-
                             data.isLoading = false;
 
                             if (status == 'error') {
@@ -224,6 +220,9 @@
                              cb(data, 'error');
                          });
                     },
+                    highlightClass  : function (cls) {
+                        //console.log(cls);
+                    },
                     fetchSchedule   : function (cb) {
                         var vm = this;
                         $.get('{{ urlFor('api:lessons:schedule') }}')
@@ -234,7 +233,7 @@
                              Materialize.toast("Couldn't get schedule!", 3000, 'status error');
                          });
                     },
-                    setSchedule     : function (classes) {
+                    setSchedule     : function (classes, notify) {
                         for (var c in classes) {
                             if (!classes.hasOwnProperty(c))
                                 continue;
@@ -244,10 +243,12 @@
                             var d  = cl.day;
                             var p  = cl.period;
 
-                            cl[ 'isLoading' ] = false;
-                            cl[ 'hasClass' ]  = true;
-
+                            cl[ 'isLoading' ]            = false;
+                            cl[ 'hasClass' ]             = true;
                             this.schedule[ w ][ d ][ p ] = cl;
+
+                            if (notify && false)
+                                this.highlightClass(this.schedule[ w ][ d ][ p ]);
                         }
 
                         this.$forceUpdate();
@@ -297,6 +298,12 @@
                 vm.setTeaching(d);
             });
             {% endif %}
+
+            window.setInterval(function () {
+                scheduleVM.fetchSchedule(function (data, vm) {
+                    vm.setSchedule(data.data, true);
+                });
+            }, 5000);
 
         </script>
         <link rel="stylesheet" href="/css/schedule.css?_t={{ date().timestamp }}">
