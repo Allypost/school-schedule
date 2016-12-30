@@ -59,16 +59,18 @@
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
 {% raw %}
     <script>
-        String.prototype.format = function () {
-            var args = arguments;
-            return this.replace(/\{\{|\}\}|\{(\d+)\}/g, function (m, n) {
-                if (m == "{{")
-                    return "{";
-                if (m == "}}")
-                    return "}";
-                return args[ n ];
-            });
-        };
+        if (!String.prototype.format) {
+            String.prototype.format = function () {
+                var args = arguments;
+                return this.replace(/\{\{|\}\}|\{(\d+)\}/g, function (m, n) {
+                    if (m == "{{")
+                        return "{";
+                    if (m == "}}")
+                        return "}";
+                    return args[ n ];
+                });
+            };
+        }
     </script>
 {% endraw %}
 <!--    </Javascript>   -->
