@@ -82,4 +82,4 @@ $app->post('/status', function () use ($app) {
     } catch (\Throwable $e) {
         dd($e);
     }
-})->name('api:lessons:status');
+})->name('api:lessons:update:status');
