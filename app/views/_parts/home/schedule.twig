@@ -163,14 +163,8 @@
 
                             d = d.data.new;
 
-                            if (!d.lesson)
-                                d.lesson = {
-                                    name : nsName,
-                                    owner: null
-                                };
-
-                            data.name     = d.lesson.name;
-                            data.owner    = d.lesson.owner;
+                            data.subject  = d.name;
+                            data.owner    = d.owner;
                             data.status   = d.status;
                             data.hasClass = d.hasClass;
                             data.owned    = d.owned;

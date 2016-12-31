@@ -16,15 +16,10 @@ $app->post('/', function () use ($app) {
 
     $entry  = $s->where($location)->with('lesson')->first() ?: new Schedule($location);
     $lesson = $entry->lesson ?? (object) [ 'id' => FALSE, 'owner' => FALSE ];
-    $old    = $entry->toArray();
+    $old    = array_collapse([ $entry->toArray() ]);
 
     if ($lesson->owner && $lesson->owner != $u->id)
         err('lessons not owned', [ 'You don\'t teach that lesson' ]);
-
-    if ($lesson->id && $lesson->id == $lessonID) {
-        $new = $entry->toArray();
-        say('lessons update', compact('old', 'new'));
-    }
 
 
     if ($lessonID < 1) {
@@ -36,7 +31,10 @@ $app->post('/', function () use ($app) {
 
     $entry->status = '';
     $entry->save();
-    $new = $entry->toArray();
+    $new = array_collapse([ $entry->toArray() ]);
+
+    $new[ 'owned' ]   = ($new[ 'owner' ] ?? $u->id) == $u->id;
+    $new[ 'subject' ] = $new[ 'name' ] ?? '';
 
     $data = compact('old', 'new');
     $app->log->log('lessons ' . (($lessonID < 1) ? 'delete' : 'update'), $data);
