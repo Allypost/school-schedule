@@ -163,12 +163,6 @@
 
                             d = d.data.new;
 
-                            if (d.lesson_id < 0) {
-                                data.hasClass = false;
-                                data.owned    = false;
-                                return;
-                            }
-
                             if (!d.lesson)
                                 d.lesson = {
                                     name : nsName,
@@ -178,6 +172,8 @@
                             data.name     = d.lesson.name;
                             data.owner    = d.lesson.owner;
                             data.status   = d.status;
+                            data.hasClass = d.hasClass;
+                            data.owned    = d.owned;
                         });
                     },
                     setStatus       : function (data, newStatus, location) {
