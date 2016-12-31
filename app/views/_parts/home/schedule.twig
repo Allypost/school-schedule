@@ -161,13 +161,7 @@
                                 return;
                             }
 
-                            d = d.data.new;
-
-                            data.subject  = d.name;
-                            data.owner    = d.owner;
-                            data.status   = d.status;
-                            data.hasClass = d.hasClass;
-                            data.owned    = d.owned;
+                            data.owned = d.data.new.owned;
                         });
                     },
                     setStatus       : function (data, newStatus, location) {
