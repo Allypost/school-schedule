@@ -1,5 +1,6 @@
 <?php
 
+use Allypost\Lessons\Lesson;
 use Allypost\Lessons\Schedule;
 
 $app->post('/', function () use ($app) {
@@ -15,26 +16,25 @@ $app->post('/', function () use ($app) {
     ];
 
     $entry  = $s->where($location)->with('lesson')->first() ?: new Schedule($location);
-    $lesson = $entry->lesson ?? (object) [ 'id' => FALSE, 'owner' => FALSE ];
+    $lesson = $entry->lesson ?? new Lesson([ 'id' => $lessonID, 'owner' => $u->id ]);
     $old    = array_collapse([ $entry->toArray() ]);
 
-    if ($lesson->owner && $lesson->owner != $u->id)
+    if ($lesson->owner != $u->id)
         err('lessons not owned', [ 'You don\'t teach that lesson' ]);
 
+    $hasClass = $lessonID > 0;
 
-    if ($lessonID < 1) {
-        $entry->hasClass = '0';
-    } else {
-        $entry->hasClass  = '1';
+    if ($hasClass)
         $entry->lesson_id = $lessonID;
-    }
 
-    $entry->status = '';
+    $entry->hasClass = (string) ((int) $hasClass);
+    $entry->status   = '';
     $entry->save();
-    $new = array_collapse([ $entry->toArray() ]);
 
-    $new[ 'owned' ]   = ($new[ 'owner' ] ?? $u->id) == $u->id;
-    $new[ 'subject' ] = $new[ 'name' ] ?? '';
+    $newData = $entry->toArray();
+    $new     = array_collapse([ $newData[ 'lesson' ], array_except($newData, 'lesson') ]);
+
+    $new[ 'owned' ] = ($new[ 'owner' ] ?? $u->id) == $u->id;
 
     $data = compact('old', 'new');
     $app->log->log('lessons ' . (($lessonID < 1) ? 'delete' : 'update'), $data);
