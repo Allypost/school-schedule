@@ -1,4 +1,6 @@
 <?php
+use Carbon\Carbon;
+
 /**
  * Convert hexdec color string to rgb(a) string
  *
@@ -437,6 +439,9 @@ function res(bool $isError, string $reason, array $data = [], string $action = '
             $return[ 'action' ]    = '*';
         }
     }
+
+    $c                     = new Carbon();
+    $return[ 'timestamp' ] = $c->timestamp;
 
     ddj($return);
 }
