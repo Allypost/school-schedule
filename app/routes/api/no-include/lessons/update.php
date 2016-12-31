@@ -29,12 +29,12 @@ $app->post('/', function () use ($app) {
 
     if ($lessonID < 1) {
         $entry->hasClass = '0';
-        $entry->status   = '';
     } else {
         $entry->hasClass  = '1';
         $entry->lesson_id = $lessonID;
     }
 
+    $entry->status = '';
     $entry->save();
     $new = $entry->toArray();
 
