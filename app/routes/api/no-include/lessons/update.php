@@ -26,13 +26,16 @@ $app->post('/', function () use ($app) {
         say('lessons update', compact('old', 'new'));
     }
 
-    $entry->lesson_id = $lessonID;
 
-    if ($lessonID < 1)
-        $entry->delete();
-    else
-        $entry->save();
+    if ($lessonID < 1) {
+        $entry->hasClass = '0';
+        $entry->status   = '';
+    } else {
+        $entry->hasClass  = '1';
+        $entry->lesson_id = $lessonID;
+    }
 
+    $entry->save();
     $new = $entry->toArray();
 
     $data = compact('old', 'new');

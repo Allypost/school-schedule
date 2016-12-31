@@ -30,7 +30,7 @@
                                             <select class="browser-default"
                                                     :disabled="data.isLoading"
                                                     @change="subjectChange($event.currentTarget.options, data, { week: week, day: day, period: period })">
-                                                <option :value="subject.id" :selected="data.subject == subject.subject"
+                                                <option :value="subject.id" :selected="data.hasClass && (data.subject == subject.subject)"
                                                         v-for="subject in teaching">{{ subject.name }}</option>
                                             </select>
                                             <span class="schedule-status dropdown-button"
@@ -48,8 +48,7 @@
                                     </span>
                                 </template>
                                 <template v-else>
-                                    <span
-                                            :data-day="day" :data-week="week" :data-period="period" :data-status="data.status">{{ data.hasClass ? data.name : '/' }}</span>
+                                    <span :data-day="day" :data-week="week" :data-period="period" :data-status="data.hasClass ? data.status : false">{{ data.hasClass ? data.name : '/' }}</span>
                                 </template>
                             </div>
                         </div>
