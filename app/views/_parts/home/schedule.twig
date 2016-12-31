@@ -216,6 +216,9 @@
                          });
                     },
                     highlightClass  : function (cls) {
+                        if (this.owned)
+                            return;
+
                         var l  = this.getLocation(cls);
                         var cl = 'schedule-hour-highlight';
                         var id = "span[data-week='{0}'][data-day='{1}'][data-period='{2}']".format(l.week, l.day, l.period);
