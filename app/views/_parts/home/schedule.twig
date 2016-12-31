@@ -29,7 +29,7 @@
                                                   v-if="data.isLoading"></span>
                                             <select class="browser-default"
                                                     :disabled="data.isLoading"
-                                                    @change="subjectChange($event.currentTarget.options, data, { week: week, day: day, period: period })">
+                                                    @change="subjectChange($event.currentTarget.options, data)">
                                                 <option :value="subject.id" :selected="data.hasClass && (data.subject == subject.subject)"
                                                         v-for="subject in teaching">{{ subject.name }}</option>
                                             </select>
@@ -138,7 +138,8 @@
                             period: subject.period
                         }
                     },
-                    subjectChange   : function (options, data, location) {
+                    subjectChange   : function (options, data) {
+                        var location   = this.getLocation(data);
                         var newSubject = options[ options.selectedIndex ];
                         var nsID       = Number(newSubject.value);
                         var nsName     = newSubject.innerText;
