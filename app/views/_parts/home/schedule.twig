@@ -237,7 +237,7 @@
                         $.get(url)
                          .done(function (data) {
                              cb(data, vm, recent);
-                             vm.lastFetch = Math.floor(new Date().getTime() / 1000);
+                             vm.lastFetch = data.timestamp;
                          })
                          .fail(function () {
                              Materialize.toast("Couldn't get schedule!", 3000, 'status error');
