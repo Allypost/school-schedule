@@ -19,6 +19,7 @@ class Lesson extends Eloquent {
         'day',
         'week',
         'owned',
+        'status',
         'hasClass',
         'created_at',
         'updated_at',
@@ -26,6 +27,7 @@ class Lesson extends Eloquent {
     ];
 
     protected $hidden = [
+        'id',
         'created_at',
         'updated_at',
         'deleted_at',
