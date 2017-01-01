@@ -199,7 +199,7 @@ class User extends Eloquent {
      *  - Push data to session
      *  - Add remember cookie if necessary
      *
-     * @param self $user     The user object
+     * @param self $user     The User object
      * @param bool $remember Whether to add a remember cookie
      *
      * @return bool Whether the login was successful
@@ -226,7 +226,7 @@ class User extends Eloquent {
     /**
      * Add the remember cookie
      *
-     * @param self $user The user object
+     * @param self $user The User object
      *
      * @return bool Whether the remember was successful
      */
@@ -341,7 +341,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Activate a user by UUID and activation code
+     * Activate a User by UUID and activation code
      *
      * @param string $identifier     The UUID of the user which to activate
      * @param string $activationCode The user supplied activation code
@@ -386,7 +386,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Generate new activation code for a user
+     * Generate new activation code for a User
      *
      * @param string $identifier The UUID of the user for which to create the activation code
      *
@@ -412,7 +412,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Update the remember (auth) credentials for the current user
+     * Update the remember (auth) credentials for the current User
      *
      * @param string $identifier The identifier
      * @param string $token      The token
@@ -429,7 +429,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Remove the remember (auth) credentials for the current user
+     * Remove the remember (auth) credentials for the current User
      */
     public function removeRememberCredentials() {
         $this->updateRememberCredentials(NULL, NULL);
@@ -492,7 +492,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Fetch the user by identifier
+     * Fetch the User by identifier
      *
      * @param string $identifier The user identifier (email, uuid or DB ID)
      * @param bool   $withData   Add all data related to the user
@@ -511,7 +511,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Create a new user
+     * Create a new User
      *
      * @param array  $data The data for the user
      * @param string $type The type of user to create (eg. default, admin, moderator, etc.)
@@ -583,7 +583,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Check whether the user exists
+     * Check whether the User exists
      *
      * @param string $identifier   The user identifier
      * @param bool   $returnObject Whether to return the user object or just whether it exists
@@ -624,7 +624,7 @@ class User extends Eloquent {
     /* ########################################## */
 
     /**
-     * Returns the current user's full name
+     * Returns the current User's full name
      *
      * @return string The current user's name
      */
@@ -637,7 +637,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Get only basic info for the current user (uuid, name, email)
+     * Get only basic info for the current User (uuid, name, email)
      *
      * @param bool $withPermission Whether to also include permissions
      * @param bool $withData       Whether to also include user data
@@ -732,7 +732,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Get lessons that the user is attending
+     * Get lessons that the User is attending
      *
      * @param int $id User ID
      *
@@ -749,7 +749,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Get schedule for user
+     * Get schedule for User
      *
      * @param int $id User ID
      *
@@ -759,11 +759,11 @@ class User extends Eloquent {
         $sqlID = $id ?: $this->id;
         $query = (new Lesson())
             ->select('lessons.*', 'schedule.week', 'schedule.day', 'schedule.period', 'schedule.status', DB::raw('schedule.hasClass = "1" as hasClass'), DB::raw('lessons.owner = ' . $sqlID . ' as owned'))
-            ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id')
-            ->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id');
+            ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id');
 
         if ($this->isStudent())
-            return $query->where('lessons_attendees.user_id', $sqlID);
+            return $query->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
+                         ->where('lessons_attendees.user_id', $sqlID);
 
         return $query;
     }
