@@ -741,6 +741,7 @@ class User extends Eloquent {
     public function attending(int $id = 0): Builder {
         $sqlID = $id ?: $this->id;
         $query = (new Lesson())
+            ->distinct()
             ->select('lessons.*')
             ->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
             ->where('lessons_attendees.user_id', $sqlID);
@@ -758,6 +759,7 @@ class User extends Eloquent {
     public function schedule(int $id = 0): Builder {
         $sqlID = $id ?: $this->id;
         $query = (new Lesson())
+            ->distinct()
             ->select('lessons.*', 'schedule.week', 'schedule.day', 'schedule.period', 'schedule.status', DB::raw('schedule.hasClass = "1" as hasClass'), DB::raw('lessons.owner = ' . $sqlID . ' as owned'))
             ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id');
 
