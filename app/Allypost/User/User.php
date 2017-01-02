@@ -760,8 +760,9 @@ class User extends Eloquent {
         $sqlID = $id ?: $this->id;
         $query = (new Lesson())
             ->distinct()
-            ->select('lessons.*', 'schedule.week', 'schedule.day', 'schedule.period', 'schedule.status', DB::raw('schedule.hasClass = "1" as hasClass'), DB::raw('lessons.owner = ' . $sqlID . ' as owned'))
-            ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id');
+            ->select('lessons.*', 'schedule.week', 'schedule.day', 'schedule.period', 'schedule.status', DB::raw('schedule.hasClass = "1" as hasClass'), DB::raw('lessons.owner = ? as owned'))
+            ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id')
+            ->setBindings([ $sqlID ]);
 
         if ($this->isStudent())
             return $query->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
