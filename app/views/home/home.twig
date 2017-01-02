@@ -1,19 +1,10 @@
-<html>
-<head>
-    {% include '_parts/head.twig' %}
-</head>
-<body>
-{% if app.auth %}
-    {% include '_parts/topbar.twig' %}
-{% endif %}
-<main class="container">
+{% extends '_templates/default.twig' %}
+
+{% block content %}
     {% if not app.auth %}
         {% include '_parts/home/initial-login.twig' %}
     {% else %}
         <div style="margin-top: 5em;"></div>
         {% include '_parts/home/schedule.twig' %}
     {% endif %}
-</main>
-{% include '_parts/foot.twig' %}
-</body>
-</html>
+{% endblock %}
