@@ -2,15 +2,60 @@
     <nav class="topbar">
         <div class="hide-on-small-only">
             <a class="topbar-link" href="{{ urlFor('lessons:home') }}">Lessons</a>
-            <a class="topbar-link" href="javascript:void(0)">Notifications <span class="topbar-badge">{{ random(8) + 1 }}</span></a>
+            <a class="topbar-link dropdown-button" href="javascript:void(0)"
+               data-activates='dropdown-notifications' data-beloworigin="true"
+               @mouseenter="getNotifications">
+                Notifications <span class="topbar-badge">{{ '{{ ' }} notificationCount {{ '}}' }}</span>
+            </a>
             <a class="topbar-link" href="{{ urlFor('auth:logout') }}">Sign Out</a>
         </div>
         <div class="hide-on-med-and-up">
-            <a class="topbar-icon" href="/lessons/"><i class="material-icons">event</i></a>
-            <a class="topbar-icon" href="javascript:void(0)"><i class="material-icons">notifications</i><span class="topbar-badge">{{ random(8) + 1 }}</span></a>
-            <a class="topbar-icon" href="/api/auth/logout"><i class="material-icons">&#xE8AC;</i></a>
+            <a class="topbar-icon" href="{{ urlFor('lessons:home') }}"><i class="material-icons">event</i></a>
+            <a class="topbar-icon" href="javascript:void(0)"
+               data-activates='dropdown-notifications' data-beloworigin="true"
+               @mouseenter="getNotifications">
+                <i class="material-icons">notifications</i><span class="topbar-badge">{{ '{{ ' }} notificationCount {{ '}}' }}</span>
+            </a>
+            <a class="topbar-icon" href="{{ urlFor('auth:logout') }}"><i class="material-icons">&#xE8AC;</i></a>
         </div>
+        <ul id="dropdown-notifications" class='dropdown-content'>
+            <li :data-recieved="notification.date" :data-subject-name="notification.name" :data-subject="notification.subject"
+                v-for="notification in notifications">{{ "{{" }} notification.name + ' ' + notification.message {{ "}}" }}</li>
+        </ul>
     </nav>
+    <script>
+        var topbarVM = new Vue({
+            el     : '.topbar',
+            data   : {
+                notifications           : [],
+                notificationCount       : null,
+                notificationCountLoading: true,
+                notificationsLoading    : false
+            },
+            methods: {
+                getNotifications: function () {
+                    if (this.notificationsLoading)
+                        return;
+
+                    var vm = this;
+
+                    this.notificationsLoading = true;
+
+                    $.get('{{ urlFor('api:notifications:list') }}')
+                     .done(function (data) {
+                         vm.notifications        = data.data;
+                         vm.notificationsLoading = false;
+                     });
+                }
+            }
+        });
+
+        $.get('{{ urlFor('api:notifications:count') }}')
+         .done(function (data) {
+             topbarVM.notificationCount        = data.data.count;
+             topbarVM.notificationCountLoading = false;
+         });
+    </script>
 </div>
 <div class="no-interact top-user-info">Logged in as <i style="text-decoration: underline;">{{ app.auth.name }}</i>, <i>{{ app.auth.getTypeString() }}</i></div>
 <style>
