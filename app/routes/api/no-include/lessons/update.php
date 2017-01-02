@@ -19,7 +19,7 @@ $app->post('/', function () use ($app) {
     $lesson = $entry->lesson ?? new Lesson([ 'id' => $lessonID, 'owner' => $u->id ]);
     $old    = array_collapse([ $entry->toArray() ]);
 
-    if ($lesson->owner != $u->id)
+    if ($entry->hasClass == '1' && $lesson->owner != $u->id)
         err('lessons not owned', [ 'You don\'t teach that lesson' ]);
 
     $hasClass = $lessonID > 0;
