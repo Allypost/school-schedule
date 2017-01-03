@@ -13,4 +13,4 @@ $app->get('/', function () use ($app) {
     $days = [ 'mon', 'tue', 'wed', 'thu', 'fri' ];
 
     $app->render('home/home.twig', compact('week', 'days'));
-});
+})->name('home:home');
