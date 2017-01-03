@@ -99,8 +99,6 @@ $app->any('/attending', function () use ($app) {
             $attending = $lesson[ 'attending' ] === 'true';
             $lessn     = $u->attendee()->where('lesson_id', $id)->where('user_id', $u->id)->first();
 
-            # dd($id, $attending, $lesson, $lessn);
-
             if ($attending && !$lessn) {
                 Attendee::create([ 'user_id' => $u->id, 'lesson_id' => $id ]);
                 continue;
