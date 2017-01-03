@@ -13,6 +13,8 @@ class Attendee extends Eloquent {
     protected $fillable = [
         'owner',
         'name',
+        'user_id',
+        'lesson_id',
         'subject',
         'status',
         'due',
@@ -40,5 +42,16 @@ class Attendee extends Eloquent {
 
     public function app() {
         return Slim::getInstance();
+    }
+
+    public static function checkData(array $data): bool {
+        foreach ($data as $datum)
+            if (
+                !isset($datum[ 'attending' ], $datum[ 'id' ]) ||
+                empty($datum[ 'attending' ]) || empty($datum[ 'id' ])
+            )
+                return FALSE;
+
+        return TRUE;
     }
 }
