@@ -58,7 +58,6 @@
                     return lessons;
                 },
                 saveLessons : function () {
-                    var vm    = this;
                     var $form = $('#lessons');
                     var url   = $form.attr('action');
 
@@ -78,8 +77,7 @@
                     var l = this.btnStatus('loading');
 
                     $.post(url, data)
-                     .done(function (d) {
-                         console.log(d);
+                     .done(function () {
                          l();
                      });
                 },
