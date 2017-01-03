@@ -37,8 +37,9 @@ class Lesson extends Eloquent {
     ];
 
     protected $casts = [
-        'owned'    => 'boolean',
-        'hasClass' => 'boolean',
+        'owned'     => 'boolean',
+        'hasClass'  => 'boolean',
+        'attending' => 'boolean',
     ];
 
     # </PRESETS>
