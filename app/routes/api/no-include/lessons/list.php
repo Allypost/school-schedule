@@ -4,15 +4,6 @@ use Carbon\Carbon;
 
 $app->group('/list', function () use ($app, $loggedIn, $admin, $guest, $cache) {
 
-    $app->get('/', $loggedIn(), function () use ($app) {
-        $u = $app->auth;
-
-        $teaching  = $u->lessons()->get()->toArray();
-        $attending = $u->attending()->get()->toArray();
-
-        say('lessons all', compact('teaching', 'attending'));
-    })->name('api:lessons:all');
-
     $app->get('/attending', $loggedIn(), function () use ($app) {
         $u = $app->auth;
 
