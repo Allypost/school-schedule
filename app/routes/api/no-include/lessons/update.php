@@ -83,36 +83,32 @@ $app->post('/status', function () use ($app) {
 })->name('api:lessons:update:status');
 
 $app->any('/attending', function () use ($app) {
-    try {
-        $r = $app->request;
-        $u = $app->auth;
+    $r = $app->request;
+    $u = $app->auth;
 
-        $lessons = $r->post('lessons', []);
+    $lessons = $r->post('lessons', []);
 
-        $valid = Attendee::checkData($lessons);
+    $valid = Attendee::checkData($lessons);
 
-        if (!$valid)
-            err('lessons attending update', [ 'Something went wrong while updating your preferences' ]);
+    if (!$valid)
+        err('lessons attending update', [ 'Something went wrong while updating your preferences' ]);
 
-        foreach ($lessons as $lesson) {
-            $id        = (int) $lesson[ 'id' ];
-            $attending = $lesson[ 'attending' ] === 'true';
-            $lessn     = $u->attendee()->where('lesson_id', $id)->where('user_id', $u->id)->first();
+    foreach ($lessons as $lesson) {
+        $id        = (int) $lesson[ 'id' ];
+        $attending = $lesson[ 'attending' ] === 'true';
+        $lessn     = $u->attendee()->where('lesson_id', $id)->where('user_id', $u->id)->first();
 
-            if ($attending && !$lessn) {
-                Attendee::create([ 'user_id' => $u->id, 'lesson_id' => $id ]);
-                continue;
-            }
-
-            if (!$attending && $lessn) {
-                $lessn->delete();
-                continue;
-            }
-
+        if ($attending && !$lessn) {
+            Attendee::create([ 'user_id' => $u->id, 'lesson_id' => $id ]);
+            continue;
         }
 
-        say('lessons attending update', [ 'new' => $u->attending()->get()->toArray() ]);
-    } catch (\Throwable $e) {
-        dd($e);
+        if (!$attending && $lessn) {
+            $lessn->delete();
+            continue;
+        }
+
     }
+
+    say('lessons attending update', [ 'new' => $u->attending()->get()->toArray() ]);
 })->name('api:lessons:update:attending');
