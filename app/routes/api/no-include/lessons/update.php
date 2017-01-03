@@ -1,5 +1,6 @@
 <?php
 
+use Allypost\Lessons\Attendee;
 use Allypost\Lessons\Lesson;
 use Allypost\Lessons\Schedule;
 
@@ -80,3 +81,40 @@ $app->post('/status', function () use ($app) {
 
     say('lessons status update', $data);
 })->name('api:lessons:update:status');
+
+$app->any('/attending', function () use ($app) {
+    try {
+        $r = $app->request;
+        $u = $app->auth;
+
+        $lessons = $r->post('lessons', []);
+
+        $valid = Attendee::checkData($lessons);
+
+        if (!$valid)
+            err('lessons attending update', [ 'Something went wrong while updating your preferences' ]);
+
+        foreach ($lessons as $lesson) {
+            $id        = (int) $lesson[ 'id' ];
+            $attending = $lesson[ 'attending' ] === 'true';
+            $lessn     = $u->attendee()->where('lesson_id', $id)->where('user_id', $u->id)->first();
+
+            # dd($id, $attending, $lesson, $lessn);
+
+            if ($attending && !$lessn) {
+                Attendee::create([ 'user_id' => $u->id, 'lesson_id' => $id ]);
+                continue;
+            }
+
+            if (!$attending && $lessn) {
+                $lessn->delete();
+                continue;
+            }
+
+        }
+
+        say('lessons attending update', [ 'new' => $u->attending()->get()->toArray() ]);
+    } catch (\Throwable $e) {
+        dd($e);
+    }
+})->name('api:lessons:update:attending');
