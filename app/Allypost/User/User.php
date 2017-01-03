@@ -742,9 +742,14 @@ class User extends Eloquent {
         $sqlID = $id ?: $this->id;
         $query = (new Lesson())
             ->distinct()
-            ->select('lessons.*')
-            ->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
-            ->where('lessons_attendees.user_id', $sqlID);
+            ->select('lessons.*', DB::raw('lessons_attendees.user_id = ? as attending'))
+            ->leftJoin('lessons_attendees', function ($join) use ($sqlID) {
+                $join->on('lessons_attendees.lesson_id', '=', 'lessons.id')
+                     ->where('lessons_attendees.user_id', $sqlID);
+            })
+            ->orderBy('attending', 'desc')
+            ->orderBy('subject', 'asc')
+            ->setBindings([ $sqlID ]);
 
         return $query;
     }
