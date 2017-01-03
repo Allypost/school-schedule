@@ -2,20 +2,22 @@
     <nav class="topbar">
         <div class="hide-on-small-only">
             <a class="topbar-link" href="{{ urlFor('lessons:home') }}">Lessons</a>
-            <a class="topbar-link dropdown-button" href="javascript:void(0)"
+            {#<a class="topbar-link dropdown-button" href="javascript:void(0)"
                data-activates='dropdown-notifications' data-beloworigin="true"
                @mouseenter="getNotifications">
                 Notifications <span class="topbar-badge">{{ '{{ ' }} notificationCount {{ '}}' }}</span>
-            </a>
+            </a>#}
+            <a class="topbar-link" href="{{ urlFor('home:home') }}">Schedule</a>
             <a class="topbar-link" href="{{ urlFor('auth:logout') }}">Sign Out</a>
         </div>
         <div class="hide-on-med-and-up">
             <a class="topbar-icon" href="{{ urlFor('lessons:home') }}"><i class="material-icons">event</i></a>
-            <a class="topbar-icon" href="javascript:void(0)"
+            {#<a class="topbar-icon" href="javascript:void(0)"
                data-activates='dropdown-notifications' data-beloworigin="true"
                @mouseenter="getNotifications">
                 <i class="material-icons">notifications</i><span class="topbar-badge">{{ '{{ ' }} notificationCount {{ '}}' }}</span>
-            </a>
+            </a>#}
+            <a class="topbar-icon" href="{{ urlFor('home:home') }}"><i class="material-icons">schedule</i></a>
             <a class="topbar-icon" href="{{ urlFor('auth:logout') }}"><i class="material-icons">&#xE8AC;</i></a>
         </div>
         <ul id="dropdown-notifications" class='dropdown-content'>
@@ -24,7 +26,7 @@
         </ul>
     </nav>
     <script>
-        var topbarVM = new Vue({
+        /*var topbarVM = new Vue({
             el     : '.topbar',
             data   : {
                 notifications           : [],
@@ -54,7 +56,7 @@
          .done(function (data) {
              topbarVM.notificationCount        = data.data.count;
              topbarVM.notificationCountLoading = false;
-         });
+         });*/
     </script>
 </div>
 <div class="no-interact top-user-info">Logged in as <i style="text-decoration: underline;">{{ app.auth.name }}</i>, <i>{{ app.auth.getTypeString() }}</i></div>
