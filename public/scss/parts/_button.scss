@@ -23,13 +23,12 @@
         }
     }
 
-    &.btn-success {
+    &.btn-success,
+    &.btn-error {
         color          : transparent !important;
         pointer-events : none;
-        background     : #4caf50;
 
         &::after {
-            content     : "\E876";
             display     : block;
             margin-top  : -15px;
             margin-left : -15px;
@@ -43,6 +42,22 @@
             padding     : 0;
             line-height : 30px;
             font-size   : 30px;
+        }
+    }
+
+    &.btn-success {
+        background : #4caf50;
+
+        &::after {
+            content : "\E876";
+        }
+    }
+
+    &.btn-error {
+        background : #f44336;
+
+        &::after {
+            content : "\E001";
         }
     }
 }
