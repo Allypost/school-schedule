@@ -1,0 +1,119 @@
+{% extends '_templates/default.twig' %}
+
+{% block content %}
+    <div class="row">
+        <form action="{{ urlFor('api:lessons:update:attending') }}" method="POST" class="col s12 m8 l6" id="lessons">
+            <div class="row">
+                <h1 class="col s6">Attending:</h1>
+            </div>
+            <div class="row lessons-attending">
+                <p class="col s6"
+                   v-for="lesson in lessons">
+                    <input type="checkbox" :id=" 'lesson-' + lesson.id " :checked="lesson.attending" @change="lesson.attending = $event.target.checked"/>
+                    <label :for=" 'lesson-' + lesson.id ">{{ '{{' }}lesson.name{{ '}}' }}</label>
+                </p>
+            </div>
+            <div class="row">
+                <div class="col s6 offset-s6">
+                    <button class="btn btn-large" :class="{ 'btn-loading': loading, 'btn-error': error, 'btn-success': success }" @click.prevent="saveLessons">Save</button>
+                </div>
+            </div>
+            <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
+        </form>
+    </div>
+    <script>
+        var lessonsVM = new Vue({
+            el     : '#lessons',
+            data   : {
+                lessons    : [],
+                loading    : true,
+                error      : false,
+                success    : false,
+                btnInterval: null
+            },
+            methods: {
+                fetchLessons: function () {
+                    var vm = this;
+
+                    $.get('{{ urlFor('api:lessons:attending') }}')
+                     .done(function (d) {
+                         vm.lessons = d.data;
+                         vm.loading = false;
+                     });
+                },
+                getLessons  : function () {
+                    var l = this.lessons;
+
+                    var lessons = {};
+
+                    for (var id in l) {
+                        if (!l.hasOwnProperty(id))
+                            continue;
+
+                        var lesson = l[ id ];
+
+                        lessons[ lesson.id ] = { id: lesson.id, attending: !!lesson.attending };
+                    }
+
+                    return lessons;
+                },
+                saveLessons : function () {
+                    var vm    = this;
+                    var $form = $('#lessons');
+                    var url   = $form.attr('action');
+
+                    var $csrfInput = $form.find('input[type="hidden"]:last');
+                    var csrf       = {
+                        key  : $csrfInput.attr('name'),
+                        token: $csrfInput.attr('value')
+                    };
+
+                    var data = {
+                        lessons: this.getLessons()
+                    };
+
+                    data[ csrf.key ] = csrf.token;
+
+
+                    var l = this.btnStatus('loading');
+
+                    $.post(url, data)
+                     .done(function (d) {
+                         console.log(d);
+                         l();
+                     });
+                    /*console.log(l);
+                    setTimeout(function () {
+                        vm.loading = false;
+
+                        vm.btnStatus(Math.round(Math.random()) == 1 ? 'error' : 'success');
+                    }, 1000);*/
+
+                },
+                btnStatus   : function (status, cb) {
+                    var vm = this;
+
+                    vm[ status ] = true;
+
+                    window.clearInterval(vm.btnInterval);
+
+                    var fn = function () {
+                        vm[ status ] = false;
+
+                        cb = cb || function () {
+                            };
+
+                        cb();
+                    };
+
+                    if (cb)
+                        vm.btnInterval = window.setTimeout(fn, 1500);
+
+                    return fn;
+                }
+            }
+        });
+
+        lessonsVM.fetchLessons();
+    </script>
+{% endblock %}

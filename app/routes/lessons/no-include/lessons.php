@@ -1,13 +1,5 @@
 <?php
 
 $app->get('/', function () use ($app) {
-    try {
-        $u         = $app->auth;
-        $attending = $u->attending()->get();
-        $teaching  = $u->lessons()->get();
-
-        dd(compact('attending', 'teaching'));
-    } catch (\Throwable $e) {
-        dd($e);
-    }
+    $app->render('lessons/home.twig');
 })->name('lessons:home');
