@@ -1,5 +1,8 @@
 <?php
 
 $app->get('/', function () use ($app) {
-    $app->render('lessons/home.twig');
+    if ($app->auth->isTeacher())
+        $app->render('lessons/edit.twig');
+    else
+        $app->render('lessons/home.twig');
 })->name('lessons:home');

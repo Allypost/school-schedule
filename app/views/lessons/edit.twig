@@ -1,0 +1,185 @@
+{% extends '_templates/default.twig' %}
+
+{% block content %}
+    <div class="row" id="lessons">
+        <div class="row">
+            <div class="col s12 l6">
+                <div class="row">
+                    <h1 class="col s12">Your classes:</h1>
+                </div>
+                <div class="row lessons-attending">
+                    <div class="col s6 m4 l3"
+                         :data-subject="lesson.id"
+                         @click="editLesson(lesson)"
+                         v-for="lesson in lessons"
+                         style="cursor:pointer;">
+                        <h5>{{ '{{' }}lesson.name{{ '}}' }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 l6">
+                <form action="{{ urlFor('api:lessons:update:attending') }}" method="POST">
+                    <div class="row">
+                        <h1 class="lesson-add-header" :data-text="isEditing ? 'Edit' : 'Add'"> lesson</h1>
+                    </div>
+                    <div class="row input-field">
+                        <input type="text" name="lesson" id="new-lesson" v-model="newLesson" :disabled="loading">
+                        <label for="new-lesson">Lesson name</label>
+                    </div>
+                    <div class="row">
+                        <div class="col s6 offset-s6 right-align">
+                            <button class="btn btn-large yellow black-text"
+                                    :disabled="!(this.newLesson || lessonEditing || loading)"
+                                    @click.prevent="cancelLesson">
+                                <i class="material-icons left">cancel</i> Cancel
+                            </button>
+                            <button class="btn btn-large"
+                                    :class="{ 'btn-loading': loading, 'btn-error': error, 'btn-success': success }"
+                                    :disabled="!(this.newLesson || success) || loading"
+                                    @click.prevent="saveLesson">
+                                <i class="material-icons left">save</i>
+                                {{ '{{' }}isEditing ? 'Edit' : 'Add'{{ '}}' }}
+                            </button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
+                </form>
+            </div>
+        </div>
+    </div>
+    <style>
+        .lesson-add-header::before {
+            content : attr(data-text);
+        }
+    </style>
+    <script>
+        var lessonsVM = new Vue({
+            el     : '#lessons',
+            data   : {
+                lessons      : [],
+                newLesson    : '',
+                loading      : true,
+                error        : false,
+                success      : false,
+                isEditing    : false,
+                lessonEditing: null,
+                btnInterval  : null
+            },
+            methods: {
+                fetchLessons    : function () {
+                    var vm = this;
+
+                    $.get('{{ urlFor('api:lessons:teaching') }}')
+                     .done(function (d) {
+                         vm.lessons = d.data;
+                         vm.loading = false;
+                     });
+                },
+                getLesson       : function () {
+                    var csrf = getCsrf();
+
+                    var data = {
+                        'name': this.newLesson
+                    };
+
+                    if (this.isEditing)
+                        data[ 'subject' ] = this.lessonEditing.id;
+
+                    data[ csrf.key ] = csrf.value;
+
+                    return data;
+                },
+                editLesson      : function (lesson) {
+                    this.newLesson     = lesson.name;
+                    this.isEditing     = true;
+                    this.lessonEditing = lesson;
+
+                    this.$nextTick(function () {
+                        Materialize.updateTextFields();
+                    });
+                },
+                cancelLesson    : function () {
+                    this.newLesson     = '';
+                    this.isEditing     = false;
+                    this.lessonEditing = null;
+
+                    this.$nextTick(function () {
+                        Materialize.updateTextFields();
+                    });
+                },
+                saveLesson      : function () {
+                    var vm = this;
+
+                    vm.loading = true;
+
+                    var data = this.getLesson();
+
+                    $.post('{{ urlFor('api:lessons:modify') }}', data)
+                     .done(function (d) {
+                         if (vm.isEditing)
+                             vm.saveEditedLesson(d);
+                         else
+                             vm.saveNewLesson(d);
+
+                         vm.clearLesson();
+                         vm.btnStatus('success');
+                     })
+                     .fail(function (data) {
+                         data = data.responseJSON || { errors: [ 'Something went wrong' ] };
+
+                         vm.btnStatus('error');
+
+                         var errors = data.errors;
+
+                         for (var e in errors) {
+                             if (!errors.hasOwnProperty(e))
+                                 continue;
+
+                             Materialize.toast(errors[ e ], 5000, 'status error');
+                         }
+                     })
+                     .always(function () {
+                         vm.loading = false;
+                     });
+                },
+                saveNewLesson   : function (data) {
+                    this.lessons.push(data.data);
+                },
+                saveEditedLesson: function (data) {
+                    var lesson = this.lessonEditing;
+                    var d      = data.data;
+
+                    lesson.name = d.name;
+                },
+                clearLesson     : function () {
+                    this.newLesson     = '';
+                    this.isEditing     = false;
+                    this.lessonEditing = null;
+                },
+                btnStatus       : function (status, cb) {
+                    var vm = this;
+
+                    vm[ status ] = true;
+
+                    window.clearInterval(vm.btnInterval);
+
+                    var fn = function () {
+                        vm[ status ] = false;
+
+                        cb = cb || function () {
+                            };
+
+                        cb();
+                    };
+
+                    if (!cb)
+                        vm.btnInterval = window.setTimeout(fn, 1500);
+
+                    return fn;
+                }
+            }
+        });
+
+        lessonsVM.fetchLessons();
+    </script>
+{% endblock %}
