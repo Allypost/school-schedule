@@ -1,7 +1,7 @@
 {% extends '_templates/default.twig' %}
 
 {% block content %}
-    <div class="row" id="lessons">
+    <div class="row" id="lessons" data-fetch-url="{{ urlFor('api:lessons:teaching') }}">
         <div class="row">
             <div class="col s12">
                 <div class="z-depth-1 lesson-box">
@@ -9,7 +9,7 @@
                         <h1 class="lesson-add-header col s12" :data-text="isEditing ? 'Edit' : 'Add'"> lesson</h1>
                     </div>
                     <div class="row">
-                        <form class="col s12" action="{{ urlFor('api:lessons:update:attending') }}" method="POST" style="padding: 0 2em;">
+                        <form class="col s12" action="{{ urlFor('api:lessons:modify') }}" method="POST" style="padding: 0 2em;">
                             <div class="row input-field">
                                 <input type="text" name="lesson" id="new-lesson" v-model="newLesson" :disabled="loading">
                                 <label for="new-lesson">Lesson name</label>
@@ -33,7 +33,6 @@
                             <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -92,9 +91,10 @@
             },
             methods: {
                 fetchLessons    : function () {
-                    var vm = this;
+                    var vm  = this;
+                    var url = $(this.$el).attr('data-fetch-url');
 
-                    $.get('{{ urlFor('api:lessons:teaching') }}')
+                    $.get(url)
                      .done(function (d) {
                          vm.lessons = d.data;
                          vm.loading = false;
@@ -135,9 +135,10 @@
 
                     vm.loading = true;
 
+                    var url  = $(lessonsVM.$el).find('form').attr('action');
                     var data = this.getLesson();
 
-                    $.post('{{ urlFor('api:lessons:modify') }}', data)
+                    $.post(url, data)
                      .done(function (d) {
                          if (vm.isEditing)
                              vm.saveEditedLesson(d);
