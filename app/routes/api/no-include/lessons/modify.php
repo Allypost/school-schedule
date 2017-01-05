@@ -31,8 +31,8 @@ $app->post('/modify', function () use ($app) {
     $lesson->save();
 
     $data = [
-        'name'    => $lesson->name,
-        'subject' => $lesson->id,
+        'name' => $lesson->name,
+        'id'   => $lesson->id,
     ];
 
     say('lessons modify', $data);
