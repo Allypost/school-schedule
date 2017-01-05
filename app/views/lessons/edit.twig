@@ -3,54 +3,73 @@
 {% block content %}
     <div class="row" id="lessons">
         <div class="row">
-            <div class="col s12 l6">
-                <div class="row">
-                    <h1 class="col s12">Your classes:
-                        <span style="padding-left: 1em;padding-top: 2em;font-size: 15px;line-height: 1.1em;opacity: .3;">(Click to edit)</span></h1>
-                </div>
-                <div class="row lessons-attending">
-                    <div class="col s6 m4 l3"
-                         :data-subject="lesson.id"
-                         @click="editLesson(lesson)"
-                         v-for="lesson in lessons"
-                         style="cursor:pointer;">
-                        <h5>{{ '{{' }}lesson.name{{ '}}' }}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 l6">
-                <form action="{{ urlFor('api:lessons:update:attending') }}" method="POST">
+            <div class="col s12">
+                <div class="z-depth-1 lesson-box">
                     <div class="row">
                         <h1 class="lesson-add-header" :data-text="isEditing ? 'Edit' : 'Add'"> lesson</h1>
                     </div>
-                    <div class="row input-field">
-                        <input type="text" name="lesson" id="new-lesson" v-model="newLesson" :disabled="loading">
-                        <label for="new-lesson">Lesson name</label>
-                    </div>
                     <div class="row">
-                        <div class="col s6 offset-s6 right-align">
-                            <button class="btn btn-large yellow black-text"
-                                    :disabled="!(this.newLesson || lessonEditing || loading)"
-                                    @click.prevent="cancelLesson">
-                                <i class="material-icons left">cancel</i> Cancel
-                            </button>
-                            <button class="btn btn-large"
-                                    :class="{ 'btn-loading': loading, 'btn-error': error, 'btn-success': success }"
-                                    :disabled="!(this.newLesson || success) || loading"
-                                    @click.prevent="saveLesson">
-                                <i class="material-icons left">save</i>
-                                {{ '{{' }}isEditing ? 'Edit' : 'Add'{{ '}}' }}
-                            </button>
+                        <form class="col s12" action="{{ urlFor('api:lessons:update:attending') }}" method="POST">
+                            <div class="row input-field">
+                                <input type="text" name="lesson" id="new-lesson" v-model="newLesson" :disabled="loading">
+                                <label for="new-lesson">Lesson name</label>
+                            </div>
+                            <div class="row">
+                                <div class="col s12 right-align">
+                                    <button class="btn btn-large yellow black-text"
+                                            :disabled="!(this.newLesson || lessonEditing || loading)"
+                                            @click.prevent="cancelLesson">
+                                        <i class="material-icons left">cancel</i> Cancel
+                                    </button>
+                                    <button class="btn btn-large"
+                                            :class="{ 'btn-loading': loading, 'btn-error': error, 'btn-success': success }"
+                                            :disabled="!(this.newLesson || success) || loading"
+                                            @click.prevent="saveLesson">
+                                        <i class="material-icons left">save</i>
+                                        {{ '{{' }}isEditing ? 'Edit' : 'Add'{{ '}}' }}
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="z-depth-1 lesson-box">
+                    <div class="row">
+                        <h1 class="col s12">Your classes:
+                            <span style="padding-left: 1em;padding-top: 2em;font-size: 15px;line-height: 1.1em;opacity: .3;">(Click to edit)</span></h1>
+                    </div>
+                    <div class="row lessons-attending">
+                        <div class="col s6 m3 l2"
+                             :data-subject="lesson.id"
+                             @click="editLesson(lesson)"
+                             v-for="lesson in lessons"
+                             style="cursor:pointer;">
+                            <h5 class="z-depth-1">{{ '{{' }}lesson.name{{ '}}' }}</h5>
                         </div>
                     </div>
-                    <input type="hidden" name="{{ csrf_key }}" value="{{ csrf_token }}">
-                </form>
+                </div>
             </div>
         </div>
     </div>
     <style>
         .lesson-add-header::before {
             content : attr(data-text);
+        }
+
+        .lesson-box {
+            margin  : 1em;
+            padding : 0 1.5em 1em;
+        }
+
+        .lessons-attending h5 {
+            padding    : .2em .4em;
+            text-align : center;
         }
     </style>
     <script>
