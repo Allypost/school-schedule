@@ -6,10 +6,10 @@
             <div class="col s12">
                 <div class="z-depth-1 lesson-box">
                     <div class="row">
-                        <h1 class="lesson-add-header" :data-text="isEditing ? 'Edit' : 'Add'"> lesson</h1>
+                        <h1 class="lesson-add-header col s12" :data-text="isEditing ? 'Edit' : 'Add'"> lesson</h1>
                     </div>
                     <div class="row">
-                        <form class="col s12" action="{{ urlFor('api:lessons:update:attending') }}" method="POST">
+                        <form class="col s12" action="{{ urlFor('api:lessons:update:attending') }}" method="POST" style="padding: 0 2em;">
                             <div class="row input-field">
                                 <input type="text" name="lesson" id="new-lesson" v-model="newLesson" :disabled="loading">
                                 <label for="new-lesson">Lesson name</label>
@@ -46,11 +46,11 @@
                     </div>
                     <div class="row lessons-attending">
                         <div class="col s6 m3 l2"
-                             :data-subject="lesson.id"
+                             :data-subject="lesson.id" :class="{'is-edited': lesson.isEdited}"
                              @click="editLesson(lesson)"
                              v-for="lesson in lessons"
                              style="cursor:pointer;">
-                            <h5 class="z-depth-1">{{ '{{' }}lesson.name{{ '}}' }}</h5>
+                            <h5 :class="[ lesson.isEdited ? 'z-depth-4' : 'z-depth-1' ]">{{ '{{' }}lesson.name{{ '}}' }}</h5>
                         </div>
                     </div>
                 </div>
@@ -70,6 +70,11 @@
         .lessons-attending h5 {
             padding    : .2em .4em;
             text-align : center;
+            transition : background-color .1s, box-shadow .2s ease-in-out;
+        }
+
+        .lessons-attending > .is-edited h5 {
+            background-color : #80deea;
         }
     </style>
     <script>
@@ -110,22 +115,20 @@
                     return data;
                 },
                 editLesson      : function (lesson) {
+                    this.clearLesson();
+
                     this.newLesson     = lesson.name;
                     this.isEditing     = true;
                     this.lessonEditing = lesson;
+
+                    Vue.set(lesson, 'isEdited', true);
 
                     this.$nextTick(function () {
                         Materialize.updateTextFields();
                     });
                 },
                 cancelLesson    : function () {
-                    this.newLesson     = '';
-                    this.isEditing     = false;
-                    this.lessonEditing = null;
-
-                    this.$nextTick(function () {
-                        Materialize.updateTextFields();
-                    });
+                    this.clearLesson();
                 },
                 saveLesson      : function () {
                     var vm = this;
@@ -172,9 +175,16 @@
                     lesson.name = d.name;
                 },
                 clearLesson     : function () {
+                    if (this.lessonEditing)
+                        Vue.set(this.lessonEditing, 'isEdited', false);
+
                     this.newLesson     = '';
                     this.isEditing     = false;
                     this.lessonEditing = null;
+
+                    this.$nextTick(function () {
+                        Materialize.updateTextFields();
+                    });
                 },
                 btnStatus       : function (status, cb) {
                     var vm = this;
