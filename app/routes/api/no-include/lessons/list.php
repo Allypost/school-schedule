@@ -7,7 +7,7 @@ $app->group('/list', function () use ($app, $loggedIn, $admin, $guest, $cache) {
     $app->get('/attending', $loggedIn(), function () use ($app) {
         $u = $app->auth;
 
-        $data = $u->attending()->get()->toArray();
+        $data = $u->attending()->orderBy('id', 'asc')->get()->toArray();
 
         say('lessons attending', $data);
     })->name('api:lessons:attending');
