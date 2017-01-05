@@ -747,8 +747,6 @@ class User extends Eloquent {
                 $join->on('lessons_attendees.lesson_id', '=', 'lessons.id')
                      ->where('lessons_attendees.user_id', $sqlID);
             })
-            ->orderBy('attending', 'desc')
-            ->orderBy('subject', 'asc')
             ->setBindings([ $sqlID ]);
 
         return $query;
