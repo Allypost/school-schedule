@@ -24,9 +24,11 @@ $app->post('/modify', function () use ($app) {
     if ($l->where('name', $name)->first())
         err('lessons modify', [ 'That name is taken' ]);
 
-    $lesson->owner   = $u->id;
-    $lesson->name    = $name;
-    $lesson->subject = $name;
+    $lesson->owner = $u->id;
+    $lesson->name  = $name;
+
+    if (!$lesson->subject)
+        $lesson->subject = $name;
 
     $lesson->save();
 
