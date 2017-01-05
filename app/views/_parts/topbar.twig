@@ -11,13 +11,13 @@
             <a class="topbar-link" href="{{ urlFor('auth:logout') }}">Sign Out</a>
         </div>
         <div class="hide-on-med-and-up">
-            <a class="topbar-icon" href="{{ urlFor('lessons:home') }}"><i class="material-icons">event</i></a>
+            <a class="topbar-icon" href="{{ urlFor('lessons:home') }}"><i class="material-icons">schedule</i></a>
             {#<a class="topbar-icon" href="javascript:void(0)"
                data-activates='dropdown-notifications' data-beloworigin="true"
                @mouseenter="getNotifications">
                 <i class="material-icons">notifications</i><span class="topbar-badge">{{ '{{ ' }} notificationCount {{ '}}' }}</span>
             </a>#}
-            <a class="topbar-icon" href="{{ urlFor('home:home') }}"><i class="material-icons">schedule</i></a>
+            <a class="topbar-icon" href="{{ urlFor('home:home') }}"><i class="material-icons">event</i></a>
             <a class="topbar-icon" href="{{ urlFor('auth:logout') }}"><i class="material-icons">&#xE8AC;</i></a>
         </div>
         <ul id="dropdown-notifications" class='dropdown-content'>
