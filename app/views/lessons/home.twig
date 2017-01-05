@@ -58,6 +58,7 @@
                     return lessons;
                 },
                 saveLessons : function () {
+                    var vm    = this;
                     var $form = $('#lessons');
                     var url   = $form.attr('action');
 
@@ -74,11 +75,28 @@
                     data[ csrf.key ] = csrf.token;
 
 
-                    var l = this.btnStatus('loading');
+                    this.loading = true;
 
                     $.post(url, data)
                      .done(function () {
-                         l();
+                         vm.btnStatus('success');
+                     })
+                     .fail(function (data) {
+                         data = data.responseJSON || { errors: [ 'Something went wrong' ] };
+
+                         vm.btnStatus('error');
+
+                         var errors = data.errors;
+
+                         for (var e in errors) {
+                             if (!errors.hasOwnProperty(e))
+                                 continue;
+
+                             Materialize.toast(errors[ e ], 5000, 'status error');
+                         }
+                     })
+                     .always(function () {
+                         vm.loading = false;
                      });
                 },
                 btnStatus   : function (status, cb) {
@@ -97,7 +115,7 @@
                         cb();
                     };
 
-                    if (cb)
+                    if (!cb)
                         vm.btnInterval = window.setTimeout(fn, 1500);
 
                     return fn;
