@@ -30,7 +30,7 @@
                                             <select class="browser-default"
                                                     :disabled="data.isLoading"
                                                     @change="subjectChange($event.currentTarget.options, data, { week: week, day: day, period: period })">
-                                                <option :value="subject.id" :selected="data.hasClass && (data.subject == subject.subject)"
+                                                <option :value="subject.id" :selected="data.hasClass && (data.name == subject.name)"
                                                         v-for="subject in teaching">{{ subject.name }}</option>
                                             </select>
                                             <span class="schedule-status dropdown-button"
@@ -146,7 +146,7 @@
                         data.week      = location.week;
                         data.day       = location.day;
                         data.period    = location.period;
-                        data.subject   = nsName;
+                        data.name      = nsName;
                         data.hasClass  = true;
                         data.owned     = true;
                         data.isLoading = true;
@@ -284,8 +284,7 @@
                     id     : -1,
                     name   : '/',
                     owner  : -1,
-                    status : '',
-                    subject: ''
+                    status : ''
                 };
 
                 vm.setTeaching(d);
