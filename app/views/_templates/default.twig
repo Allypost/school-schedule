@@ -1,6 +1,7 @@
 <html>
 <head>
     {% include '_parts/head.twig' %}
+    {% block head %}{% endblock %}
 </head>
 <body>
 {% if app.auth %}
