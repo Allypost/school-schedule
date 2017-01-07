@@ -2,6 +2,7 @@
 
 namespace Allypost\Lessons;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Slim\Slim;
 
@@ -56,6 +57,12 @@ class Lesson extends Eloquent {
             $lessons = $lessons->with([ 'attendees', 'owner' ]);
 
         return $lessons->get()->toArray();
+    }
+
+    public static function checkDue($due) {
+        $date = Carbon::createFromFormat('Y-m-d', $due);
+
+        return Carbon::now()->diffInDays($date, TRUE) >= 3;
     }
 
     public function attendees() {
