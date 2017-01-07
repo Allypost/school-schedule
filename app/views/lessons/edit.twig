@@ -1,5 +1,12 @@
 {% extends '_templates/default.twig' %}
 
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.min.css">
+{% endblock %}
+
 {% block content %}
     <div class="row" id="lessons" data-fetch-url="{{ urlFor('api:lessons:teaching') }}">
         <div class="row">
@@ -10,9 +17,15 @@
                     </div>
                     <div class="row">
                         <form class="col s12" action="{{ urlFor('api:lessons:modify') }}" method="POST" style="padding: 0 2em;">
-                            <div class="row input-field">
-                                <input type="text" name="lesson" id="new-lesson" v-model="newLesson" :disabled="loading">
-                                <label for="new-lesson">Lesson name</label>
+                            <div class="row">
+                                <div class="col s12 m6 input-field">
+                                    <input type="text" name="lesson" id="new-lesson" v-model="newLesson" :disabled="loading">
+                                    <label for="new-lesson">Lesson name</label>
+                                </div>
+                                <div class="col s12 m6 input-field" v-show="lessonEditing">
+                                    <input type="text" id="datepicker" :value="(lessonEditing || { 'due' : null }).due | formatDate">
+                                    <label class="active">Due date</label>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col s12 right-align">
@@ -24,7 +37,7 @@
                                         {{ '{{' }}isEditing ? 'Edit' : 'Add'{{ '}}' }}
                                     </button>
                                     <button class="btn btn-large yellow black-text"
-                                            :disabled="!(this.newLesson || lessonEditing || loading)"
+                                            :disabled="!(newLesson || lessonEditing || loading)"
                                             @click.prevent="cancelLesson">
                                         <i class="material-icons left">cancel</i> Cancel
                                     </button>
@@ -83,10 +96,18 @@
                 success      : false,
                 isEditing    : false,
                 lessonEditing: null,
-                btnInterval  : null
+                btnInterval  : null,
+                datePicker   : null
+            },
+            filters: {
+                formatDate: function (date) {
+                    if (!date)
+                        return '';
+                    return moment(date, 'YYYY-MM-DD').format("dddd D MMM YYYY");
+                }
             },
             methods: {
-                fetchLessons    : function () {
+                fetchLessons     : function () {
                     var vm  = this;
                     var url = $(this.$el).attr('data-fetch-url');
 
@@ -96,21 +117,31 @@
                          vm.loading = false;
                      });
                 },
-                getLesson       : function () {
+                getLesson        : function () {
                     var csrf = getCsrf();
 
                     var data = {
                         'name': this.newLesson
                     };
 
-                    if (this.isEditing)
-                        data[ 'subject' ] = this.lessonEditing.id;
+                    if (this.isEditing) {
+                        var lesson = this.lessonEditing;
+
+                        data[ 'subject' ] = lesson.id;
+                        data[ 'due' ]     = lesson.due;
+                    }
 
                     data[ csrf.key ] = csrf.value;
 
                     return data;
                 },
-                editLesson      : function (lesson) {
+                dateSelect       : function (formattedDate, date) {
+                    var d = moment(date);
+                    if (this.lessonEditing && d.isValid()) {
+                        this.lessonEditing.due = d.format('YYYY-MM-DD');
+                    }
+                },
+                editLesson       : function (lesson) {
                     this.clearLesson();
 
                     this.newLesson     = lesson.name;
@@ -119,14 +150,18 @@
 
                     Vue.set(lesson, 'isEdited', true);
 
+                    this.refreshDatepicker();
+                    if (lesson.due)
+                        this.datePicker.selectDate(new Date(lesson.due));
+
                     this.$nextTick(function () {
                         Materialize.updateTextFields();
                     });
                 },
-                cancelLesson    : function () {
+                cancelLesson     : function () {
                     this.clearLesson();
                 },
-                saveLesson      : function () {
+                saveLesson       : function () {
                     var vm = this;
 
                     vm.loading = true;
@@ -162,16 +197,16 @@
                          vm.loading = false;
                      });
                 },
-                saveNewLesson   : function (data) {
+                saveNewLesson    : function (data) {
                     this.lessons.push(data.data);
                 },
-                saveEditedLesson: function (data) {
+                saveEditedLesson : function (data) {
                     var lesson = this.lessonEditing;
                     var d      = data.data;
 
                     lesson.name = d.name;
                 },
-                clearLesson     : function () {
+                clearLesson      : function () {
                     if (this.lessonEditing)
                         Vue.set(this.lessonEditing, 'isEdited', false);
 
@@ -179,11 +214,13 @@
                     this.isEditing     = false;
                     this.lessonEditing = null;
 
+                    this.destroyDatepicker();
+
                     this.$nextTick(function () {
                         Materialize.updateTextFields();
                     });
                 },
-                btnStatus       : function (status, cb) {
+                btnStatus        : function (status, cb) {
                     var vm = this;
 
                     vm[ status ] = true;
@@ -203,10 +240,71 @@
                         vm.btnInterval = window.setTimeout(fn, 1500);
 
                     return fn;
+                },
+                destroyDatepicker: function () {
+                    if (!this.datePicker)
+                        return;
+                    this.datePicker.destroy();
+                    this.datePicker = null;
+                },
+                refreshDatepicker: function () {
+                    this.destroyDatepicker();
+                    this.createDatepicker();
+                },
+                createDatepicker : function () {
+                    var vm               = this;
+                    var threeDaysFromNow = new Date();
+                    var days3FromNow     = threeDaysFromNow.getDate() + 3;
+
+                    threeDaysFromNow.setDate(days3FromNow);
+
+                    var opts = {
+                        language    : 'en',
+                        minDate     : threeDaysFromNow,
+                        dateFormat  : 'DD d M yyyy',
+                        autoClose   : true,
+                        clearButton : true,
+                        onSelect    : vm.dateSelect,
+                        onRenderCell: function (date, cellType) {
+                            var disabledDays = [ 0, 6 ];
+                            if (cellType == 'day') {
+                                var day        = date.getDay(),
+                                    isDisabled = disabledDays.indexOf(day) != -1;
+
+                                return {
+                                    disabled: isDisabled
+                                }
+                            }
+                        }
+                    };
+
+                    var datepicker = $("#datepicker").datepicker().data('datepicker');
+
+                    datepicker.update(opts);
+
+                    this.datePicker = datepicker;
                 }
+            },
+            mounted: function () {
+                this.createDatepicker();
             }
         });
 
         lessonsVM.fetchLessons();
     </script>
+    <style>
+        nav.datepicker--nav {
+            width            : auto;
+            background-color : transparent;
+            color            : #000;
+        }
+
+        .datepicker--nav-title i {
+            font-size : 1em;
+        }
+    </style>
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/picker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/picker.date.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/date.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.date.css">#}
 {% endblock %}
