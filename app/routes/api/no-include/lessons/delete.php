@@ -19,5 +19,7 @@ $app->post('/delete', function () use ($app) {
 
     $deleted = $lesson->delete();
 
+    $app->log->log('lessons delete', [ 'old' => $lesson->toArray() ]);
+
     say('lessons delete', compact('deleted'));
 })->name('api:lessons:delete');

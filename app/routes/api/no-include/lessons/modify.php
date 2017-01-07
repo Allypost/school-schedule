@@ -25,6 +25,8 @@ $app->post('/modify', function () use ($app) {
     if ($name != $lesson->name && $l->where('name', $name)->first())
         err('lessons modify', [ 'That name is taken' ]);
 
+    $oldLesson = $lesson;
+
     $lesson->owner = $u->id;
     $lesson->name  = $name;
 
@@ -39,6 +41,7 @@ $app->post('/modify', function () use ($app) {
     if (!$lesson->subject)
         $lesson->subject = $name;
 
+    $app->log->log('lessons delete', [ 'old' => $oldLesson->toArray(), 'new' => $lesson->toArray() ]);
     $lesson->save();
 
     $data = [
