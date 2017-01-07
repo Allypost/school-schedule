@@ -21,7 +21,7 @@ $app->post('/modify', function () use ($app) {
     if (!$lesson)
         err('lessons modify', [ 'That lesson doesn\'t exist' ]);
 
-    if ($l->where('name', $name)->first())
+    if ($name != $lesson->name && $l->where('name', $name)->first())
         err('lessons modify', [ 'That name is taken' ]);
 
     $lesson->owner = $u->id;
