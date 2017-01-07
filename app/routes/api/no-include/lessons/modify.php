@@ -41,8 +41,9 @@ $app->post('/modify', function () use ($app) {
     if (!$lesson->subject)
         $lesson->subject = $name;
 
-    $app->log->log('lessons delete', [ 'old' => $oldLesson->toArray(), 'new' => $lesson->toArray() ]);
     $lesson->save();
+
+    $app->log->log('lessons modify', [ 'old' => $oldLesson->toArray(), 'new' => $lesson->toArray() ]);
 
     $data = [
         'name' => $lesson->name,
