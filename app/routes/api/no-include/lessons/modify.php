@@ -8,6 +8,7 @@ $app->post('/modify', function () use ($app) {
     $u = $app->auth;
 
     $name = $r->post('name');
+    $due  = $r->post('due');
     $id   = (int) $r->post('subject', 0);
 
     if (empty($name))
@@ -26,6 +27,12 @@ $app->post('/modify', function () use ($app) {
 
     $lesson->owner = $u->id;
     $lesson->name  = $name;
+
+    if ($due)
+        if ($lesson::checkDue($due))
+            $lesson->due = $due;
+        else
+            err('lessons modify', [ 'That date is not valid' ]);
 
     if (!$lesson->subject)
         $lesson->subject = $name;
