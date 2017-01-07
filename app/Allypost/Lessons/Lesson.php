@@ -32,10 +32,6 @@ class Lesson extends Eloquent {
         'deleted_at',
     ];
 
-    protected $dates = [
-        'due',
-    ];
-
     protected $casts = [
         'owned'     => 'boolean',
         'hasClass'  => 'boolean',
