@@ -79,6 +79,14 @@ class Lesson extends Eloquent {
         return $this->hasMany('Allypost\Lessons\Notification')->where('created_at', '>', $app->auth->data->notification_seen);
     }
 
+    public function notify($message) {
+        $this->notifications()->create([ 'lesson_id' => $this->id, 'message' => $message ]);
+    }
+
+    public function formatDate($due = NULL) {
+        return Carbon::createFromFormat('Y-m-d', $due ?? $this->due)->format('dS M Y');
+    }
+
     public function app() {
         return Slim::getInstance();
     }
