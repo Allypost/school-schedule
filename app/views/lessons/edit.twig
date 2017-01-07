@@ -97,13 +97,23 @@
                 isEditing    : false,
                 lessonEditing: null,
                 btnInterval  : null,
-                datePicker   : null
+                datePicker   : null,
+                dateFormats  : {
+                    db    : 'YYYY-MM-DD',
+                    moment: 'dddd D MMM YYYY',
+                    picker: 'DD d M yyyy'
+                }
             },
             filters: {
-                formatDate: function (date) {
+                formatDate       : function (date) {
                     if (!date)
                         return '';
-                    return moment(date, 'YYYY-MM-DD').format("dddd D MMM YYYY");
+                    return moment(date, lessonsVM.dateFormats.db).format(lessonsVM.dateFormats.moment);
+                },
+                reverseFormatDate: function (date) {
+                    if (!date)
+                        return '';
+                    return moment(date, lessonsVM.dateFormats.moment).format(lessonsVM.dateFormats.db);
                 }
             },
             methods: {
@@ -135,11 +145,28 @@
 
                     return data;
                 },
-                dateSelect       : function (formattedDate, date) {
+                dateSelect       : function (date) {
                     var d = moment(date);
-                    if (this.lessonEditing && d.isValid()) {
-                        this.lessonEditing.due = d.format('YYYY-MM-DD');
-                    }
+                    this.dateSet(d);
+                },
+                dateHide         : function (inst) {
+                    var date = inst.$el[ 0 ].value;
+
+                    if (!date)
+                        return this.dateSet(null);
+
+                    var formattedDate = this.$options.filters.reverseFormatDate(date);
+                    this.dateSelect(formattedDate);
+                },
+                dateSet          : function (momentDate) {
+                    if (!this.lessonEditing)
+                        return;
+
+                    if (momentDate === null)
+                        return this.lessonEditing.due = null;
+
+                    if (momentDate.isValid())
+                        this.lessonEditing.due = momentDate.format(this.dateFormats.db);
                 },
                 editLesson       : function (lesson) {
                     this.clearLesson();
@@ -261,10 +288,17 @@
                     var opts = {
                         language    : 'en',
                         minDate     : threeDaysFromNow,
-                        dateFormat  : 'DD d M yyyy',
+                        dateFormat  : this.dateFormats.picker,
                         autoClose   : true,
                         clearButton : true,
-                        onSelect    : vm.dateSelect,
+                        onSelect    : function (formattedString, date) {
+                            vm.dateSelect(date);
+                        },
+                        onHide      : function (inst, animtaionCompleted) {
+                            if (!animtaionCompleted)
+                                return;
+                            vm.dateHide(inst);
+                        },
                         onRenderCell: function (date, cellType) {
                             var disabledDays = [ 0, 6 ];
                             if (cellType == 'day') {
@@ -303,8 +337,4 @@
             font-size : 1em;
         }
     </style>
-    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/picker.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/picker.date.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/date.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.date.css">#}
 {% endblock %}
