@@ -3,9 +3,10 @@
 use Allypost\Lessons\Lesson;
 
 $app->post('/modify', function () use ($app) {
-    $l = new Lesson();
-    $r = $app->request;
-    $u = $app->auth;
+    $l       = new Lesson();
+    $r       = $app->request;
+    $u       = $app->auth;
+    $message = '';
 
     $name = $r->post('name');
     $due  = $r->post('due');
@@ -30,13 +31,23 @@ $app->post('/modify', function () use ($app) {
     $lesson->owner = $u->id;
     $lesson->name  = $name;
 
-    if ($due)
-        if ($lesson::checkDue($due))
-            $lesson->due = $due;
-        else
+    if ($due) {
+
+        if (!$lesson::checkDue($due))
             err('lessons modify', [ 'That date is not valid' ]);
-    else
+
+        if ($lesson->due != $due) {
+            $lesson->due = $due;
+            $message     = sprintf('Class `%s` is due on %s', $lesson->name, $lesson->formatDate());
+        }
+
+    } elseif ($lesson->due) {
+        $message     = sprintf('Class `%s` is no longer due', $lesson->name);
         $lesson->due = NULL;
+    }
+
+    if ($message)
+        $lesson->notify($message);
 
     if (!$lesson->subject)
         $lesson->subject = $name;
