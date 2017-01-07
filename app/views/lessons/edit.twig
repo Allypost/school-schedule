@@ -4,6 +4,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.0/sweetalert2.min.js"></script>
+    <script src="/js/vendor.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.0/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.min.css">
 {% endblock %}
 
@@ -30,14 +33,21 @@
                             <div class="row">
                                 <div class="col s12 right-align">
                                     <button class="btn btn-large right" style="margin-left: 1em;"
-                                            :class="{ 'btn-loading': loading, 'btn-error': error, 'btn-success': success }"
-                                            :disabled="!(this.newLesson || success) || loading"
+                                            :class="{ 'btn-loading': loading && !deleting, 'btn-error': error, 'btn-success': success }"
+                                            :disabled="!newLesson || deleting"
                                             @click.prevent="saveLesson">
                                         <i class="material-icons left">save</i>
                                         {{ '{{' }}isEditing ? 'Edit' : 'Add'{{ '}}' }}
                                     </button>
+                                    <button class="btn btn-large red" style="margin-right: .7em;"
+                                            :class="{ 'btn-loading': deleting, 'btn-success': deleted, 'btn-error': deletedError }"
+                                            :disabled="!(newLesson || lessonEditing) || (loading && !deleting)"
+                                            v-if="lessonEditing"
+                                            @click.prevent="deleteLesson">
+                                        <i class="material-icons left">delete</i> Delete
+                                    </button>
                                     <button class="btn btn-large yellow black-text"
-                                            :disabled="!(newLesson || lessonEditing || loading)"
+                                            :disabled="!(newLesson || lessonEditing) || loading"
                                             @click.prevent="cancelLesson">
                                         <i class="material-icons left">cancel</i> Cancel
                                     </button>
@@ -92,11 +102,13 @@
                 lessons      : [],
                 newLesson    : '',
                 loading      : true,
+                deleting     : false,
+                deleted      : false,
+                deletedError : false,
                 error        : false,
                 success      : false,
                 isEditing    : false,
                 lessonEditing: null,
-                btnInterval  : null,
                 datePicker   : null,
                 dateFormats  : {
                     db    : 'YYYY-MM-DD',
@@ -207,21 +219,62 @@
                          vm.btnStatus('success');
                      })
                      .fail(function (data) {
-                         data = data.responseJSON || { errors: [ 'Something went wrong' ] };
-
-                         vm.btnStatus('error');
-
-                         var errors = data.errors;
-
-                         for (var e in errors) {
-                             if (!errors.hasOwnProperty(e))
-                                 continue;
-
-                             Materialize.toast(errors[ e ], 5000, 'status error');
-                         }
+                         vm.displayErrors(data);
                      })
                      .always(function () {
                          vm.loading = false;
+                     });
+                },
+                deleteLesson     : function () {
+                    var vm = this;
+                    swal(
+                        {
+                            title             : 'Delete lesson',
+                            text              : 'Are you sure you want to delete the lesson?',
+                            type              : 'warning',
+                            showCancelButton  : true,
+                            confirmButtonText : 'Delete',
+                            allowOutsideClick : true,
+                            confirmButtonColor: '#f44336'
+                        }
+                    ).then(
+                        function () {
+                            vm.deletePropagate();
+                        },
+                        function () {
+
+                        }
+                    );
+                },
+                deletePropagate  : function (cb) {
+                    var l  = this.getLesson();
+                    var vm = this;
+
+                    if (!cb)
+                        cb = function () {
+                        };
+
+                    vm.loading  = true;
+                    vm.deleting = true;
+
+                    $.post('{{ urlFor('api:lessons:delete') }}', l)
+                     .done(function () {
+                         vm.lessons.splice(vm.lessons.indexOf(vm.lessonEditing), 1);
+
+                         Materialize.toast('Lesson deleted', 1500, 'status success');
+
+                         vm.btnStatus('deleted');
+                         vm.clearLesson();
+                         cb(true);
+                     })
+                     .fail(function (data) {
+                         vm.displayErrors(data);
+                         vm.btnStatus('deletedError');
+                         cb(false);
+                     })
+                     .always(function () {
+                         vm.loading  = false;
+                         vm.deleting = false;
                      });
                 },
                 saveNewLesson    : function (data) {
@@ -252,8 +305,6 @@
 
                     vm[ status ] = true;
 
-                    window.clearInterval(vm.btnInterval);
-
                     var fn = function () {
                         vm[ status ] = false;
 
@@ -264,9 +315,23 @@
                     };
 
                     if (!cb)
-                        vm.btnInterval = window.setTimeout(fn, 1500);
+                        window.setTimeout(fn, 1500);
 
                     return fn;
+                },
+                displayErrors    : function (data) {
+                    data = data.responseJSON || { errors: [ 'Something went wrong' ] };
+
+                    this.btnStatus('error');
+
+                    var errors = data.errors;
+
+                    for (var e in errors) {
+                        if (!errors.hasOwnProperty(e))
+                            continue;
+
+                        Materialize.toast(errors[ e ], 5000, 'status error');
+                    }
                 },
                 destroyDatepicker: function () {
                     if (!this.datePicker)
