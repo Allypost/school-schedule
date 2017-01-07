@@ -33,6 +33,8 @@ $app->post('/modify', function () use ($app) {
             $lesson->due = $due;
         else
             err('lessons modify', [ 'That date is not valid' ]);
+    else
+        $lesson->due = NULL;
 
     if (!$lesson->subject)
         $lesson->subject = $name;
