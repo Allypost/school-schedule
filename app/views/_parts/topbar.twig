@@ -1,4 +1,6 @@
-<nav class="topbar" data-notifications-list="{{ urlFor('api:notifications:list') }}" data-notifications-count="{{ urlFor('api:notifications:count') }}">
+<nav class="topbar"
+     data-notifications-list="{{ urlFor('api:notifications:list') }}" data-notifications-count="{{ urlFor('api:notifications:count') }}"
+     data-notifications-seen="{{ urlFor('api:notifications:seen') }}">
     <div class="nav-wrapper">
         <a href="/" class="brand-logo">Logo</a>
         <a href="javascript:void(0)" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -6,9 +8,12 @@
             <li><a href="{{ urlFor('home:home') }}"><i class="material-icons left">event</i>Schedule</a></li>
             <li><a href="{{ urlFor('lessons:home') }}"><i class="material-icons left">schedule</i>Lessons</a></li>
             <li class="divider"></li>
-            <li><a href="javascript:void(0)" class="dropdown-button" data-activates="notifications-dropdown" data-beloworigin="true" data-constrainwidth="false">
+            <li>
+                <a href="javascript:void(0)" data-activates="notifications-dropdown"
+                   ref="dropdown" @click="dropdownToggle">
                     <i class="material-icons">notifications</i>
-                    <span class="notification-count" :data-notifications="notificationCount > 0">{{ '{{' }} notificationCount{{ '}}' }}</span></a>
+                    <span class="notification-count" :data-notifications="notificationCount > 0">{{ '{{' }} notificationCount{{ '}}' }}</span>
+                </a>
             </li>
             <li><a href="{{ urlFor('auth:logout') }}"><i class="material-icons">&#xE8AC;</i></a></li>
         </ul>
@@ -37,13 +42,13 @@
             notificationsLoading    : false
         },
         methods: {
-            getListUrl : function () {
+            getListUrl      : function () {
                 return this.$el.dataset.notificationsList;
             },
-            getCountUrl: function () {
+            getCountUrl     : function () {
                 return this.$el.dataset.notificationsCount;
             },
-            getData    : function () {
+            getData         : function () {
                 if (this.notificationsLoading)
                     return;
 
@@ -61,7 +66,7 @@
                      vm.notificationsLoading = false;
                  });
             },
-            getCount   : function () {
+            getCount        : function () {
                 if (this.notificationCountLoading)
                     return;
 
@@ -75,10 +80,38 @@
                      vm.notificationCount        = data.data.count;
                      vm.notificationCountLoading = false;
                  });
+            },
+            dropdownGet$    : function () {
+                return $(this.$refs.dropdown);
+            },
+            dropdownToggle  : function () {
+                this.getData();
+
+                var url  = this.$el.dataset.notificationsSeen;
+                var data = {};
+                var csrf = getCsrf();
+
+                data[ csrf.key ] = csrf.value;
+
+                $.post(url, data);
+            },
+            dropdownRegister: function () {
+                this.dropdownGet$().dropdown(
+                    {
+                        inDuration     : 300,
+                        outDuration    : 225,
+                        constrain_width: false,
+                        hover          : false,
+                        gutter         : 0,
+                        belowOrigin    : true,
+                        alignment      : 'right'
+                    }
+                );
             }
         },
         mounted: function () {
             this.getData();
+            this.dropdownRegister();
             $(".button-collapse").sideNav();
         }
     });
