@@ -21,6 +21,7 @@ class Lesson extends Eloquent {
         'week',
         'owned',
         'status',
+        'dueToday',
         'hasClass',
         'created_at',
         'updated_at',
@@ -37,6 +38,7 @@ class Lesson extends Eloquent {
         'owned'     => 'boolean',
         'hasClass'  => 'boolean',
         'attending' => 'boolean',
+        'dueToday'  => 'boolean',
     ];
 
     # </PRESETS>
