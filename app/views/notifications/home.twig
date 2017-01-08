@@ -8,7 +8,7 @@
     <div class="row" id="notifications" data-fetch-url="{{ urlFor('api:notifications:list:all') }}">
         <div class="col s12 m10 offset-m1 l6 offset-l3">
             <h2>Notifications</h2>
-            <div class="row">
+            <div class="row" v-if="newer.length > 0">
                 <div class="col s12">
                     <h5>New</h5>
                 </div>
@@ -19,7 +19,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="row">
+            <div class="row" v-if="older.length > 0">
                 <div class="col s12">
                     <h5>Old</h5>
                 </div>
