@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row" id="lessons" data-fetch-url="{{ urlFor('api:lessons:teaching') }}">
+    <div class="row" id="lessons" data-fetch-url="{{ urlFor('api:lessons:teaching') }}" data-delete-url="{{ urlFor('api:lessons:delete') }}" data-save-url="{{ urlFor('api:lessons:modify') }}">
         <div class="row">
             <div class="col s12">
                 <div class="z-depth-1 lesson-box">
@@ -205,7 +205,7 @@
 
                     vm.loading = true;
 
-                    var url  = $(lessonsVM.$el).find('form').attr('action');
+                    var url  = this.$el.dataset.saveUrl;
                     var data = this.getLesson();
 
                     $.post(url, data)
@@ -247,8 +247,9 @@
                     );
                 },
                 deletePropagate  : function (cb) {
-                    var l  = this.getLesson();
-                    var vm = this;
+                    var data = this.getLesson();
+                    var vm   = this;
+                    var url  = this.$el.dataset.deleteUrl;
 
                     if (!cb)
                         cb = function () {
@@ -257,7 +258,7 @@
                     vm.loading  = true;
                     vm.deleting = true;
 
-                    $.post('{{ urlFor('api:lessons:delete') }}', l)
+                    $.post(url, data)
                      .done(function () {
                          vm.lessons.splice(vm.lessons.indexOf(vm.lessonEditing), 1);
 
