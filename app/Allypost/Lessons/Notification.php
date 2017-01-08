@@ -2,6 +2,7 @@
 
 namespace Allypost\Lessons;
 
+use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Slim\Slim;
 
@@ -13,6 +14,7 @@ class Notification extends Eloquent {
     protected $fillable = [
         'lesson_id',
         'message',
+        'seen',
         'created_at',
         'updated_at',
     ];
@@ -21,6 +23,10 @@ class Notification extends Eloquent {
         'created_at',
         'updated_at',
         'id',
+    ];
+
+    protected $casts = [
+        'seen' => 'boolean',
     ];
 
     # </PRESETS>
@@ -40,7 +46,9 @@ class Notification extends Eloquent {
             ->where('lessons_attendees.user_id', $u->id)
             ->orderBy('notifications.created_at', 'DESC');
 
-        if (!$all)
+        if ($all)
+            $query = $query->addSelect(DB::raw('IF(notifications.created_at < ?, 1, 0) as seen'))->addBinding($u->data->notification_seen, 'select');
+        else
             $query = $query->where('notifications.created_at', '>', $u->data->notification_seen);
 
         return $query;
