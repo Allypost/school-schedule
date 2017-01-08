@@ -17,3 +17,11 @@ $app->get('/', function () use ($app) {
 
     say('notifications list', $data);
 })->name('api:notifications:list');
+
+$app->get('/all', function () use ($app) {
+    $n = new Notification();
+
+    $data = $n->mine(TRUE)->get()->toArray();
+
+    say('notifications list', $data);
+})->name('api:notifications:list');
