@@ -46,15 +46,14 @@ $app->post('/modify', function () use ($app) {
         $lesson->due = NULL;
     }
 
-    if ($message)
-        $lesson->notify($message);
-
     if (!$lesson->subject)
         $lesson->subject = $name;
 
     $lesson->save();
 
     $app->log->log('lessons modify', [ 'old' => $oldLesson->toArray(), 'new' => $lesson->toArray() ]);
+    if ($message)
+        $lesson->notify($message);
 
     $data = [
         'name' => $lesson->name,
