@@ -25,3 +25,11 @@ $app->get('/all', function () use ($app) {
 
     say('notifications list', $data);
 })->name('api:notifications:list:all');
+
+$app->get('/old', function () use ($app) {
+    $n = new Notification();
+
+    $data = $n->mine(TRUE)->where('notifications.created_at', '<=', $app->auth->data->notification_seen)->get()->toArray();
+
+    say('notifications list', $data);
+})->name('api:notifications:list:old');
