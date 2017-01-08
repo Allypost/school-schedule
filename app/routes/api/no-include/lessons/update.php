@@ -74,7 +74,7 @@ $app->post('/status', function () use ($app) {
     $entry->status = $status;
     if (strtolower($status) == 'cancelled') {
         $nf      = new NumberFormatter('en_GB', NumberFormatter::ORDINAL);
-        $message = sprintf('"Class `%s` (W%d %s %s period) has been cancelled"', $lesson->name, $location[ 'week' ], $location[ 'day' ], $nf->format($location[ 'period' ]));
+        $message = sprintf('Class `%s` (W%d %s %s period) has been cancelled', $lesson->name, $location[ 'week' ], $location[ 'day' ], $nf->format($location[ 'period' ]));
         $lesson->notify($message);
     }
 
