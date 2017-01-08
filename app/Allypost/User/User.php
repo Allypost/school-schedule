@@ -766,7 +766,7 @@ class User extends Eloquent {
             ->select('lessons.*', 'schedule.week', 'schedule.day', 'schedule.period', 'schedule.status',
                      DB::raw('schedule.hasClass = "1" as hasClass'), DB::raw('lessons.owner = ? as owned'), DB::raw('IF(lessons.due = CURDATE(), 1, 0) as dueToday'))
             ->join('schedule', 'schedule.lesson_id', '=', 'lessons.id')
-            ->setBindings([ $sqlID ]);
+            ->addBinding($sqlID, 'select');
 
         if ($this->isStudent())
             return $query->join('lessons_attendees', 'lessons_attendees.lesson_id', '=', 'lessons.id')
