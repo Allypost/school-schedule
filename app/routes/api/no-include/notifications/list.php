@@ -24,4 +24,4 @@ $app->get('/all', function () use ($app) {
     $data = $n->mine(TRUE)->get()->toArray();
 
     say('notifications list', $data);
-})->name('api:notifications:list');
+})->name('api:notifications:list:all');
