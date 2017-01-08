@@ -22,6 +22,7 @@ $app->group('/api', function () use ($app, $loggedIn, $admin, $guest, $cache) {
 
     $app->group('/notifications', $loggedIn(), function () use ($app, $loggedIn, $admin, $guest, $cache) {
         require_once 'no-include/notifications/list.php';
+        require_once 'no-include/notifications/seen.php';
     });
 
 });
