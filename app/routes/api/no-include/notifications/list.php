@@ -23,7 +23,19 @@ $app->get('/all', function () use ($app) {
 
     $data = $n->mine(TRUE)->get()->toArray();
 
-    say('notifications list', $data);
+    $old = array_filter($data, function ($el) {
+        return $el[ 'seen' ];
+    });
+
+    $new = array_diff_key($data, $old);
+    $old = array_values($old);
+
+    $list = [
+        'new' => $new,
+        'old' => $old,
+    ];
+
+    say('notifications list', $list);
 })->name('api:notifications:list:all');
 
 $app->get('/old', function () use ($app) {
