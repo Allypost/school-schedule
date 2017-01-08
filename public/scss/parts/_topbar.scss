@@ -1,72 +1,76 @@
 .topbar {
+    padding : 0 1em;
 
-    background : #ffffff;
-    color      : #000000;
-    display    : inline-block;
-    width      : auto;
-    height     : auto;
-    margin     : 0 auto;
-    box-shadow : 0 0 transparent;
+    a {
+        font-size : 1.3em;
 
-    .topbar-link,
-    .topbar-icon {
-        position        : relative;
-        display         : inline-block;
-        margin          : 15px 25px;
-        outline         : none;
-        text-decoration : none;
-        text-transform  : uppercase;
-        letter-spacing  : 1px;
-        font-size       : 1.8em;
-        padding         : 0 10px;
-        color           : #546e7a;
-        text-shadow     : none;
-        font-weight     : 700;
-        line-height     : 2em;
+        &.brand-logo {
+            font-size : 2.1rem;
+        }
+
     }
 
-    .topbar-link,
-    .topbar-icon {
+    li {
+        position : relative;
 
-        &::before,
-        &::after {
-            position   : absolute;
-            top        : 100%;
-            left       : 0;
-            width      : 100%;
-            height     : 3px;
-            background : #546e7a;
-            content    : '';
-            @include trans(transform 0.3s);
-            @include transform(scale(0.85));
+        span.notification-count {
+            position    : absolute;
+            top         : .5em;
+            left        : 100%;
+            margin-left : -1.8em;
+            font-size   : .58em;
+            line-height : 1.1em;
+            background  : #f44336;
+            padding     : .2em .4em;
+            opacity     : 0;
+            @include trans(opacity .2s);
 
-            &:hover {
-                @include transform(scale(1))
-            }
-
-        }
-
-        &::after {
-            opacity : 0;
-            @include trans(top 0.3s, opacity 0.3s, transform 0.3s);
-        }
-
-        &:hover {
-
-            &::before,
-            &::after {
-                @include transform(scale(1));
-            }
-
-            &::after {
-                top     : 0;
+            &[data-notifications] {
                 opacity : 1;
             }
+        }
 
-            .topbar-badge {
+        &.logo {
+            text-align    : center;
+            margin-top    : 32px;
+            margin-bottom : 80px;
+            font-size     : 3em;
+            font-weight   : bold;
 
-                &::before {
-                    transform : rotate(180deg);
+            a:hover {
+                background-color : inherit;
+            }
+        }
+
+    }
+
+    #notifications-dropdown {
+
+        > li {
+            border-bottom : 1px solid rgba(0, 0, 0, .1);
+
+            &:last-child {
+                border-bottom : none;
+            }
+
+            &:hover {
+                background-color : transparent;
+            }
+
+            & > a {
+                color  : #424242;
+                cursor : default;
+
+                &:hover {
+                    background-color : transparent;
+                }
+
+                &[data-i] {
+
+                    &::before {
+                        content : attr(data-i) ': ';
+                    }
+
                 }
 
             }
@@ -75,53 +79,4 @@
 
     }
 
-    .topbar-icon {
-        padding    : 15px 25px;
-        padding    : 15px 5vw;
-        margin     : 15px 10px;
-        margin     : 15px 4vw;
-        text-align : center;
-
-        > i {
-            font-size : 1.8em;
-        }
-
-        .topbar-badge {
-            font-size : .8em;
-            left      : 80%;
-        }
-
-    }
-
-    .topbar-badge {
-        display     : inline-block;
-        position    : absolute;
-        top         : 0;
-        left        : 95%;
-        font-size   : 0.6em;
-        font-weight : bold;
-        color       : #f44336;
-        height      : 1.5em;
-        line-height : .9em;
-        padding     : .3em;
-        @include trans(opacity .2s);
-
-        &::before {
-            content       : '';
-            border        : 2px solid;
-            border-bottom : transparent;
-            border-left   : transparent;
-            border-radius : 0 .2em 0 0;
-            width         : 90%;
-            height        : 80%;
-            position      : absolute;
-            top           : 10%;
-            left          : 5%;
-            @include trans(transform .3s ease-out);
-        }
-
-        &:empty {
-            opacity : 0;
-        }
-    }
 }

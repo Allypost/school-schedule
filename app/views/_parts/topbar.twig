@@ -1,65 +1,86 @@
-<div class="center-align">
-    <nav class="topbar">
-        <div class="hide-on-small-only">
-            <a class="topbar-link" href="{{ urlFor('lessons:home') }}">Lessons</a>
-            {#<a class="topbar-link dropdown-button" href="javascript:void(0)"
-               data-activates='dropdown-notifications' data-beloworigin="true"
-               @mouseenter="getNotifications">
-                Notifications <span class="topbar-badge">{{ '{{ ' }} notificationCount {{ '}}' }}</span>
-            </a>#}
-            <a class="topbar-link" href="{{ urlFor('home:home') }}">Schedule</a>
-            <a class="topbar-link" href="{{ urlFor('auth:logout') }}">Sign Out</a>
-        </div>
-        <div class="hide-on-med-and-up">
-            <a class="topbar-icon" href="{{ urlFor('lessons:home') }}"><i class="material-icons">schedule</i></a>
-            {#<a class="topbar-icon" href="javascript:void(0)"
-               data-activates='dropdown-notifications' data-beloworigin="true"
-               @mouseenter="getNotifications">
-                <i class="material-icons">notifications</i><span class="topbar-badge">{{ '{{ ' }} notificationCount {{ '}}' }}</span>
-            </a>#}
-            <a class="topbar-icon" href="{{ urlFor('home:home') }}"><i class="material-icons">event</i></a>
-            <a class="topbar-icon" href="{{ urlFor('auth:logout') }}"><i class="material-icons">&#xE8AC;</i></a>
-        </div>
-        <ul id="dropdown-notifications" class='dropdown-content'>
-            <li :data-recieved="notification.date" :data-subject-name="notification.name" :data-subject="notification.subject"
-                v-for="notification in notifications">{{ "{{" }} notification.name + ' ' + notification.message {{ "}}" }}</li>
+<nav class="topbar" data-notifications-list="{{ urlFor('api:notifications:list') }}" data-notifications-count="{{ urlFor('api:notifications:count') }}">
+    <div class="nav-wrapper">
+        <a href="/" class="brand-logo">Logo</a>
+        <a href="javascript:void(0)" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="{{ urlFor('home:home') }}"><i class="material-icons left">event</i>Schedule</a></li>
+            <li><a href="{{ urlFor('lessons:home') }}"><i class="material-icons left">schedule</i>Lessons</a></li>
+            <li><a href="javascript:void(0)" class="dropdown-button" data-activates="notifications-dropdown" data-beloworigin="true" data-constrainwidth="false">
+                    <i class="material-icons">notifications</i>
+                    <span class="notification-count" :data-notifications="notificationCount > 0">{{ '{{' }} notificationCount{{ '}}' }}</span></a>
+            </li>
+            <li><a href="{{ urlFor('auth:logout') }}"><i class="material-icons">&#xE8AC;</i></a></li>
         </ul>
-    </nav>
-    <script>
-        /*var topbarVM = new Vue({
-            el     : '.topbar',
-            data   : {
-                notifications           : [],
-                notificationCount       : null,
-                notificationCountLoading: true,
-                notificationsLoading    : false
+        <ul class="side-nav" id="mobile-demo">
+            <li class="logo"><a href="{{ urlFor('home:home') }}">Logo</a></li>
+            <li class="bold"><a href="{{ urlFor('home:home') }}"><i class="material-icons left">event</i>Schedule</a></li>
+            <li class="bold"><a href="{{ urlFor('lessons:home') }}"><i class="material-icons left">schedule</i>Lessons</a></li>
+            <li class="bold"><a href="{{ urlFor('auth:logout') }}"><i class="material-icons left">&#xE8AC;</i>Logout</a></li>
+        </ul>
+    </div>
+    <ul id="notifications-dropdown" class="dropdown-content">
+        <template v-for="(notification, index) in notifications">
+            <li><a :data-i="index + 1">{{ '{{' }}notification.message{{ '}}' }}</a></li>
+        </template>
+    </ul>
+</nav>
+<script>
+    var topbarVM = new Vue({
+        el     : '.topbar',
+        data   : {
+            notifications           : [],
+            notificationCount       : 0,
+            notificationCountLoading: false,
+            notificationsLoading    : false
+        },
+        methods: {
+            getListUrl : function () {
+                return this.$el.dataset.notificationsList;
             },
-            methods: {
-                getNotifications: function () {
-                    if (this.notificationsLoading)
-                        return;
+            getCountUrl: function () {
+                return this.$el.dataset.notificationsCount;
+            },
+            getData    : function () {
+                if (this.notificationsLoading)
+                    return;
 
-                    var vm = this;
+                var vm  = this;
+                var url = this.getListUrl();
 
-                    this.notificationsLoading = true;
+                vm.notificationsLoading = true;
 
-                    $.get('{{ urlFor('api:notifications:list') }}')
-                     .done(function (data) {
-                         vm.notifications        = data.data;
-                         vm.notificationsLoading = false;
-                     });
-                }
+                $.get(url)
+                 .done(function (data) {
+                     var d = data.data;
+
+                     vm.notifications        = d;
+                     vm.notificationCount    = d.length;
+                     vm.notificationsLoading = false;
+                 });
+            },
+            getCount   : function () {
+                if (this.notificationCountLoading)
+                    return;
+
+                var vm  = this;
+                var url = this.getCountUrl();
+
+                vm.notificationCountLoading = true;
+
+                $.get(url)
+                 .done(function (data) {
+                     vm.notificationCount        = data.data.count;
+                     vm.notificationCountLoading = false;
+                 });
             }
-        });
-
-        $.get('{{ urlFor('api:notifications:count') }}')
-         .done(function (data) {
-             topbarVM.notificationCount        = data.data.count;
-             topbarVM.notificationCountLoading = false;
-         });*/
-    </script>
-</div>
-<div class="no-interact top-user-info">Logged in as <i style="text-decoration: underline;">{{ app.auth.name }}</i>, <i>{{ app.auth.getTypeString() }}</i></div>
+        },
+        mounted: function () {
+            this.getData();
+            $(".button-collapse").sideNav();
+        }
+    });
+</script>
+{#<div class="no-interact top-user-info">Logged in as <i style="text-decoration: underline;">{{ app.auth.name }}</i>, <i>{{ app.auth.getTypeString() }}</i></div>
 <style>
     .top-user-info {
         opacity  : .5;
@@ -68,4 +89,4 @@
         top      : 0;
         right    : .5em;
     }
-</style>
+</style>#}
