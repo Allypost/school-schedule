@@ -30,12 +30,18 @@ class Notification extends Eloquent {
     }
 
     public function mine($all = FALSE) {
-        $query = $this->select('notifications.message', 'notifications.created_at as date', 'lessons.name', 'lessons.id as subject', 'lessons.due')
-                      ->join('lessons', 'notifications.lesson_id', 'lessons.id')
-                      ->orderBy('notifications.created_at', 'DESC');
+        $u = $this->app()->auth;
+
+        $query = $this
+            ->distinct()
+            ->select('notifications.message', 'notifications.created_at as date', 'lessons.name', 'lessons.id as subject', 'lessons.due')
+            ->join('lessons', 'notifications.lesson_id', 'lessons.id')
+            ->join('lessons_attendees', 'lessons.id', 'lessons_attendees.lesson_id')
+            ->where('lessons_attendees.user_id', $u->id)
+            ->orderBy('notifications.created_at', 'DESC');
 
         if (!$all)
-            $query = $query->where('notifications.created_at', '>', $this->app()->auth->data->notification_seen);
+            $query = $query->where('notifications.created_at', '>', $u->data->notification_seen);
 
         return $query;
     }
