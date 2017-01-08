@@ -1,0 +1,59 @@
+{% extends '_templates/default.twig' %}
+
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col s12 m10 offset-m1 l6 offset-l3">
+            <h2>Notifications</h2>
+            <table class="striped" id="notifications" data-fetch-url="{{ urlFor('api:notifications:list:all') }}">
+                <tr v-for="item in newer">
+                    <td>[{{ '{{' }}item.date | ago{{ '}}' }}]</td>
+                    <td>{{ '{{' }}item.message{{ '}}' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        var notificationVM = new Vue(
+            {
+                el     : '#notifications',
+                data   : {
+                    newer: [],
+                    older: []
+                },
+                filters: {
+                    ago: function (value) {
+                        return moment.utc(value, 'YYYY-MM-DD HH:mm:ss').fromNow();
+                    }
+                },
+                methods: {
+                    getFetchUrl: function () {
+                        return this.$el.dataset.fetchUrl;
+                    },
+                    fetchAll   : function () {
+                        var vm  = this;
+                        var url = vm.getFetchUrl();
+
+                        $.get(url)
+                         .done(function (data) {
+                             var d = data.data;
+
+                             vm.newer = d;
+                         })
+                    }
+                },
+                mounted: function () {
+                    this.fetchAll();
+                }
+            }
+        );
+    </script>
+    <style>
+        #notifications {
+            width : auto;
+        }
+    </style>
+{% endblock %}
