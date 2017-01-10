@@ -38,8 +38,8 @@ return [
     ],
     'google' => [
         'recaptcha' => [
-            'site_key'   => '6Lc3_yITAAAAAKHsaewGCdA4Jn_pgRaHaGk-zrti',
-            'secret_key' => '6Lc3_yITAAAAAI_Pj-SLbC8edQgXtCMvaVOscW6u',
+            'site_key'   => '6LdIYBEUAAAAAC1Wda7C2xKQsw_ZCxcuA9quB9sR',
+            'secret_key' => '6LdIYBEUAAAAAJEE2YBRTtS0jA4B1s2SlOc5O-mg',
         ],
     ],
 ];
