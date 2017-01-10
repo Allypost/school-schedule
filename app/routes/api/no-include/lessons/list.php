@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 
-$app->group('/list', function () use ($app, $loggedIn, $admin, $guest, $cache) {
+$app->group('/list', function () use ($app, $loggedIn, $guest, $teacher, $student) {
 
     $app->get('/attending', $loggedIn(), function () use ($app) {
         $u = $app->auth;
