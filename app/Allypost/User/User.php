@@ -20,8 +20,6 @@ class User extends Eloquent {
     protected $fillable = [
         'uuid',
         'name',
-        'dob',
-        'sex',
         'password',
         'email',
         'remember_identifier',
