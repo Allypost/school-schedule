@@ -13,7 +13,8 @@ class UserData extends Eloquent {
         'activation_code',
         'banned',
         'banned_until',
-        'profile_pic',
+        'dob',
+        'sex',
         'notification_seen',
     ];
 
@@ -21,7 +22,6 @@ class UserData extends Eloquent {
         'active'            => 'boolean',
         'banned'            => 'boolean',
         'banned_until'      => 'datetime',
-        'profile_pic'       => 'array',
         'notification_seen' => 'datetime',
     ];
     protected $hidden = [
@@ -34,22 +34,8 @@ class UserData extends Eloquent {
     /*  <PRESETS>    */
 
     public static $default = [
-        'active'      => FALSE,
-        'banned'      => FALSE,
-        'profile_pic' => [
-            'url'  => [
-                'original' => '',
-                'small'    => '',
-                'medium'   => '',
-                'big'      => '',
-            ],
-            'path' => [
-                'isLocal'  => '',
-                'absolute' => '',
-                'filename' => '',
-                'location' => '',
-            ],
-        ],
+        'active' => FALSE,
+        'banned' => FALSE,
     ];
 
 
