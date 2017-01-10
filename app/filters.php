@@ -12,12 +12,14 @@ function Filter_isType($redirect = NULL, $redirectTo = '/', callable $validator)
     global $loggedIn;
 
     return function () use ($redirect, $redirectTo, $validator, $app, $loggedIn) {
-        if (!$validator()) {
-            if (defined('FILTERS_AUTHENTICATION_REDIRECT')) {
-                $redirect = FILTERS_AUTHENTICATION_REDIRECT;
+        return function () use ($redirect, $redirectTo, $validator, $app, $loggedIn) {
+            if (!$validator()) {
+                if (defined('FILTERS_AUTHENTICATION_REDIRECT')) {
+                    $redirect = FILTERS_AUTHENTICATION_REDIRECT;
+                }
+                $redirect ? $app->redirect($redirectTo) : err('authentication mismatch', [ 'You don\'t have sufficient permissions to use this resource' ]);
             }
-            $redirect ? $app->redirect($redirectTo) : err('authentication mismatch', [ 'You don\'t have sufficient permissions to use this resource' ]);
-        }
+        };
     };
 }
 
@@ -93,9 +95,9 @@ $guest = function ($redirect = NULL, $redirectTo = '/', $flash = TRUE) use ($aut
 };
 
 $teacher = Filter_isType($redirect = NULL, $redirectTo = '/', function () use ($app) {
-    return !($app->auth && $app->auth->isTeacher());
+    return $app->auth && $app->auth->isTeacher();
 });
 
 $student = Filter_isType($redirect = NULL, $redirectTo = '/', function () use ($app) {
-    return !($app->auth && $app->auth->isStudent());
+    return $app->auth && $app->auth->isStudent();
 });
