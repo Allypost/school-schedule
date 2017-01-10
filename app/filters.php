@@ -7,6 +7,20 @@ if (!defined('FILTERS_AUTHENTICATION_ADD_BACK')) {
     define('FILTERS_AUTHENTICATION_ADD_BACK', TRUE);
 }
 
+function Filter_isType($redirect = NULL, $redirectTo = '/', callable $validator) {
+    global $app;
+    global $loggedIn;
+
+    return function () use ($redirect, $redirectTo, $validator, $app, $loggedIn) {
+        if (!$validator()) {
+            if (defined('FILTERS_AUTHENTICATION_REDIRECT')) {
+                $redirect = FILTERS_AUTHENTICATION_REDIRECT;
+            }
+            $redirect ? $app->redirect($redirectTo) : err('authentication mismatch', [ 'You don\'t have sufficient permissions to use this resource' ]);
+        }
+    };
+}
+
 $authenticationCheck = function ($required, $redirect = NULL, $redirectTo = '/', $flash = TRUE) use ($app) {
     return function () use ($required, $redirect, $redirectTo, $app, $flash) {
         if ((!$app->auth && $required) || ($app->auth && !$required)) {
@@ -78,24 +92,10 @@ $guest = function ($redirect = NULL, $redirectTo = '/', $flash = TRUE) use ($aut
     return $authenticationCheck(FALSE, $redirect, $redirectTo, $flash);
 };
 
-$admin = function ($redirect = NULL, $redirectTo = '/') use ($app, $loggedIn) {
-    return function () use ($redirect, $redirectTo, $app, $loggedIn) {
-        if (!$app->auth || !$app->auth->isAdmin()) {
-            if (defined('FILTERS_AUTHENTICATION_REDIRECT')) {
-                $redirect = FILTERS_AUTHENTICATION_REDIRECT;
-            }
-            $redirect ? $app->redirect($redirectTo) : err('authentication mismatch', [ 'You don\'t have sufficient permissions to use this resource' ]);
-        }
-    };
-};
+$teacher = Filter_isType($redirect = NULL, $redirectTo = '/', function () use ($app) {
+    return !($app->auth && $app->auth->isTeacher());
+});
 
-$cache = function () use ($app) {
-    return function () use ($app) {
-        $expire = 60 * 60;
-        header('Pragma: public');
-        header('Vary: Accept-Encoding');
-        header("Cache-Control: public, max-age={$expire}");
-        header('Date: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
-        header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $expire));
-    };
-};
+$student = Filter_isType($redirect = NULL, $redirectTo = '/', function () use ($app) {
+    return !($app->auth && $app->auth->isStudent());
+});
