@@ -392,21 +392,29 @@ class User extends Eloquent {
      */
     public function createActivationCode(string $identifier): string {
         $user = ($identifier == '-') ? $this : $this->fetch($identifier, TRUE);
-        $app  = $this->app();
 
         if (!$user)
             return FALSE;
 
-        $activationCode     = (string) $app->hash->random(128);//$app->randomlib->generateString(128, 7);
-        $activationCodeHash = (string) $app->hash->hash($activationCode);
+        $code = $this->generateActivationCode();
 
         $user->data->update(
             [
-                'activation_code' => $activationCodeHash,
+                'activation_code' => $code[ 'hash' ],
             ]
         );
 
-        return $activationCode;
+        return $code[ 'code' ];
+    }
+
+    public function generateActivationCode() {
+        $app  = $this->app();
+        $hash = $app->hash;
+
+        $code = $hash->random(128);
+        $hash = $hash->hash($code);
+
+        return compact('code', 'hash');
     }
 
     /**
