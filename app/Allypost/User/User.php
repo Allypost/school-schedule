@@ -384,7 +384,7 @@ class User extends Eloquent {
     }
 
     /**
-     * Generate new activation code for a User
+     * Generate and apply new activation code for a User
      *
      * @param string $identifier The UUID of the user for which to create the activation code
      *
@@ -407,11 +407,18 @@ class User extends Eloquent {
         return $code[ 'code' ];
     }
 
-    public function generateActivationCode() {
+    /**
+     * Generate activation code
+     *
+     * @param int $length The length of the new code
+     *
+     * @return array Array of [{code}, {hash}]
+     */
+    public function generateActivationCode(int $length = 128): array {
         $app  = $this->app();
         $hash = $app->hash;
 
-        $code = $hash->random(128);
+        $code = $hash->random($length);
         $hash = $hash->hash($code);
 
         return compact('code', 'hash');
