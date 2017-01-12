@@ -17,6 +17,7 @@ $app->post('/delete', function () use ($app) {
     if ($lesson->owner != $u->id)
         err('lessons delete', [ 'You don\'t teach that lesson' ]);
 
+    $lesson->schedule()->delete();
     $deleted = $lesson->delete();
 
     $app->log->log('lessons delete', [ 'old' => $lesson->toArray() ]);
