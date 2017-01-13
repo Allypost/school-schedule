@@ -352,8 +352,8 @@ function toArray($object): array {
  * @return void
  */
 function err(string $reason, array $data = [], string $action = '', array $actions = []): void {
-    #header($_SERVER['SERVER_PROTOCOL'] . ' 400 ');
-    http_response_code(400);
+    global $app;
+    $app->status(400);
     res(TRUE, $reason, $data, $action, $actions);
 }
 
@@ -443,7 +443,7 @@ function res(bool $isError, string $reason, array $data = [], string $action = '
     $c                     = new Carbon();
     $return[ 'timestamp' ] = $c->timestamp;
 
-    ddj($return);
+    sdj($return);
 }
 
 /**
@@ -631,6 +631,18 @@ function smart_resize_image($file, $string = NULL, $width = 0, $height = 0, $pro
     return TRUE;
 }
 
+/**
+ * (sdj => Stop Dump Json)
+ *
+ * Halt the $app and dump input as json
+ *
+ * @param array|object $array
+ */
+function sdj($array) {
+    global $app;
+    $app->contentType('application/json');
+    $app->halt($app->response->getStatus(), json_encode($array));
+}
 
 /**
  * Prints out the array in json, sets the correct headers and exits the script
