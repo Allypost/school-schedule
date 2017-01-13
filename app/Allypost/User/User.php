@@ -560,7 +560,6 @@ class User extends Eloquent {
             'dob',
             'sex',
             'password',
-            'email',
         ];
 
         $checks = [];
@@ -585,7 +584,7 @@ class User extends Eloquent {
 
         $vMDA = array_not($validateMakeDataArray);
 
-        if ($vMDA[ 'uuid' ] || $vMDA[ 'password' ] || $vMDA[ 'email' ])
+        if ($vMDA[ 'uuid' ] || $vMDA[ 'password' ])
             return [ FALSE ];
 
         $app = $this->app();
