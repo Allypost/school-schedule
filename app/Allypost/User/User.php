@@ -538,12 +538,18 @@ class User extends Eloquent {
 
         $data = $this->fixMakeData($data);
 
-        if (($data[ 0 ] ?? FALSE) == FALSE)
+        if (($data[ 0 ] ?? TRUE) == FALSE)
             throw new \Exception("Data is invalid");
 
+        $permissionsData = UserPermission::$$type;
+        $dataData        = UserData::$default;
+
+        $dataData[ 'dob' ] = $data[ 'dob' ] ?? NULL;
+        $dataData[ 'sex' ] = $data[ 'sex' ] ?? NULL;
+
         $user           = $this->create($data);
-        $permissions    = $user->permissions()->create(UserPermission::$$type);
-        $data           = $user->data()->create(UserData::$default);
+        $permissions    = $user->permissions()->create($permissionsData);
+        $data           = $user->data()->create($dataData);
         $activationCode = $user->createActivationCode('-');
 
         $app->log->log('user create', toArray($user), 200, $user->uuid);
