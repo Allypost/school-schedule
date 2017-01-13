@@ -374,7 +374,7 @@ class User extends Eloquent {
         if (!$user)
             return FALSE;
 
-        $vaild = (bool) $user->data->activation_code == $app->hash->password($activationCode);
+        $vaild = (bool) ($user->data->activation_code == $app->hash->hash($activationCode));
 
         if ($returnRaw) {
             return $vaild ? $user : FALSE;
