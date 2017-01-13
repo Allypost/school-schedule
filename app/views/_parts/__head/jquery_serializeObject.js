@@ -1,15 +1,18 @@
 $.fn.serializeObject = function () {
     var o = {};
     var a = this.serializeArray();
-    $.each(a, function () {
-        if (o[ this.name ] !== undefined) {
-            if (!o[ this.name ].push) {
-                o[ this.name ] = [ o[ this.name ] ];
-            }
-            o[ this.name ].push(this.value || '');
+
+    for (var i = 0; i < a.length; i++) {
+        var item = a[ i ];
+
+        if (!o[ item.name ]) {
+            o[ item.name ] = item.value;
         } else {
-            o[ this.name ] = this.value || '';
+            if (!o[ item.name ].push)
+                o[ item.name ] = [ o[ item.name ] ];
+            o[ item.name ].push(item.value || null)
         }
-    });
+    }
+
     return o;
 };
