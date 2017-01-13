@@ -529,12 +529,17 @@ class User extends Eloquent {
      * @param array  $data The data for the user
      * @param string $type The type of user to create (eg. default, admin, moderator, etc.)
      *
+     * @throws \Exception If the data isn't valid
+     *
      * @return array All the data for the created user (the user, permissions, user data, activation code)
      */
     public function make(array $data, string $type = 'student'): array {
         $app = $this->app();
 
         $data = $this->fixMakeData($data);
+
+        if (($data[ 0 ] ?? FALSE) == FALSE)
+            throw new \InvalidArgumentException("Data is invalid");
 
         $user           = $this->create($data);
         $permissions    = $user->permissions()->create(UserPermission::$$type);
