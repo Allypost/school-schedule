@@ -45,4 +45,12 @@ class UserData extends Eloquent {
         return $this->belongsTo('Allypost\User\User', 'id', 'user_id');
     }
 
+    public function user() {
+        return $this->owner();
+    }
+
+    public function permissions() {
+        return $this->hasOne('Allypost\User\UserPermission', 'user_id', 'user_id');
+    }
+
 }
