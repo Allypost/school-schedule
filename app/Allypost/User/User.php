@@ -539,7 +539,7 @@ class User extends Eloquent {
         $data = $this->fixMakeData($data);
 
         if (($data[ 0 ] ?? FALSE) == FALSE)
-            throw new \InvalidArgumentException("Data is invalid");
+            throw new \Exception("Data is invalid");
 
         $user           = $this->create($data);
         $permissions    = $user->permissions()->create(UserPermission::$$type);
