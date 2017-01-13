@@ -62,7 +62,7 @@
                      var d = data.data;
 
                      vm.notifications        = d;
-                     vm.notificationCount    = d.length;
+                     vm.notificationCount    = d ? d.length : 0;
                      vm.notificationsLoading = false;
                  });
             },
