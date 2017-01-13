@@ -23,6 +23,7 @@
     "alexgarrett/violin": "^2.2",
     "ramsey/uuid": "^3.4",
     "moontoast/math": "^1.1",
-    "google/recaptcha": "^1.1"
+    "google/recaptcha": "^1.1",
+    "mailgun/mailgun-php": "^2.1"
   }
 }
