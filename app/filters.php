@@ -58,7 +58,7 @@ $loggedIn = function ($redirect = NULL, $redirectTo = '', $addBack = NULL, $flas
     $e = $app->hash;
 
     if (empty($redirectTo))
-        $redirectTo = '/auth/login';
+        $redirectTo = '/';
 
     if (is_null($addBack) && defined('FILTERS_AUTHENTICATION_ADD_BACK')) {
         $addBack = FILTERS_AUTHENTICATION_ADD_BACK;
