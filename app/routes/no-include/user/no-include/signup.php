@@ -2,16 +2,12 @@
 
 use Allypost\User\User;
 
-$app->get('/signup/:user/(:code)', function ($user, $code = NULL) {
-    $u = new User();
-
-    if (!$code)
-        dd('Enter code');
-
+$app->get('/signup/:user/:code', $guest(), function ($user, $code = NULL) use ($app) {
+    $u    = new User();
     $data = $u->activateCheck($user, $code, TRUE);
 
     if (!$data)
         err('user signup', [ 'Invalid code' ]);
 
-    dd($code, $data->toArray());
+    $app->render('user/signup.twig', compact('data', 'code'));
 })->name('user:signup');

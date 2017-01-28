@@ -23,6 +23,7 @@ $app->group('/notifications', $loggedIn(), function () use ($app, $loggedIn, $gu
     require_once 'no-include/notifications/seen.php';
 });
 
-$app->group('/user', $loggedIn(), $teacher(), function () use ($app, $loggedIn, $guest, $teacher, $student) {
+$app->group('/user', function () use ($app, $loggedIn, $guest, $teacher, $student) {
     require_once 'no-include/user/invite.php';
+    require_once 'no-include/user/signup.php';
 });
