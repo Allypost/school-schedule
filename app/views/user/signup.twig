@@ -6,14 +6,18 @@
 
 {% if dataSex == 'i' %}
     {% set sex = 'Intersex' %}
-    {% set sexIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAC0UlEQVRoge3Zu29URxTH8U+ILQERBBE7JJAaxKNBhiogSEleVcRDvBHiDwAZIpRihUSbAiRqCkRJOtdYShB5VDGh4yUZCvMIRgIhMI9i7mUn6732DNm1Bbpf6Upn786Z+Z2dc+eemaWmpqampqbGB13qdzFWYRmWFvfuYBRX8W+Xxu0ISzCIYUzgVcX1HBeLtktmQ2gV8/ETHqkWX3U9wnHMm3HVLQzglskCJ3AZI9G9K/hd+9m6gbUzrP0NO/CkRdDfOID+ok0j+q5R3OvHQSGw2Pcxts2I8oideBmJuIs9mNPSrmFyICUfYj/uR21eYnuXNE/iKzyLBv9TWJ3a0VAdSMkX+Ctq9wybOqa2ggXCMloO+g8+nqJ9w/SBwCJhWS7bjuKjHGGtqTAdx/B5YY/ha4xn9tGOh9gipChhhgc70G9bPvXfJXZ3gk9D2oyU7I/aj6MvVVzOjOwVUgsu4VyGbypnhecFFhZjJpETyLeRfUb41TrNK5yuGHNKUgPpw5eFPYGh1AHegiG8KOwNQt02LamBrBHWffhDd4u+e5rp1YPVKU49iZ0vjewF0h5c2Nxip/rFS2/VO+qtOCK/IOzUdThFYGpqdWvf0rGxU1PrdmSP4EKi32bNcmNY2Iek8IPmszGa6JMsqJzqSxl+jcivkeF3OfLbmOKQmlpXNJfE9fgkQ1Qu/VhX2BNCPTctqYHcw2+F3YPvsqTl8b3mUv8rHqQ45bzZf4nsH6U/Xzn04mjFmFOSE8h5oWiEFdiV4ZvKXiwv7PFizCRyAhnDyejzKYlv3UTW4Ofo8wkhpbvCfOGgoNsbq2uYmyMsd2P1RNhMlSm2SqiLVmb2E9Paxzi+wdP/0Wcy23Xm8GGfkD7x4cPW7kiupt1x0Ih37DioZAA3TS70cg/orpvFA7qSXhwS0iu3sh0rfHtnXPUUfCa8zGblELv+W6GmpqampuZ94jV6ehoxw0A/5wAAAABJRU5ErkJggg==' %}
 {% elseif dataSex == 'm' %}
     {% set sex = 'Male' %}
-    {% set sexIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAADA0lEQVRoQ+2Yi1EVQRBFLxEIEagRIBGgEagRABEoESARoBFoBmoESgRABGgEagRQx5qu6hr20/N5rx6vtqu2+OzMbp++Pd0zu6MtsZ0t4dACsmlKLoosiqwoApuSWndBvnNJH4bGLiDBCEaHbY0iOfALST8k7WY3Nj61vL9jEIx5NCA5xD9JPyW9TqSPAmQI4qWkN5LO1glCPu9L4uX8/kzSdbp+p59ji38MgvmU27WA4Pi7FLm5KvVF0qmkv27gFATDVg5CxD8nBeYA/H0gPkr6lFTz1Yk1QWBQwmylIMeSLgbK42VyAmdxhmjjGNBPM9pfab6V2CEIpjCfC2Phcz2wms4OBEp4I7pEGefGDGeI7uHAgDGIsNKlIDhDKpjdSALMp8LcyxkP9BM38K2kb3MTp+6XgJACVylNeCYQgPmFG/WFlCNFDAYIYKqtBIQoUp0wUoG8r4EwZ4EhMGavxvI/QhcFQY0/7oGjHTbyUjeGcnyU/kYhYKosCvI+ValeapizBIgCYSl2Igm4YouCkAKkAkZDI816mU/ZaqWjIP68EJ0TBfWVkD5kPSM6//+4iFP5oozMKXGConGbJpBmz0sm29iIU3nviMwp9aVZ8YhTHoTeYWul1Nmp8WsHoYMf9CRI/chSi+0+qVZsEUV4qI/YXmMjzJ1c22LnxTQr2+w174syEr9NZ/NJzyq2qCK+1n8PHqIiztAQSSvbyq+8IfoSiYOsk5Id7xiUV6N6fUT7iDnBDtW+ZlDvgWnZNBIcdgymRlPKRlMLGPuYYPsiFGGTVwOD85xrrJRXd/SShujTgk8zX90/gCGSUyfDPK1wnhOm70fNqVqiiDk0dNSlGLDhm1IHFTjP5F/Tqxe4j1ANCPOHYOyDA6UahUwl+gTRR01vHM4otVXb9lzmWhBbMyhhBSBSbm0MWx3ASlJy8vktIPZgIg4QXxnnjEWNAl1U6JFaQw5T1bgslays2mdTS7k52Kr7PRSpenHvSQtI74i2Pm9RpDWCvecvivSOaOvztkaRe/pNnDP+ZhvQAAAAAElFTkSuQmCC' %}
 {% elseif dataSex == 'f' %}
     {% set sex = 'Female' %}
-    {% set sexIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACtUlEQVRoQ+2ZjTFlQRCFz4tgicCKwIpgiQAZEIEVARsBIkAGuxEgAkSACBAB9XFbdU0pd3pmrp9bt6teed6bnz5z+vR03zfTSGw2EhyagHw1JodgZE7SmqR1SbxfcaDPJN1L+ifpf/e+yZm0BILT+5I2A54dSPrbAlArIDgPCMBEDYZ2JB1HJ/rxLYDsStpLnLiSRBhdutcvSfYi3JaSOawBO0VWC4TNAWL20IEiZPrsTzf2hxsIkPRQ+tZ5/r4GCOF05HY57/Rxk7Xzy6CfnfA9O1slYVYKBC1cO00AwmenAJbnoYTh724SmlmMJoBSIITOdrcx4UTsR5hIgcIMerIwO5RE6GVbCRDYuHM7kHFyNNHnFI6T+czmI6yUAPHaIDvBRiuDFdNLSCslQLiVubmxcAj0IPYhexK5XEuAeGGGTi2DNs92KIGUAHl0Di13Is3wMWsIYXrhshc6ybJaICXz+xzzB5W9fvZAt/tHMUJaz67dSoCMRiOjyVo+s5D3EXwrQ+h2L4UyYklojeZm5/T9xUWRByu1tRZsmLjDF20JIwBhQxy3Io8EsFoRX6eueiZbUURyQNlWCoQN0n4EvWwEmcFhehrfAoS0YUhrgLBG2iFyinxGaPQZbQBj/V3xKR2iOZqC4XPYsZ6dCpn/yUZUtvyFgbRqLgbBhrWMGBjCjATg++8+Rux7NEEv8ulPUcwhQgR2rHPMAUIIMick7LcWbsWIXxtAPGW0J43WizOG0pxsR9hRIVQDaCX2nFMvqmZzFvZjhmAk9WECEmFlYiRwWt8ytLhPFhKQ/llu+lz3tvb+GCpr+e4xh7TQk5L3FmytkdEAIbSoaL35nx3S3z+4HKtKk6FC6y32v6XYJyA5meEjxT5qRt67R2qJeJ3fOv02cyy60AQkemJDj58YGfqEo+s/ATNcijPTBiWnAAAAAElFTkSuQmCC' %}
 {% endif %}
+
+{% block head %}
+    <script src="/js/vendor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.0/sweetalert2.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.0/sweetalert2.min.css">
+{% endblock %}
 
 {% block content %}
     <div class="row z-depth-2 top-spacer">
@@ -23,7 +27,8 @@
                     <h1>Signup:</h1>
                 </div>
             </div>
-            <form action="{{ urlFor('api:user:signup') }}" method="POST" class="row" id="invite-user">
+            <form action="{{ urlFor('api:user:signup') }}" method="POST" class="row" id="invite-user"
+                  data-login="{{ urlFor('auth:login') }}" data-lessons="{{ urlFor('lessons:home') }}" data-user="{{ data.uuid }}">
                 <div class="row">
                     <input-field name="Full name" value="{{ data.name }}" :disabled="true"></input-field>
                     <input-field name="User Identifier" value="{{ data.uuid }}" comment="(User ID)" :disabled="true"></input-field>
@@ -123,18 +128,18 @@
                     repeatPassword: ''
                 },
                 methods   : {
-                    getUrl     : function () {
+                    getUrl       : function () {
                         return $(this.$el).attr('action');
                     },
-                    getFormData: function () {
+                    getFormData  : function () {
                         return $(this.$el).serializeObject();
                     },
-                    getData    : function () {
+                    getData      : function () {
                         var formData = this.getFormData();
 
                         return formData;
                     },
-                    send       : function (nudes) {
+                    send         : function (nudes) {
                         var vm   = this;
                         var data = this.getData();
                         var url  = this.getUrl();
@@ -144,28 +149,91 @@
                         $.post(url, data)
                          .done(function () {
                              Materialize.toast('You successfully signed up!', 1500, 'status success');
-                             vm.btnStatus('btnSuccess', function () {
-                                 window.location.href = '{{ urlFor('home:home') }}';
-                             });
+                             vm.login(data.data);
+                             vm.btnStatus('btnSuccess');
                          })
                          .fail(function (data) {
-                             data  = data.responseJSON || { errors: [ 'Something went wrong!' ] };
-                             var d = data.errors;
-
-                             for (var i in d) {
-                                 if (!d.hasOwnProperty(i))
-                                     continue;
-
-                                 Materialize.toast(d[ i ], 3000, 'status error');
-                             }
-
+                             vm.displayErrors(data);
                              vm.btnStatus('btnError');
                          })
                          .always(function () {
                              vm.loading = false;
                          });
                     },
-                    btnStatus  : function (status, cb) {
+                    displayErrors: function (data) {
+                        data  = data.responseJSON || { errors: [ 'Something went wrong!' ] };
+                        var d = data.errors;
+
+                        for (var i in d) {
+                            if (!d.hasOwnProperty(i))
+                                continue;
+
+                            Materialize.toast(d[ i ], 3000, 'status error');
+                        }
+                    },
+                    getUser      : function () {
+                        return $(this.$el).attr('data-user');
+                    },
+                    getLoginUrl  : function () {
+                        return $(this.$el).attr('data-login');
+                    },
+                    getLessonsUrl: function () {
+                        return $(this.$el).attr('data-lessons');
+                    },
+                    login        : function (data) {
+                        var vm  = this;
+                        var cls = 'click-to-log-user-in';
+                        swal(
+                            {
+                                title              : 'Success!',
+                                html               : 'You\'ve successfully signed up!<br>Now you\'re being logged in...',
+                                type               : 'info',
+                                confirmButtonText  : 'Log in',
+                                showLoaderOnConfirm: true,
+                                confirmButtonClass : cls,
+                                preConfirm         : function () {
+                                    return new Promise(function (resolve, reject) {
+                                        var csrf = getCsrf();
+                                        var url  = vm.getLoginUrl();
+
+                                        var data = {
+                                            identifier: vm.getUser(),
+                                            password  : vm.password
+                                        };
+
+                                        data[ csrf.key ] = csrf.value;
+
+                                        $.post(url, data)
+                                         .done(function () {
+                                             resolve();
+                                         })
+                                         .fail(function (data) {
+                                             vm.displayErrors(data);
+                                             reject('Things went amiss');
+                                         });
+                                    })
+                                },
+                                allowOutsideClick  : false,
+                                onOpen             : function () {
+                                    setTimeout(function () {
+                                        $('.' + cls).click();
+                                    }, 50);
+                                }
+                            }
+                        ).then(function () {
+                            swal(
+                                {
+                                    type   : 'success',
+                                    title  : 'You\'re ready to go',
+                                    html   : 'Now you just need to select lessons you\'re gonna be attending',
+                                    onClose: function () {
+                                        window.location.href = vm.getLessonsUrl();
+                                    }
+                                }
+                            )
+                        });
+                    },
+                    btnStatus    : function (status, cb) {
                         var vm = this;
 
                         this[ status ] = true;
