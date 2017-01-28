@@ -348,12 +348,13 @@ function toArray($object): array {
  * @param array  $data    Data to be supplied with alongside the message
  * @param string $action  An additional action
  * @param array  $actions Possible additional actions
+ * @param int    $status  The status code for the error
  *
  * @return void
  */
-function err(string $reason, array $data = [], string $action = '', array $actions = []): void {
+function err(string $reason, array $data = [], string $action = '', array $actions = [], int $status = 400): void {
     global $app;
-    $app->status(400);
+    $app->status($status);
     res(TRUE, $reason, $data, $action, $actions);
 }
 
