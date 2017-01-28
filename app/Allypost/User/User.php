@@ -83,13 +83,11 @@ class User extends Eloquent {
     public function login(string $identifier, string $password, bool $remember = FALSE) {
         $validation = $this->loginValidate($identifier, $password);
 
-        if (!$validation[ 'tries' ]) {
+        if (!$validation[ 'tries' ])
             return $this->_error('Too many failed login attempts. Try again after a while.');
-        }
 
-        if (!$validation[ 'data' ]) {
+        if (!$validation[ 'data' ])
             return $this->_error('Both fields are required');
-        }
 
         return $this->loginPropagate($identifier, $password, $remember);
     }
@@ -177,6 +175,9 @@ class User extends Eloquent {
 
         if (!$passwordsMatch)
             return $this->_error("Wrong ID or password", $identifier, $user);
+
+        if (!$user->data->active)
+            return $this->_error("Account not activated", $identifier, $user);
 
         $final = $this->loginFinalise($user, $remember);
 
