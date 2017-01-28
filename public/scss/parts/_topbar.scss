@@ -43,10 +43,11 @@
         }
 
         &.divider {
-            height     : 100%;
-            width      : 8px;
-            background : transparent;
-            position   : relative;
+            height      : 100%;
+            margin-left : 8px;
+            width       : 8px;
+            background  : transparent;
+            position    : relative;
 
             &::after {
                 content    : ' ';
