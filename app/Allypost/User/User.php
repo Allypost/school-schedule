@@ -330,33 +330,37 @@ class User extends Eloquent {
     /**
      * Activate the current user's account
      */
-    public function activateAccount() {
-        return $this->data->update(
+    public function activateAccount($password) {
+        $data = $this->data->update(
             [
                 'active'          => TRUE,
                 'activation_code' => NULL,
             ]
         );
+
+        $user = $this->update(
+            [
+                'password' => $password,
+            ]
+        );
+
+        return $data && $user;
     }
 
     /**
      * Activate a User by UUID and activation code
      *
-     * @param string $identifier     The UUID of the user which to activate
-     * @param string $activationCode The user supplied activation code
+     * @param self   $user     The User object to be activated
+     * @param string $password The new password for the user
      *
      * @return bool Whether the activation was successful
      */
-    public function activate(string $identifier, string $activationCode): bool {
-        $user = $this->activateCheck($identifier, $activationCode, TRUE);
-        $app  = $this->app();
-
-        if (!$user)
-            return FALSE;
+    public function activate(self $user, string $password): bool {
+        $app = $this->app();
 
         $app->log->log('user activate', json_decode(json_encode($user), TRUE), 200, $user->uuid);
 
-        return (bool) $user->activateAccount();
+        return (bool) $user->activateAccount($app->hash->password($password));
     }
 
     /**
