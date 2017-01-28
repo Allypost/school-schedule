@@ -385,6 +385,23 @@ class User extends Eloquent {
     }
 
     /**
+     * Check new user password
+     *
+     * @param string $password       The new password
+     * @param string $passwordRepeat The new password (repeated)
+     * @param string $identifier     The User identifier
+     *
+     * @return array<Bool> Array of tests and whether they've been passed (test name => bool)
+     */
+    public function passwordCheck(string $password, string $passwordRepeat, string $identifier = ''): array {
+        $match   = $password == $passwordRepeat;
+        $length  = strlen($password) > 5;
+        $naughty = $password == $identifier;
+
+        return compact('match', 'length', 'naughty');
+    }
+
+    /**
      * Generate and apply new activation code for a User
      *
      * @param string $identifier The UUID of the user for which to create the activation code
