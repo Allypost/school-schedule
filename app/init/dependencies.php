@@ -70,6 +70,11 @@ $app->container->set('recaptcha', function () use ($app) {
 
 $app->notFound(function () use ($app) {
     $app->status(404);
-    $app->render('errors/404.twig');
+
+    if ($app->request->headers('x-requested-with') == 'XMLHttpRequest')
+        err('Page not found');
+    else
+        $app->render('errors/404.twig');
+
     $app->stop();
 });
