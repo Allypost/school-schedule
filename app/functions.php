@@ -301,6 +301,24 @@ function fixFilesArray(array $filesArray): array {
 }
 
 /**
+ * Get the ratio of the levenstein distance between two string and the max length
+ *
+ * @param string $str1 First string
+ * @param string $str2 Second string
+ *
+ * @return float The ratio
+ */
+function levenshteinRatio($str1, $str2): float {
+    $lev = levenshtein($str1, $str2);
+    $max = strlen(max($str1, $str2));
+
+    if ($max == 0)
+        return 1;
+
+    return (1 - $lev / $max);
+}
+
+/**
  * Generate integer value from string (used for error codes, about 5% chance of duplicates)
  *
  * @param string $error The error string
