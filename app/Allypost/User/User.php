@@ -389,16 +389,22 @@ class User extends Eloquent {
      *
      * @param string $password       The new password
      * @param string $passwordRepeat The new password (repeated)
-     * @param string $identifier     The User identifier
+     * @param self   $user           Instance of User (for similarity checks)
      *
      * @return array<Bool> Array of tests and whether they've been passed (test name => bool)
      */
-    public function passwordCheck(string $password, string $passwordRepeat, string $identifier = ''): array {
-        $match   = $password == $passwordRepeat;
-        $length  = strlen($password) > 5;
-        $naughty = $password == $identifier;
+    public function passwordCheck(string $password, string $passwordRepeat, self $user = NULL): array {
+        $match  = $password == $passwordRepeat;
+        $length = strlen($password) > 5;
+        $id     = TRUE;
+        $name   = TRUE;
 
-        return compact('match', 'length', 'naughty');
+        if (!empty($password) && $user) {
+            $id   = levenshteinRatio($user->uuid, $password) < 0.72;
+            $name = levenshteinRatio($user->name, $password) < 0.72;
+        }
+
+        return compact('match', 'length', 'id', 'name');
     }
 
     /**
