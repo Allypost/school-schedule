@@ -5,6 +5,10 @@
         <a href="/" class="brand-logo">Logo</a>
         <a href="javascript:void(0)" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {% if app.auth.isTeacher() %}
+                <li><a href="{{ urlFor('user:invite') }}"><i class="material-icons left">share</i>Invite</a></li>
+                <li class="divider"></li>
+            {% endif %}
             <li><a href="{{ urlFor('home:home') }}"><i class="material-icons left">event</i>Schedule</a></li>
             <li><a href="{{ urlFor('lessons:home') }}"><i class="material-icons left">schedule</i>Lessons</a></li>
             <li class="divider"></li>
