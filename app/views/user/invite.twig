@@ -116,7 +116,7 @@
             }
         };
         {% endraw %}
-
+        var cp;
         var inviteVM = new Vue(
             {
                 el        : '#invite-user',
@@ -214,7 +214,7 @@
                              $.getJSON(apiUrl, function (d) {
                                  $('#' + id).append($('<div class="col s12">  URL: <button class="btn btn-flat btn-cpy" data-clipboard-text=' + d.shorturl + '>Click to copy</button></div>'));
 
-                                 var cp = new Clipboard('.btn-cpy');
+                                 cp = cp || new Clipboard('.btn-cpy');
 
                                  cp.on('success', function () {
                                      Materialize.toast('Copied to clipboard', 1500, 'status success');
