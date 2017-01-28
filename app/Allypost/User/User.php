@@ -398,13 +398,15 @@ class User extends Eloquent {
         $length = strlen($password) > 5;
         $id     = TRUE;
         $name   = TRUE;
+        $email  = TRUE;
 
         if (!empty($password) && $user) {
-            $id   = levenshteinRatio($user->uuid, $password) < 0.72;
-            $name = levenshteinRatio($user->name, $password) < 0.72;
+            $id    = levenshteinRatio($user->uuid, $password) < 0.72;
+            $name  = levenshteinRatio($user->name, $password) < 0.72;
+            $email = levenshteinRatio($user->email, $password) < 0.72;
         }
 
-        return compact('match', 'length', 'id', 'name');
+        return compact('match', 'length', 'id', 'name', 'email');
     }
 
     /**
