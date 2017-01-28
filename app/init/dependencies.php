@@ -72,7 +72,7 @@ $app->notFound(function () use ($app) {
     $app->status(404);
 
     if ($app->request->headers('x-requested-with') == 'XMLHttpRequest')
-        err('Page not found');
+        err('Page not found', [], '', [], 404);
     else
         $app->render('errors/404.twig');
 
