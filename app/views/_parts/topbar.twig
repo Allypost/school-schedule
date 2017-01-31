@@ -120,9 +120,14 @@
             }
         },
         mounted: function () {
-            this.getData();
-            this.dropdownRegister();
+            var vm = this;
+
+            vm.dropdownRegister();
             $(".button-collapse").sideNav();
+
+            $(document).ready(function () {
+                vm.getData();
+            });
         }
     });
 </script>
