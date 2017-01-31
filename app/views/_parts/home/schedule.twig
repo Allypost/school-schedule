@@ -271,25 +271,27 @@
                 }
             });
 
-            scheduleVM.fetchSchedule(function (data, vm) {
-                vm.setSchedule(data.data);
+            $(document).ready(function () {
+                scheduleVM.fetchSchedule(function (data, vm) {
+                    vm.setSchedule(data.data);
+                });
+
+                {% if app.auth.isTeacher() %}
+                scheduleVM.fetchTeaching(function (data, vm) {
+                    var d = data.data;
+
+                    vm.teaching[ 0 ] = {
+                        due   : null,
+                        id    : -1,
+                        name  : '/',
+                        owner : -1,
+                        status: ''
+                    };
+
+                    vm.setTeaching(d);
+                });
+                {% endif %}
             });
-
-            {% if app.auth.isTeacher() %}
-            scheduleVM.fetchTeaching(function (data, vm) {
-                var d = data.data;
-
-                vm.teaching[ 0 ] = {
-                    due   : null,
-                    id    : -1,
-                    name  : '/',
-                    owner : -1,
-                    status: ''
-                };
-
-                vm.setTeaching(d);
-            });
-            {% endif %}
 
             window.setInterval(function () {
                 scheduleVM.fetchSchedule(function (data, vm) {
