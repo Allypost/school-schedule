@@ -1,6 +1,6 @@
 <?php
 
-$isApi = $app->request->headers('X-Api', 0) == '1';
+$isApi = $_SERVER[ 'IS_API' ] ?? '0' == '1';
 
 if (!$isApi) {
 
