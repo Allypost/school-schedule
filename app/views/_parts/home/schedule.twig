@@ -61,64 +61,67 @@
             {% endraw %}
         </div>
         <script>
-            var scheduleMatrix = {};
+            var getScheduleMatrix = function () {
+                var scheduleMatrix = {};
+                var weeks          = [ 1, 2 ];
+                var days           = {{ days|json_encode|raw }};
+                var periods        = Array.apply(null, Array(5)).map(function (_, i) {
+                    return i + 1;
+                });
 
-            var weeks   = [ 1, 2 ];
-            var days    = {{ days|json_encode|raw }};
-            var periods = Array.apply(null, Array(5)).map(function (_, i) {
-                return i + 1;
-            });
-
-            for (var week in weeks) {
-                if (!weeks.hasOwnProperty(week))
-                    continue;
-
-                var w = weeks[ week ];
-
-                if (!scheduleMatrix[ w ])
-                    scheduleMatrix[ w ] = {};
-
-
-                for (var day in days) {
-                    if (!days.hasOwnProperty(day))
+                for (var week in weeks) {
+                    if (!weeks.hasOwnProperty(week))
                         continue;
 
-                    var d = days[ day ];
+                    var w = weeks[ week ];
 
-                    if (!scheduleMatrix[ w ][ d ])
-                        scheduleMatrix[ w ][ d ] = {};
+                    if (!scheduleMatrix[ w ])
+                        scheduleMatrix[ w ] = {};
 
 
-                    for (var period in periods) {
-                        if (!periods.hasOwnProperty(period))
+                    for (var day in days) {
+                        if (!days.hasOwnProperty(day))
                             continue;
 
-                        var p = periods[ period ];
+                        var d = days[ day ];
 
-                        scheduleMatrix[ w ][ d ][ p ] = {
-                            id       : null,
-                            owner    : null,
-                            name     : '',
-                            subject  : '',
-                            status   : '',
-                            due      : null,
-                            week     : null,
-                            day      : null,
-                            period   : null,
-                            owned    : false,
-                            hasClass : false,
-                            isLoading: false
-                        };
+                        if (!scheduleMatrix[ w ][ d ])
+                            scheduleMatrix[ w ][ d ] = {};
+
+
+                        for (var period in periods) {
+                            if (!periods.hasOwnProperty(period))
+                                continue;
+
+                            var p = periods[ period ];
+
+                            scheduleMatrix[ w ][ d ][ p ] = {
+                                id       : null,
+                                owner    : null,
+                                name     : '',
+                                subject  : '',
+                                status   : '',
+                                due      : null,
+                                week     : null,
+                                day      : null,
+                                period   : null,
+                                owned    : false,
+                                hasClass : false,
+                                isLoading: false
+                            };
+                        }
                     }
                 }
-            }
+
+                return scheduleMatrix;
+            };
 
             var scheduleVM = new Vue({
                 el     : '.schedule',
                 data   : {
                     week     : '{{ week }}',
                     days     : {{ days|json_encode|raw }},
-                    schedule : scheduleMatrix,
+                    schedule : getScheduleMatrix(),
                     teaching : {},
                     isTeacher: {{ app.auth.isTeacher()|json_encode|raw }},
                     statuses : { Cancelled: "Cancelled", Normal: "" },
