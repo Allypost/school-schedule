@@ -124,9 +124,12 @@
 
                     return fn;
                 }
+            },
+            mounted: function () {
+                $(document).ready(function () {
+                    lessonsVM.fetchLessons();
+                });
             }
         });
-
-        lessonsVM.fetchLessons();
     </script>
 {% endblock %}
