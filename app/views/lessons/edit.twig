@@ -95,7 +95,7 @@
             transition : background-color .1s, box-shadow .2s ease-in-out;
         }
     </style>
-    <script>{{ source('_parts/__VueVMs/lessonsVM.edit.min.js') }}</script>
+    <script>window.onload = function () { {{ source('_parts/__VueVMs/lessonsVM.edit.min.js') }} }</script>
     <script>
         lessonsVM.fetchLessons();
     </script>

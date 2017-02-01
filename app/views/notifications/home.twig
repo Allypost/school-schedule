@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    <script>{{ source('_parts/__VueVMs/notificationVM.min.js') }}</script>
+    <script>window.onload = function () { {{ source('_parts/__VueVMs/notificationVM.min.js') }} }</script>
     <style>
         #notifications {
             width : auto;

@@ -52,13 +52,13 @@
 
 <!--    <Javascript>    -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
 
 <!--    <Inlined-DEPENDANT-Javascript>    -->
-<script>{{ source('_parts/__head/jquery_debounce.min.js') }}</script>
-<script>{{ source('_parts/__head/jquery_serializeObject.min.js') }}</script>
+<script>window.onload = function () { {{ source('_parts/__head/jquery_debounce.min.js') }} }</script>
+<script>window.onload = function () { {{ source('_parts/__head/jquery_serializeObject.min.js') }} }</script>
 <!--    </Inlined-DEPENDANT-Javascript>    -->
 
 <!--    </Javascript>    -->
