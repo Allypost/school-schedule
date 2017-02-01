@@ -2,20 +2,25 @@
     <link rel="stylesheet" href="/css/schedule.css?v=1.3">
 {% endblock %}
 
+{% set isTeacher = app.auth.isTeacher() %}
+
 <div class="row">
     <div class="col s12">
-        <div class="schedule z-depth-2 row">
-            {% raw %}
-                <div class="row schedule-week"
-                     :class="'week-' + week" :data-week="week + ':'"
-                     v-for="(days, week) in schedule">
-                    <div class="row schedule-header">
-                        <div class="col offset-s1"></div>
-                        <div class="col s2 schedule-day"
-                             v-for="(periods, day) in days">
-                            {{ day | capitalize }}
-                        </div>
+        <div class="schedule z-depth-2 row"
+             data-teacher="{{ isTeacher|raw }}"
+             data-schedule="{{ urlFor('api:lessons:schedule') }}" data-status="{{ urlFor('api:lessons:update:status') }}"
+             data-teaching="{{ urlFor('api:lessons:teaching') }}" data-subject="{{ urlFor('api:lessons:update') }}">
+            <div class="row schedule-week"
+                 :class="'week-' + week" :data-week="week + ':'"
+                 v-for="(days, week) in schedule">
+                <div class="row schedule-header">
+                    <div class="col offset-s1"></div>
+                    <div class="col s2 schedule-day"
+                         v-for="(periods, day) in days">
+                        {{ '{{' }} day | capitalize {{ '}}' }}
                     </div>
+                </div>
+                {% raw %}
                     <div class="row schedule-days">
                         <div class="col offset-s1"></div>
                         <div class="col s2 schedule-day"
@@ -57,15 +62,24 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endraw %}
+                {% endraw %}
+            </div>
         </div>
         <script>
+            function getWeek() {
+                var now            = new Date();
+                var onejan         = new Date(now.getFullYear(), 0, 1);
+                var millisecsInDay = 86400000;
+                var realWeek       = Math.ceil((((now - onejan) / millisecsInDay) + onejan.getDay() + 1) / 7);
+
+                return realWeek % 2 + 1;
+            }
+
             var getScheduleMatrix = function () {
                 var scheduleMatrix = {};
                 var weeks          = [ 1, 2 ];
-                var days           = {{ days|json_encode|raw }};
-                var periods        = Array.apply(null, Array(5)).map(function (_, i) {
+                var days           = [ 'mon', 'tue', 'wed', 'thu', 'fri' ];
+                var periods        = Array.apply(null, new Array(5)).map(function (_, i) {
                     return i + 1;
                 });
 
@@ -117,17 +131,21 @@
             };
 
             var scheduleVM = new Vue({
-                el     : '.schedule',
-                data   : {
-                    week     : '{{ week }}',
-                    days     : {{ days|json_encode|raw }},
+                el      : '.schedule',
+                data    : {
+                    week     : getWeek(),
+                    days     : [ 'mon', 'tue', 'wed', 'thu', 'fri' ],
                     schedule : getScheduleMatrix(),
                     teaching : {},
-                    isTeacher: {{ app.auth.isTeacher()|json_encode|raw }},
                     statuses : { Cancelled: "Cancelled", Normal: "" },
                     lastFetch: 0
                 },
-                filters: {
+                computed: {
+                    isTeacher: function () {
+                        return !!parseInt($(this.$el).attr('data-teacher'));
+                    }
+                },
+                filters : {
                     lower     : function (el) {
                         return el.toString().toLowerCase();
                     },
@@ -137,7 +155,7 @@
                         return value.charAt(0).toUpperCase() + value.slice(1);
                     }
                 },
-                methods: {
+                methods : {
                     getLocation     : function (subject) {
                         return {
                             week  : subject.week,
@@ -182,26 +200,27 @@
 
                             if (status == 'error') {
                                 Materialize.toast('An error occured', 3000, 'status error');
-                                return;
                             }
                         });
                     },
                     statusPropagate : function (data, cb) {
-                        this.dataPropagate(data, '{{ urlFor('api:lessons:update:status') }}', cb);
+                        var url = $(this.$el).attr('data-status');
+                        return this.dataPropagate(data, url, cb);
                     },
                     subjectPropagate: function (data, cb) {
-                        this.dataPropagate(data, '{{ urlFor('api:lessons:update') }}', cb);
+                        var url = $(this.$el).attr('data-subject');
+                        return this.dataPropagate(data, url, cb);
                     },
                     dataPropagate   : function (data, url, cb) {
                         data[ $('meta[name="csrf_key"]').attr('content') ] = $('meta[name="csrf"]').attr('content');
 
-                        $.post(url, data)
-                         .done(function (data) {
-                             cb(data, 'success');
-                         })
-                         .fail(function (data) {
-                             cb(data, 'error');
-                         });
+                        return $.post(url, data)
+                                .done(function (data) {
+                                    cb(data, 'success');
+                                })
+                                .fail(function (data) {
+                                    cb(data, 'error');
+                                });
                     },
                     highlightClass  : function (cls) {
                         if (cls.owned)
@@ -218,9 +237,12 @@
                             $el.removeClass(cl);
                         }, 850);
                     },
+                    getScheduleUrl  : function () {
+                        return $(this.$el).attr('data-schedule');
+                    },
                     fetchSchedule   : function (cb, recent) {
                         var vm  = this;
-                        var url = '{{ urlFor('api:lessons:schedule') }}';
+                        var url = vm.getScheduleUrl();
 
                         if (recent)
                             url += '/' + this.lastFetch;
@@ -253,9 +275,13 @@
 
                         this.$forceUpdate();
                     },
+                    getTeachingUrl  : function () {
+                        return $(this.$el).attr('data-teaching');
+                    },
                     fetchTeaching   : function (cb) {
-                        var vm = this;
-                        $.get('{{ urlFor('api:lessons:teaching') }}')
+                        var vm  = this;
+                        var url = vm.getTeachingUrl();
+                        $.get(url)
                          .done(function (data) {
                              cb(data, vm);
                          })
@@ -275,35 +301,38 @@
 
                         this.$forceUpdate();
                     }
+                },
+                mounted : function () {
+                    var vm = this;
+
+                    $(document).ready(function () {
+                        scheduleVM.fetchSchedule(function (data, vm) {
+                            vm.setSchedule(data.data);
+                        });
+
+                        if (vm.isTeacher) {
+                            scheduleVM.fetchTeaching(function (data, vm) {
+                                var d = data.data;
+
+                                vm.teaching[ 0 ] = {
+                                    due   : null,
+                                    id    : -1,
+                                    name  : '/',
+                                    owner : -1,
+                                    status: ''
+                                };
+
+                                vm.setTeaching(d);
+                            });
+                        }
+
+                        window.setInterval(function () {
+                            scheduleVM.fetchSchedule(function (data, vm) {
+                                vm.setSchedule(data.data, true);
+                            }, true);
+                        }, 5000);
+                    });
                 }
-            });
-
-            $(document).ready(function () {
-                scheduleVM.fetchSchedule(function (data, vm) {
-                    vm.setSchedule(data.data);
-                });
-
-                window.setInterval(function () {
-                    scheduleVM.fetchSchedule(function (data, vm) {
-                        vm.setSchedule(data.data, true);
-                    }, true);
-                }, 5000);
-
-                {% if app.auth.isTeacher() %}
-                scheduleVM.fetchTeaching(function (data, vm) {
-                    var d = data.data;
-
-                    vm.teaching[ 0 ] = {
-                        due   : null,
-                        id    : -1,
-                        name  : '/',
-                        owner : -1,
-                        status: ''
-                    };
-
-                    vm.setTeaching(d);
-                });
-                {% endif %}
             });
         </script>
     </div>
