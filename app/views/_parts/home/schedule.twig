@@ -280,6 +280,12 @@
                     vm.setSchedule(data.data);
                 });
 
+                window.setInterval(function () {
+                    scheduleVM.fetchSchedule(function (data, vm) {
+                        vm.setSchedule(data.data, true);
+                    }, true);
+                }, 5000);
+
                 {% if app.auth.isTeacher() %}
                 scheduleVM.fetchTeaching(function (data, vm) {
                     var d = data.data;
@@ -296,13 +302,6 @@
                 });
                 {% endif %}
             });
-
-            window.setInterval(function () {
-                scheduleVM.fetchSchedule(function (data, vm) {
-                    vm.setSchedule(data.data, true);
-                }, true);
-            }, 5000);
-
         </script>
     </div>
 </div>
