@@ -67,7 +67,12 @@
             </form>
         </div>
     </div>
-    <script>{{ source('_parts/__VueVMs/inviteVM.min.js') }}</script>
+    <script>
+        var inviteVM;
+        addLoadEvent(function () {
+            {{ source('_parts/__VueVMs/inviteVM.min.js') }}
+        });
+    </script>
     <style>
         nav.datepicker--nav {
             width            : auto;

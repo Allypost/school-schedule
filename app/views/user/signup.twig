@@ -55,7 +55,12 @@
             </form>
         </div>
     </div>
-    <script>{{ source('_parts/__VueVMs/signupVM.min.js') }}</script>
+    <script>
+        var signupVM;
+        addLoadEvent(function () {
+            {{ source('_parts/__VueVMs/signupVM.min.js') }}
+        });
+    </script>
     <style>
         .row.top-spacer {
             padding    : 0 2.1rem 0 2.1rem;
