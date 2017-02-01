@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="row">
-        <form action="{{ urlFor('api:lessons:update:attending') }}" method="POST" class="col s12 m8 l6" id="lessons">
+        <form action="{{ urlFor('api:lessons:update:attending') }}" data-attending="{{ urlFor('api:lessons:attending') }}" method="POST" class="col s12 m8 l6" id="lessons">
             <div class="row">
                 <h1 class="col s6">Attending:</h1>
             </div>
@@ -32,16 +32,20 @@
                 btnInterval: null
             },
             methods: {
-                fetchLessons: function () {
-                    var vm = this;
+                getAttendingUrl: function () {
+                    return $(this.$el).attr('data-attending');
+                },
+                fetchLessons   : function () {
+                    var vm  = this;
+                    var url = vm.getAttendingUrl();
 
-                    $.get('{{ urlFor('api:lessons:attending') }}')
+                    $.get(url)
                      .done(function (d) {
                          vm.lessons = d.data;
                          vm.loading = false;
                      });
                 },
-                getLessons  : function () {
+                getLessons     : function () {
                     var l = this.lessons;
 
                     var lessons = {};
@@ -57,7 +61,7 @@
 
                     return lessons;
                 },
-                saveLessons : function () {
+                saveLessons    : function () {
                     var vm    = this;
                     var $form = $('#lessons');
                     var url   = $form.attr('action');
@@ -99,7 +103,7 @@
                          vm.loading = false;
                      });
                 },
-                btnStatus   : function (status, cb) {
+                btnStatus      : function (status, cb) {
                     var vm = this;
 
                     vm[ status ] = true;
