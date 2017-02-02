@@ -1,4 +1,4 @@
-var loginVM = new Vue({
+window.loginVM = new Vue({
     el     : '.login-form',
     data   : {
         loading    : false,

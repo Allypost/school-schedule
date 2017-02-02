@@ -1,4 +1,4 @@
-var lessonsVM = new Vue({
+window.lessonsVM = new Vue({
     el     : '#lessons',
     data   : {
         lessons      : [],

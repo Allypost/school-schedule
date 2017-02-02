@@ -1,5 +1,5 @@
 var cp;
-var inviteVM = new Vue(
+window.inviteVM = new Vue(
     {
         el        : '#invite-user',
         data      : {

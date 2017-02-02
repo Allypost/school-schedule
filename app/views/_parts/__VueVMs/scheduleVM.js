@@ -60,7 +60,8 @@ var getScheduleMatrix = function () {
 
     return scheduleMatrix;
 };
-var scheduleVM        = new Vue({
+
+window.scheduleVM = new Vue({
     el      : '.schedule',
     data    : {
         week     : getWeek(),

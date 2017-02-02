@@ -1,4 +1,4 @@
-var signupVM = new Vue(
+window.signupVM = new Vue(
     {
         el        : '#invite-user',
         data      : {

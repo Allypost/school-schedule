@@ -1,4 +1,4 @@
-var notificationVM = new Vue(
+window.notificationVM = new Vue(
     {
         el     : '#notifications',
         data   : {

@@ -1,4 +1,4 @@
-var topbarVM = new Vue({
+window.topbarVM = new Vue({
     el     : '.topbar',
     data   : {
         notifications           : [],
