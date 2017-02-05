@@ -22,7 +22,17 @@ class SiteSettings extends Eloquent {
         'id',
         'created_at',
         'updated_at',
-    ]; // 7 days
+    ];
+
+    /**
+     * Return app instance
+     *
+     * @return Slim The instance
+     */
+    public function app() {
+        return Slim::getInstance();
+    }
+
 
     /**
      * Update settings
@@ -76,15 +86,6 @@ class SiteSettings extends Eloquent {
         }
 
         return $settings;
-    }
-
-    /**
-     * Return app instance
-     *
-     * @return Slim The instance
-     */
-    public function app() {
-        return Slim::getInstance();
     }
 
     /**

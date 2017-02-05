@@ -3,6 +3,7 @@
 namespace Allypost\Lessons;
 
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Slim\Slim;
 
@@ -31,11 +32,34 @@ class Notification extends Eloquent {
 
     # </PRESETS>
 
+    /* ######################################### */
+    /* # <Wrappers for Eloquent relationships> # */
+    /* ######################################### */
     public function lesson() {
         return $this->belongsTo('Allypost\Lessons\Lesson');
     }
+    /* ######################################### */
+    /* # </Wrappers for Eloquent relationships> # */
+    /* ######################################### */
 
-    public function mine($all = FALSE) {
+    /**
+     * Get the current instance of the App
+     *
+     * @return Slim The instance
+     */
+    public function app() {
+        return Slim::getInstance();
+    }
+
+
+    /**
+     * Return all unread Notifications for the current user
+     *
+     * @param bool $all Whether to return ALL Notifications
+     *
+     * @return Builder The Query Builder object
+     */
+    public function mine(bool $all = FALSE) {
         $u = $this->app()->auth;
 
         $query = $this
@@ -52,9 +76,5 @@ class Notification extends Eloquent {
             $query = $query->where('notifications.created_at', '>', $u->data->notification_seen);
 
         return $query;
-    }
-
-    public function app() {
-        return Slim::getInstance();
     }
 }

@@ -37,7 +37,13 @@ class UserPermission extends Eloquent {
 
     # </PRESETS>
 
+    /* ######################################### */
+    /* # <Wrappers for Eloquent relationships> # */
+    /* ######################################### */
     public function owner() {
         return $this->belongsTo('Allypost\User\User', 'id', 'user_id');
     }
+    /* ######################################### */
+    /* # </Wrappers for Eloquent relationships> # */
+    /* ######################################### */
 }

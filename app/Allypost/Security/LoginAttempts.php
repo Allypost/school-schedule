@@ -46,6 +46,16 @@ class LoginAttempts extends Eloquent {
     }
 
     /**
+     * Returns the instance of Slim
+     *
+     * @return Slim The current Slim instance
+     */
+    public function app(): Slim {
+        return Slim::getInstance();
+    }
+
+
+    /**
      * Log a login attempt
      *
      * @param string $ip      The IP of the user
@@ -112,6 +122,8 @@ class LoginAttempts extends Eloquent {
      *
      * @param string $ip  The IP of the user
      * @param bool   $raw Whether to return the raw Eloquent class or an array
+     *
+     * @return self The LoginAttempt
      */
     public function fetch(string $ip, bool $raw = FALSE) {
         $return = $this->where('ip', $ip)->first();
@@ -166,14 +178,5 @@ class LoginAttempts extends Eloquent {
      */
     public function getIP(string $ip = ''): string {
         return $ip ?: $this->app()->request->getIp();
-    }
-
-    /**
-     * Returns the instance of Slim
-     *
-     * @return Slim The current Slim instance
-     */
-    public function app(): Slim {
-        return Slim::getInstance();
     }
 }

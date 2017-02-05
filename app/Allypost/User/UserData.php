@@ -41,6 +41,9 @@ class UserData extends Eloquent {
 
     /*  </PRESETS>   */
 
+    /* ######################################### */
+    /* # <Wrappers for Eloquent relationships> # */
+    /* ######################################### */
     public function owner() {
         return $this->belongsTo('Allypost\User\User', 'id', 'user_id');
     }
@@ -52,5 +55,8 @@ class UserData extends Eloquent {
     public function permissions() {
         return $this->hasOne('Allypost\User\UserPermission', 'user_id', 'user_id');
     }
+    /* ######################################### */
+    /* # </Wrappers for Eloquent relationships> # */
+    /* ######################################### */
 
 }

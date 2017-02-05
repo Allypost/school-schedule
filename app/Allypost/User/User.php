@@ -56,6 +56,38 @@ class User extends Eloquent {
 
     public $app = NULL;
 
+    /* ######################################### */
+    /* # <Wrappers for Eloquent relationships> # */
+    /* ######################################### */
+    public function permissions() {
+        return $this->hasOne('Allypost\User\UserPermission', 'user_id', 'id');
+    }
+
+    public function data() {
+        return $this->hasOne('Allypost\User\UserData', 'user_id', 'id');
+    }
+
+    public function attendee() {
+        return $this->hasMany('Allypost\Lessons\Attendee');
+    }
+
+    public function lessons() {
+        return $this->hasMany('Allypost\Lessons\Lesson', 'owner');
+    }
+    /* ########################################## */
+    /* # </Wrappers for Eloquent relationships> # */
+    /* ########################################## */
+
+    /**
+     * Returns the instance of Slim
+     *
+     * @return Slim The current Slim instance
+     */
+    public function app() {
+        return $this->app ?: Slim::getInstance();
+    }
+
+
     /**
      * Initialization (injection) of LoginAttempts
      *
@@ -654,28 +686,6 @@ class User extends Eloquent {
         return $pass ? ($returnObject ? $user : $pass) : FALSE;
     }
 
-    /* ######################################### */
-    /* # <Wrappers for Eloquent relationships> # */
-    /* ######################################### */
-    public function permissions() {
-        return $this->hasOne('Allypost\User\UserPermission', 'user_id', 'id');
-    }
-
-    public function data() {
-        return $this->hasOne('Allypost\User\UserData', 'user_id', 'id');
-    }
-
-    public function attendee() {
-        return $this->hasMany('Allypost\Lessons\Attendee');
-    }
-
-    public function lessons() {
-        return $this->hasMany('Allypost\Lessons\Lesson', 'owner');
-    }
-    /* ########################################## */
-    /* # </Wrappers for Eloquent relationships> # */
-    /* ########################################## */
-
     /**
      * Returns the current User's full name
      *
@@ -826,14 +836,5 @@ class User extends Eloquent {
                          ->where('lessons_attendees.user_id', $sqlID);
 
         return $query;
-    }
-
-    /**
-     * Returns the instance of Slim
-     *
-     * @return Slim The current Slim instance
-     */
-    public function app() {
-        return $this->app ?: Slim::getInstance();
     }
 }
