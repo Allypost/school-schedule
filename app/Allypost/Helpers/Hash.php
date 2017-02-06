@@ -63,7 +63,7 @@ class Hash {
         if (empty($cost) || !is_int($cost))
             $cost = $this->config->get('app.hash.cost');
 
-        return (int) ($cost > 0) ? $cost : 1;
+        return (int) ($cost > 0) ? $cost : 5;
     }
 
     /**
@@ -176,7 +176,7 @@ class Hash {
      *
      * @param string $action      Whether to encrypt or decrypt the string
      * @param string $value       The string to be encrypted/decrypted
-     * @param string $cryptMethod The algorythm for the encryption/decryption
+     * @param string $cryptMethod The algorithm for the encryption/decryption
      * @param string $password    The 'password' for the encryption/decryption
      *
      * @return string Either the hash or the decrypted string
@@ -193,22 +193,6 @@ class Hash {
     }
 
     /**
-     * Performs the decryption (wrapper for PHP openssl_decrypt)
-     *
-     * @param string $value       The value to be decrypted
-     * @param string $cryptMethod The algorythm for the decryption
-     * @param string $password    The 'password' for the decryption
-     *
-     * @return string The hash encrypted with the $password
-     */
-    private function doDecrypt(string $value, string $cryptMethod, string $password): string {
-        $data = $value;
-        $iv   = $this->getIV();
-
-        return (string) openssl_decrypt($data, $cryptMethod, $password, FALSE, $iv);
-    }
-
-    /**
      * Generate a new initialization vector for openssl crypto
      */
     protected function getIV(): string {
@@ -216,19 +200,33 @@ class Hash {
     }
 
     /**
+     * Performs the decryption (wrapper for PHP openssl_decrypt)
+     *
+     * @param string $value       The value to be decrypted
+     * @param string $cryptMethod The algorithm for the decryption
+     * @param string $password    The 'password' for the decryption
+     *
+     * @return string The hash encrypted with the $password
+     */
+    private function doDecrypt(string $value, string $cryptMethod, string $password): string {
+        $iv = $this->getIV();
+
+        return (string) openssl_decrypt($value, $cryptMethod, $password, FALSE, $iv);
+    }
+
+    /**
      * Performs the encryption (wrapper for PHP openssl_encrypt)
      *
      * @param string $value       The value to be encrypted
-     * @param string $cryptMethod The algorythm for the encryption
+     * @param string $cryptMethod The algorithm for the encryption
      * @param string $password    The 'password' for the encryption
      *
      * @return string The hash encrypted with the $password
      */
     private function doEncrypt(string $value, string $cryptMethod, string $password): string {
-        $data = $value;
-        $iv   = $this->getIV();
+        $iv = $this->getIV();
 
-        return (string) openssl_encrypt($data, $cryptMethod, $password, FALSE, $iv);
+        return (string) openssl_encrypt($value, $cryptMethod, $password, FALSE, $iv);
     }
 
     /**
@@ -250,22 +248,14 @@ class Hash {
      * @return string Random string of length $length
      */
     public function random(int $length): string {
-        $chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        $count = strlen($chars);
+        $chars  = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $max    = mb_strlen($chars, '8bit') - 1;
+        $return = '';
 
-        // Generate random bytes
-        $bytes = random_bytes($length);
+        for ($i = 0; $i < $length; ++$i)
+            $return .= $chars[ random_int(0, $max) ];
 
-        // Construct the output string
-        $result = '';
-        // Split the string of random bytes into individual characters
-        foreach (str_split($bytes) as $byte) {
-            // ord($byte) converts the character into an integer between 0 and 255
-            // ord($byte) % $count wrap it around $chars
-            $result .= $chars[ ord($byte) % $count ];
-        }
-
-        return $result;
+        return $return;
     }
 
     /**
@@ -278,17 +268,6 @@ class Hash {
      */
     public function hashCheck(string $known, string $user): bool {
         return hash_equals($known, $user);
-    }
-
-    /**
-     * Pointer alias for fixValue
-     *
-     * @param $value  mixed The value to be serialized
-     *
-     * @return string The serialized string (returns original value if string)
-     */
-    protected function _fixValue(&$value) {
-        return $value = $this->fixValue($value);
     }
 
 }
