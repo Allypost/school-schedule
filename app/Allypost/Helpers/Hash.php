@@ -145,8 +145,11 @@ class Hash {
      * @return string The serialized string (returns original value if string)
      */
     protected function fixValue($value): string {
-        if (is_string($value))
-            return $value;
+        if (is_scalar($value))
+            return (string) $value;
+
+        if (is_array($value) || is_object($value))
+            return json_encode($value);
 
         if (is_resource($value))
             return '';
