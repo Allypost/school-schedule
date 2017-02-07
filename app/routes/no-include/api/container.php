@@ -13,6 +13,7 @@ $app->group('/misc', function () use ($app, $loggedIn, $guest, $teacher, $studen
 
 $app->group('/lessons', $loggedIn(), function () use ($app, $loggedIn, $guest, $teacher, $student) {
     require_once 'no-include/lessons/list.php';
+    require_once 'no-include/lessons/attendees.php';
     require_once 'no-include/lessons/update.php';
     require_once 'no-include/lessons/modify.php';
     require_once 'no-include/lessons/delete.php';
