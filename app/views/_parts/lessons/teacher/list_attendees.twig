@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="row">
+        <div class="col s12">
+            <div class="z-depth-1 padded-box">
+                <h1>Attendees:</h1>
+                <ul class="collapsible popout" id="attendees" data-collapsible="accordion" data-lessons="{{ urlFor('api:lessons:teaching') }}" data-users="{{ urlFor('api:lessons:attendees') }}">
+                    {% raw %}
+                        <li v-for="lesson in lessons">
+                            <div class="collapsible-header">
+                                Class: <b>{{ lesson.name }}</b>
+                            </div>
+                            <div class="collapsible-body">
+                                <button class="btn btn-large btn-flat" v-for="user in users[lesson.id]">{{ user.name }}</button>
+                            </div>
+                        </li>
+                    {% endraw %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    addLoadEvent(function () {
+        {{ source('_parts/__VueVMs/attendeesVM.js') }}
+    });
+</script>
