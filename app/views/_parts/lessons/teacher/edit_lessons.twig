@@ -1,7 +1,7 @@
 <div class="row" id="lessons" data-fetch-url="{{ urlFor('api:lessons:teaching') }}" data-delete-url="{{ urlFor('api:lessons:delete') }}" data-save-url="{{ urlFor('api:lessons:modify') }}">
     <div class="row">
         <div class="col s12">
-            <div class="z-depth-1 lesson-box">
+            <div class="z-depth-1 padded-box">
                 <div class="row">
                     <h1 class="lesson-add-header col s12" :data-text="isEditing ? 'Edit' : 'Add'"> lesson</h1>
                 </div>
@@ -48,7 +48,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <div class="z-depth-1 lesson-box">
+            <div class="z-depth-1 padded-box">
                 <div class="row">
                     <h1 class="col s12">Your classes:
                         <span style="padding-left: 1em;padding-top: 2em;font-size: 15px;line-height: 1.1em;opacity: .3;">(Click to edit)</span></h1>
@@ -66,22 +66,6 @@
         </div>
     </div>
 </div>
-<style>
-    .lesson-add-header::before {
-        content : attr(data-text);
-    }
-
-    .lesson-box {
-        margin  : 1em;
-        padding : 0 1.5em 1em;
-    }
-
-    .lessons-attending h5 {
-        padding    : .2em .4em;
-        text-align : center;
-        transition : background-color .1s, box-shadow .2s ease-in-out;
-    }
-</style>
 <script></script>
 <script>
     addLoadEvent(function () {
@@ -90,6 +74,16 @@
     });
 </script>
 <style>
+    .lesson-add-header::before {
+        content : attr(data-text);
+    }
+
+    .lessons-attending h5 {
+        padding    : .2em .4em;
+        text-align : center;
+        transition : background-color .1s, box-shadow .2s ease-in-out;
+    }
+
     nav.datepicker--nav {
         width            : auto;
         background-color : transparent;
