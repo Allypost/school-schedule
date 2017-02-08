@@ -168,6 +168,10 @@ window.lessonsVM = new Vue({
 
                  vm.btnStatus('deleted');
                  vm.clearLesson();
+
+                 if (window.attendeesVM)
+                     window.attendeesVM.fetchTeaching();
+
                  cb(true);
              })
              .fail(function (data) {
