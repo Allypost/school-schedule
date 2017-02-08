@@ -182,12 +182,18 @@ window.lessonsVM = new Vue({
         },
         saveNewLesson    : function (data) {
             this.lessons.push(data.data);
+
+            if (window.attendeesVM)
+                window.attendeesVM.fetchTeaching();
         },
         saveEditedLesson : function (data) {
             var lesson = this.lessonEditing;
             var d      = data.data;
 
             lesson.name = d.name;
+
+            if (window.attendeesVM)
+                window.attendeesVM.fetchTeaching();
         },
         clearLesson      : function () {
             if (this.lessonEditing)
