@@ -85,7 +85,7 @@ window.attendeesVM = new Vue({
 
             window.setInterval(function () {
                 vm.fetchTeaching();
-            }, 20000);
+            }, 60 * 1000);
 
             $('.collapsible').collapsible();
         });
