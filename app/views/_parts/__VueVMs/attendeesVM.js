@@ -20,24 +20,17 @@ window.attendeesVM = new Vue({
             $.get(url)
              .done(function (d) {
                  vm.lessons = d.data;
-                 for (var l in d.data) {
-                     if (!d.data.hasOwnProperty(l))
-                         continue;
-
-                     var lesson = d.data[ l ];
-
-                     vm.fetchAttendees(lesson.id);
-                 }
+                 vm.fetchAttendees();
                  vm.loading = false;
              });
         },
-        fetchAttendees : function (lesson) {
+        fetchAttendees : function () {
             var vm  = this;
-            var url = vm.getAttendeesUrl(lesson);
+            var url = vm.getAttendeesUrl(' ').slice(0, -1);
 
             $.get(url)
              .done(function (d) {
-                 vm.$set(vm.users, lesson, d.data);
+                 vm.$set(vm, 'users', d.data)
              });
         },
         getLessons     : function () {
