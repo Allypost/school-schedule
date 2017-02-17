@@ -6,7 +6,7 @@ window.attendeesVM = new Vue({
     },
     methods: {
         getTeachingUrl : function () {
-            return $(this.$el).attr('data-lessons');
+            return $(this.$el).attr('data-teaching');
         },
         getAttendeesUrl: function (lesson) {
             var url = $(this.$el).attr('data-users');

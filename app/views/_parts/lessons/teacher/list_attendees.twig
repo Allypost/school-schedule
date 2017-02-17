@@ -6,9 +6,9 @@
                     <div class="col s12">
                         <h1>Attendees:</h1>
                         <ul class="collapsible popout" id="attendees" data-collapsible="accordion"
-                            data-lessons="{{ urlFor('api:lessons:teaching') }}" data-users="{{ urlFor('api:lessons:attendees') }}">
+                            data-teaching="{{ urlFor('api:lessons:teaching') }}" data-users="{{ urlFor('api:lessons:attendees') }}">
                             {% raw %}
-                                <li v-for="lesson in lessons">
+                                <li v-for="lesson in teaching">
                                     <div class="collapsible-header">
                                         Class: <b>{{ lesson.name }}</b>
                                     </div>
@@ -26,6 +26,6 @@
 </div>
 <script>
     addLoadEvent(function () {
-        {{ source('_parts/__VueVMs/attendeesVM.min.js') }}
+        {{ source('_parts/__VueVMs/attendeesVM.js') }}
     });
 </script>
