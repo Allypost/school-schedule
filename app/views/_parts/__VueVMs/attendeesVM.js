@@ -1,8 +1,8 @@
 window.attendeesVM = new Vue({
     el     : '#attendees',
     data   : {
-        lessons: [],
-        users  : {}
+        teaching: [],
+        users   : {}
     },
     methods: {
         getTeachingUrl : function () {
@@ -19,7 +19,7 @@ window.attendeesVM = new Vue({
 
             $.get(url)
              .done(function (d) {
-                 vm.lessons = d.data;
+                 vm.teaching = d.data;
                  vm.fetchAttendees();
                  vm.loading = false;
              });
@@ -33,10 +33,10 @@ window.attendeesVM = new Vue({
                  vm.$set(vm, 'users', d.data)
              });
         },
-        getLessons     : function () {
-            var l = this.lessons;
+        getTeaching    : function () {
+            var l = this.teaching;
 
-            var lessons = {};
+            var teaching = {};
 
             for (var id in l) {
                 if (!l.hasOwnProperty(id))
@@ -44,10 +44,10 @@ window.attendeesVM = new Vue({
 
                 var lesson = l[ id ];
 
-                lessons[ lesson.id ] = { id: lesson.id, attending: !!lesson.attending };
+                teaching[ lesson.id ] = { id: lesson.id, attending: !!lesson.attending };
             }
 
-            return lessons;
+            return teaching;
         },
         btnStatus      : function (status, cb) {
             var vm = this;
