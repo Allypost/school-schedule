@@ -1,7 +1,7 @@
 window.attendeesVM = new Vue({
     el     : '#attendees',
     data   : {
-        teaching: [],
+        teaching: {},
         users   : {}
     },
     methods: {
@@ -19,7 +19,15 @@ window.attendeesVM = new Vue({
 
             $.get(url)
              .done(function (d) {
-                 vm.teaching = d.data;
+                 var data = d.data;
+
+                 for (var id in data) {
+                     if (!data.hasOwnProperty(id))
+                         continue;
+
+                     vm.$set(vm.teaching, id, data[ id ]);
+                 }
+
                  vm.fetchAttendees();
                  vm.loading = false;
              });
