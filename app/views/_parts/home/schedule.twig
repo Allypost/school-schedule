@@ -65,9 +65,10 @@
                 {% endraw %}
             </div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
         <script>
-            {{ source('_parts/__VueVMs/scheduleVM.min.js') }}
+            addLoadEvent(function () {
+                {{ source('_parts/__VueVMs/scheduleVM.min.js') }}
+            });
         </script>
     </div>
 </div>

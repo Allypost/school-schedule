@@ -262,6 +262,8 @@ window.scheduleVM = new Vue({
                     vm.setSchedule(data.data, true);
                 }, true);
             }, 5000);
+
+            $('.dropdown-button').dropdown();
         });
     }
 });
