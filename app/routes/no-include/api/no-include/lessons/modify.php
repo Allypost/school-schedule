@@ -52,13 +52,11 @@ $app->post('/modify', function () use ($app) {
     $lesson->save();
 
     $app->log->log('lessons modify', [ 'old' => $oldLesson->toArray(), 'new' => $lesson->toArray() ]);
+
     if ($message)
         $lesson->notify($message);
 
-    $data = [
-        'name' => $lesson->name,
-        'id'   => $lesson->id,
-    ];
+    $data = $lesson->toArray();
 
     say('lessons modify', $data);
 })->name('api:lessons:modify');
