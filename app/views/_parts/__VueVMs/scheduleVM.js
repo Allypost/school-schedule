@@ -7,58 +7,82 @@ function getWeek() {
     return realWeek % 2 + 1;
 }
 var getScheduleMatrix = function () {
-    var scheduleMatrix = {};
-    var weeks          = [ 1, 2 ];
-    var days           = [ 'mon', 'tue', 'wed', 'thu', 'fri' ];
-    var periods        = Array.apply(null, new Array(5)).map(function (_, i) {
-        return i + 1;
-    });
+    var key = 'scheduleVM:schedule:matrix';
 
-    for (var week in weeks) {
-        if (!weeks.hasOwnProperty(week))
-            continue;
+    function generate() {
+        var scheduleMatrix = {};
 
-        var w = weeks[ week ];
+        var weeks = [ 1, 2 ];
+        var days  = [ 'mon', 'tue', 'wed', 'thu', 'fri' ];
 
-        if (!scheduleMatrix[ w ])
-            scheduleMatrix[ w ] = {};
+        var periods = Array.apply(null, new Array(5)).map(function (_, i) {
+            return i + 1;
+        });
 
-
-        for (var day in days) {
-            if (!days.hasOwnProperty(day))
+        for (var week in weeks) {
+            if (!weeks.hasOwnProperty(week))
                 continue;
 
-            var d = days[ day ];
+            var w = weeks[ week ];
 
-            if (!scheduleMatrix[ w ][ d ])
-                scheduleMatrix[ w ][ d ] = {};
+            if (!scheduleMatrix[ w ])
+                scheduleMatrix[ w ] = {};
 
 
-            for (var period in periods) {
-                if (!periods.hasOwnProperty(period))
+            for (var day in days) {
+                if (!days.hasOwnProperty(day))
                     continue;
 
-                var p = periods[ period ];
+                var d = days[ day ];
 
-                scheduleMatrix[ w ][ d ][ p ] = {
-                    id       : null,
-                    owner    : null,
-                    name     : '',
-                    subject  : '',
-                    status   : '',
-                    due      : null,
-                    week     : null,
-                    day      : null,
-                    period   : null,
-                    owned    : false,
-                    hasClass : false,
-                    isLoading: false
-                };
+                if (!scheduleMatrix[ w ][ d ])
+                    scheduleMatrix[ w ][ d ] = {};
+
+
+                for (var period in periods) {
+                    if (!periods.hasOwnProperty(period))
+                        continue;
+
+                    var p = periods[ period ];
+
+                    scheduleMatrix[ w ][ d ][ p ] = {
+                        id       : null,
+                        owner    : null,
+                        name     : '',
+                        subject  : '',
+                        status   : '',
+                        due      : null,
+                        week     : null,
+                        day      : null,
+                        period   : null,
+                        owned    : false,
+                        hasClass : false,
+                        isLoading: false
+                    };
+                }
             }
         }
+
+        return save(scheduleMatrix);
     }
 
-    return scheduleMatrix;
+    function save(matrix) {
+        if (localStorage && localStorage.setItem)
+            localStorage.setItem(key, JSON.stringify(matrix));
+
+        return matrix;
+    }
+
+    function retrieve() {
+        if (!(localStorage && localStorage.getItem))
+            return false;
+
+        var resRaw = localStorage.getItem(key);
+
+        return resRaw && JSON.parse(resRaw);
+    }
+
+    return retrieve() || generate();
 };
 
 window.scheduleVM = new Vue({
