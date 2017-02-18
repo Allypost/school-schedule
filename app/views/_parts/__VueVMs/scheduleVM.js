@@ -86,7 +86,7 @@ var getScheduleMatrix = function () {
 };
 
 window.scheduleVM = new Vue({
-    el      : '.schedule',
+    el      : '#schedule',
     data    : {
         week     : getWeek(),
         days     : [ 'mon', 'tue', 'wed', 'thu', 'fri' ],

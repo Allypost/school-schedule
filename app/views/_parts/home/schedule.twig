@@ -1,12 +1,12 @@
 {% block head %}
-    <link rel="stylesheet" href="/css/schedule.css?v=1.4">
+    <link rel="stylesheet" href="/css/schedule.css?v=1.5">
 {% endblock %}
 
 {% set isTeacher = app.auth.isTeacher() %}
 
 <div class="row">
     <div class="col s12">
-        <div class="schedule z-depth-2 row"
+        <div id="schedule" class="z-depth-2 row"
              data-teacher="{{ isTeacher|raw }}"
              data-schedule="{{ urlFor('api:lessons:schedule') }}" data-status="{{ urlFor('api:lessons:update:status') }}"
              data-teaching="{{ urlFor('api:lessons:teaching') }}" data-subject="{{ urlFor('api:lessons:update') }}">
