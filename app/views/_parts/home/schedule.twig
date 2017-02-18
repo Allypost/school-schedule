@@ -10,7 +10,23 @@
              data-teacher="{{ isTeacher|raw }}"
              data-schedule="{{ urlFor('api:lessons:schedule') }}" data-status="{{ urlFor('api:lessons:update:status') }}"
              data-teaching="{{ urlFor('api:lessons:teaching') }}" data-subject="{{ urlFor('api:lessons:update') }}">
+            <div id="loader" class="row center-align" :data-loaded="isLoaded" style="padding: 2em;">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row schedule-week"
+                 :data-loaded="isLoaded"
                  :class="'week-' + week" :data-week="week + ':'"
                  v-for="(days, week) in schedule">
                 <div class="row schedule-header">
@@ -65,6 +81,15 @@
                 {% endraw %}
             </div>
         </div>
+        <style>
+            #schedule .row.schedule-week, #schedule #loader[data-loaded] {
+                display : none;
+            }
+
+            #schedule .row.schedule-week[data-loaded], #schedule #loader {
+                display : inherit;
+            }
+        </style>
         <script>
             addLoadEvent(function () {
                 {{ source('_parts/__VueVMs/scheduleVM.min.js') }}

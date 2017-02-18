@@ -93,7 +93,8 @@ window.scheduleVM = new Vue({
         schedule : getScheduleMatrix(),
         teaching : {},
         statuses : { Cancelled: "Cancelled", Normal: "" },
-        lastFetch: 0
+        lastFetch: 0,
+        isLoaded : false
     },
     computed: {
         isTeacher: function () {
@@ -288,6 +289,8 @@ window.scheduleVM = new Vue({
             }, 5000);
 
             $('.dropdown-button').dropdown();
+
+            vm.isLoaded = true;
         });
     }
 });
