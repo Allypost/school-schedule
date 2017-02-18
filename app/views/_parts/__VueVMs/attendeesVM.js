@@ -1,8 +1,8 @@
 window.attendeesVM = new Vue({
     el     : '#attendees',
     data   : {
-        teaching: {},
-        users   : {}
+        teaching : {},
+        attendees: {}
     },
     methods: {
         getTeachingUrl      : function () {
@@ -27,10 +27,10 @@ window.attendeesVM = new Vue({
         },
         removeTeaching      : function (lessonID) {
             this.$delete(this.teaching, lessonID);
-            this.$delete(this.users, lessonID);
+            this.$delete(this.attendees, lessonID);
         },
         getAttendeesUrl     : function (lesson) {
-            var url = $(this.$el).attr('data-users');
+            var url = $(this.$el).attr('data-attendees');
 
             return url.replace(':lesson', lesson);
         },
@@ -44,7 +44,7 @@ window.attendeesVM = new Vue({
              });
         },
         editAttendee        : function (data) {
-            return this.$edit(this.users, data.id, data);
+            return this.$edit(this.attendees, data.id, data);
         },
         fetchLessonAttendees: function (lesson) {
             var vm  = this;
@@ -56,7 +56,7 @@ window.attendeesVM = new Vue({
              });
         },
         editLessonAttendee  : function (lesson, attendee) {
-            this.$set(this.users, lesson, attendee);
+            this.$set(this.attendees, lesson, attendee);
         },
         btnStatus           : function (status, cb) {
             var vm = this;
