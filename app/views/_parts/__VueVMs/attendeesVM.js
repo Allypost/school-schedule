@@ -39,12 +39,20 @@ window.attendeesVM = new Vue({
             var url = vm.getAttendeesUrl(' ').slice(0, -1);
 
             $.get(url)
-             .done(function (d) {
-                 d.data.forEach(vm.editAttendee)
-             });
+             .done(vm.editAttendees);
         },
-        editAttendee        : function (data) {
-            return this.$edit(this.attendees, data.id, data);
+        editAttendees       : function (d) {
+            var attendees = d.data;
+
+            for (var id in attendees) {
+                if (!attendees.hasOwnProperty(id))
+                    continue;
+
+                this.editAttendee(id, attendees[ id ]);
+            }
+        },
+        editAttendee        : function (id, data) {
+            return this.$edit(this.attendees, id, data);
         },
         fetchLessonAttendees: function (lesson) {
             var vm  = this;
