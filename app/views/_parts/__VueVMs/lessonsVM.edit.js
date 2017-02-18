@@ -170,7 +170,7 @@ window.lessonsVM = new Vue({
                  vm.clearLesson();
 
                  if (window.attendeesVM)
-                     window.attendeesVM.fetchTeaching();
+                     window.attendeesVM.removeTeaching(data.subject);
 
                  cb(true);
              })
@@ -185,10 +185,12 @@ window.lessonsVM = new Vue({
              });
         },
         saveNewLesson    : function (data) {
-            this.lessons.push(data.data);
+            var d = data.data;
+
+            this.lessons.push(d);
 
             if (window.attendeesVM)
-                window.attendeesVM.fetchTeaching();
+                window.attendeesVM.editTeaching(d);
         },
         saveEditedLesson : function (data) {
             var lesson = this.lessonEditing;
@@ -197,7 +199,7 @@ window.lessonsVM = new Vue({
             lesson.name = d.name;
 
             if (window.attendeesVM)
-                window.attendeesVM.fetchTeaching();
+                window.attendeesVM.editTeaching(d, true);
         },
         clearLesson      : function () {
             if (this.lessonEditing)

@@ -5,59 +5,60 @@ window.attendeesVM = new Vue({
         users   : {}
     },
     methods: {
-        getTeachingUrl : function () {
+        getTeachingUrl      : function () {
             return $(this.$el).attr('data-teaching');
         },
-        getAttendeesUrl: function (lesson) {
-            var url = $(this.$el).attr('data-users');
-
-            return url.replace(':lesson', lesson);
-        },
-        fetchTeaching  : function () {
+        fetchTeaching       : function () {
             var vm  = this;
             var url = vm.getTeachingUrl();
 
             $.get(url)
              .done(function (d) {
-                 var data = d.data;
-
-                 for (var id in data) {
-                     if (!data.hasOwnProperty(id))
-                         continue;
-
-                     vm.$set(vm.teaching, id, data[ id ]);
-                 }
-
+                 d.data.forEach(vm.editTeaching);
                  vm.fetchAttendees();
                  vm.loading = false;
              });
         },
-        fetchAttendees : function () {
+        editTeaching        : function (lesson, update) {
+            this.$edit(this.teaching, lesson.id, lesson);
+
+            if (update && typeof update === typeof true)
+                this.fetchLessonAttendees(lesson.id);
+        },
+        removeTeaching      : function (lessonID) {
+            this.$delete(this.teaching, lessonID);
+            this.$delete(this.users, lessonID);
+        },
+        getAttendeesUrl     : function (lesson) {
+            var url = $(this.$el).attr('data-users');
+
+            return url.replace(':lesson', lesson);
+        },
+        fetchAttendees      : function () {
             var vm  = this;
             var url = vm.getAttendeesUrl(' ').slice(0, -1);
 
             $.get(url)
              .done(function (d) {
-                 vm.$set(vm, 'users', d.data)
+                 d.data.forEach(vm.editAttendee)
              });
         },
-        getTeaching    : function () {
-            var l = this.teaching;
-
-            var teaching = {};
-
-            for (var id in l) {
-                if (!l.hasOwnProperty(id))
-                    continue;
-
-                var lesson = l[ id ];
-
-                teaching[ lesson.id ] = { id: lesson.id, attending: !!lesson.attending };
-            }
-
-            return teaching;
+        editAttendee        : function (data) {
+            return this.$edit(this.users, data.id, data);
         },
-        btnStatus      : function (status, cb) {
+        fetchLessonAttendees: function (lesson) {
+            var vm  = this;
+            var url = vm.getAttendeesUrl(lesson);
+
+            $.get(url)
+             .done(function (d) {
+                 vm.editLessonAttendee(lesson, d.data);
+             });
+        },
+        editLessonAttendee  : function (lesson, attendee) {
+            this.$set(this.users, lesson, attendee);
+        },
+        btnStatus           : function (status, cb) {
             var vm = this;
 
             vm[ status ] = true;
@@ -77,6 +78,21 @@ window.attendeesVM = new Vue({
                 vm.btnInterval = window.setTimeout(fn, 1500);
 
             return fn;
+        },
+        $edit               : function ($object, key, data) {
+            var vm = this;
+            vm.$set($object, key, data);
+
+            vm.$nextTick(function () {
+                var object     = $object[ key ];
+                var objectKeys = Object.keys(object);
+                var dataKeys   = Object.keys(data);
+
+                objectKeys.forEach(function (i) {
+                    if (dataKeys.indexOf(i) < 0)
+                        vm.$delete(object, i);
+                })
+            });
         }
     },
     mounted: function () {
