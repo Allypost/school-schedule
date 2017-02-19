@@ -18,9 +18,27 @@
         border        : 1px solid #dddddd;
         border-bottom : 0 transparent;
     }
+    #loader {
+        padding : 2em;
+
+        &:not([data-loaded]) {
+            display : inherit;
+        }
+
+        &[data-loaded] {
+            display : none;
+        }
+
+    }
 
     .row.schedule-week {
         margin : 1em 0;
+
+        @extend #loader[data-loaded];
+
+        &[data-loaded] {
+            @extend #loader:not([data-loaded]);
+        }
 
         &:first-child {
             margin-top : 0;
