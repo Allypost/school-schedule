@@ -57,10 +57,15 @@ class Lesson extends Eloquent {
         return $this->hasMany('Allypost\Lessons\Schedule');
     }
 
-    public function notifications() {
+    public function notifications($all = FALSE) {
         $app = $this->app();
 
-        return $this->hasMany('Allypost\Lessons\Notification')->where('created_at', '>', $app->auth->data->notification_seen);
+        $query = $this->hasMany('Allypost\Lessons\Notification');
+
+        if ($all)
+            $query = $query->where('created_at', '>', $app->auth->data->notification_seen);
+
+        return $query;
     }
 
     # </RELATIONSHIPS>
