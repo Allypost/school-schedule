@@ -21,7 +21,6 @@ class Notification extends Eloquent {
     ];
 
     protected $hidden = [
-        'created_at',
         'updated_at',
         'id',
     ];
