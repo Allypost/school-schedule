@@ -55,7 +55,7 @@ class Notification extends Eloquent {
     /**
      * Return all unread Notifications for the current user
      *
-     * @param bool $all Whether to return ALL Notifications
+     * @param bool $all Whether to return ALL Notifications or just unseen ones
      *
      * @return Builder The Query Builder object
      */
