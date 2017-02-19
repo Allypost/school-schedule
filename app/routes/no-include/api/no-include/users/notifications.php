@@ -13,7 +13,7 @@ $app->get('/notifications', function () use ($app) {
     $userDataTable  = (new UserData())->getTable();
     $lessonTable    = (new Lesson())->getTable();
 
-    $return = $u
+    $users = $u
         ->distinct()
         ->select("{$userTable}.id", "{$userTable}.name", "{$userDataTable}.notification_seen as seen")
         ->join($userDataTable, "{$userDataTable}.user_id", '=', "users.id")
@@ -24,6 +24,12 @@ $app->get('/notifications', function () use ($app) {
                          ->where('owner', $app->auth->id);
         })
         ->get()->toArray();
+
+    $return = [];
+
+    foreach ($users as $user) {
+        $return[ $user[ 'id' ] ] = array_except($user, 'id');
+    }
 
     say('user notifications', $return);
 })->name('api:users:notifications:seen');
