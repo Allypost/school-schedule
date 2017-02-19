@@ -1,0 +1,39 @@
+<div class="row" id="notifications" data-fetch-url="{{ urlFor('api:notifications:list:all') }}">
+    {% raw %}
+        <div class="col s12 m10 offset-m1 l6 offset-l3">
+            <h2>Notifications</h2>
+            <div class="row" v-if="newer.length > 0">
+                <div class="col s12">
+                    <h5>New</h5>
+                </div>
+                <table class="striped col s12">
+                    <tr v-for="item in newer">
+                        <td>[{{ item.date | ago }}]</td>
+                        <td>{{ item.message }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="row" v-if="older.length > 0">
+                <div class="col s12">
+                    <h5>Old</h5>
+                </div>
+                <table class="striped col s12">
+                    <tr v-for="item in older">
+                        <td>[{{ item.date | ago }}]</td>
+                        <td>{{ item.message }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    {% endraw %}
+</div>
+<script>
+    addLoadEvent(function () {
+        {{ source('_parts/__VueVMs/notificationVM.min.js') }}
+    });
+</script>
+<style>
+    #notifications {
+        width : auto;
+    }
+</style>
