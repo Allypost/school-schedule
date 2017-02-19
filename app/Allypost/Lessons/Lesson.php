@@ -50,8 +50,13 @@ class Lesson extends Eloquent {
         return $this->belongsTo('Allypost\User\User', 'owner');
     }
 
-    public function attendees() {
-        return $this->hasMany('Allypost\Lessons\Attendee')->with('user');
+    public function attendees($withUserData = FALSE) {
+        $attendees = $this->hasMany('Allypost\Lessons\Attendee')->with('user');
+
+        if ($withUserData)
+            $attendees = $attendees->with('user.data');
+
+        return $attendees;
     }
 
     public function schedule() {
@@ -88,7 +93,7 @@ class Lesson extends Eloquent {
      *
      * @return array The Lessons that the current user owns
      */
-    public function mine(bool $withAttendees = FALSE) {
+    public function mine(bool $withAttendees = FALSE): array {
         $lessons = $this->my($withAttendees);
 
         return $lessons->get()->toArray();
@@ -101,7 +106,7 @@ class Lesson extends Eloquent {
      *
      * @return Builder The Lessons that the current user owns
      */
-    private function my(bool $withAttendees = FALSE) {
+    private function my(bool $withAttendees = FALSE): Builder {
         $app = $this->app();
 
         $lessons = $this->where('owner', $app->auth->id);
@@ -113,13 +118,39 @@ class Lesson extends Eloquent {
     }
 
     /**
+     * Return all notifications for lessons that the current user teaches
+     *
+     * @return array Array of notifications for lessons
+     */
+    public function allNotifications() {
+        $mine = $this->my(FALSE)->with([ 'notifications' ])->get()->toArray();
+
+        $return = [];
+
+        foreach ($mine as $lesson) {
+
+            foreach ($lesson[ 'notifications' ] as $notification) {
+
+                $return[ $lesson[ 'id' ] ][] = [
+                    'message' => $notification[ 'message' ],
+                    'date'    => $notification[ 'created_at' ],
+                ];
+
+            }
+
+        }
+
+        return $return;
+    }
+
+    /**
      * Check whether the $due date is a valid due date
      *
      * @param string $due The due date in the format Y-m-d
      *
      * @return bool Is date valid
      */
-    public static function checkDue(string $due) {
+    public static function checkDue(string $due): bool {
         $date = Carbon::createFromFormat('Y-m-d', $due);
 
         return Carbon::now()->diffInDays($date, TRUE) >= 3;
@@ -141,7 +172,7 @@ class Lesson extends Eloquent {
      *
      * @return string The formatted date
      */
-    public function formatDate($due = NULL) {
+    public function formatDate($due = NULL): string {
         return Carbon::createFromFormat('Y-m-d', $due ?? $this->due)->format('dS M Y');
     }
 }
