@@ -10,6 +10,7 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
 
         $lessons = $l->where('owner', $u->id)
                      ->with('attendees')
+                     ->with('attendees.user.data')
                      ->get()->toArray();
 
         if (empty($lessons))
@@ -20,7 +21,15 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
         foreach ($lessons as $lesson) {
             $attendees = $lesson[ 'attendees' ];
 
-            $users[ (int) $lesson[ 'id' ] ] = array_column($attendees, 'user');
+            foreach ($attendees as $attendee) {
+                $user     = $attendee[ 'user' ];
+                $userData = array_pull($user, 'data');
+
+                $user[ 'seen' ] = $userData[ 'notification_seen' ];
+
+                $users[ (int) $lesson[ 'id' ] ][] = $user;
+            }
+
         }
 
         say('lessons attendees', $users);
@@ -33,12 +42,18 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
         $lesson = $l->where('id', $id)
                     ->where('owner', $u->id)
                     ->with('attendees')
+                    ->with('attendees.user.data')
                     ->get()->toArray();
 
         if (empty($lesson))
             err('lessons attendees', [ 'The lesson doesn\'t exist' ]);
 
         $users = array_column(array_column($lesson, 'attendees')[ 0 ], 'user');
+
+        foreach ($users as $i => $user) {
+            $users[ $i ]           = array_except($user, 'data');
+            $users[ $i ][ 'seen' ] = $user[ 'data' ][ 'notification_seen' ];
+        }
 
         say('lessons attendees', $users);
     })->name('api:lessons:attendees');
