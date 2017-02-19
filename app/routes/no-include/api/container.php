@@ -29,3 +29,7 @@ $app->group('/user', function () use ($app, $loggedIn, $guest, $teacher, $studen
     require_once 'no-include/user/invite.php';
     require_once 'no-include/user/signup.php';
 });
+
+$app->group('/users', $loggedIn(), function () use ($app, $loggedIn, $guest, $teacher, $student) {
+    require_once 'no-include/users/notifications.php';
+});
