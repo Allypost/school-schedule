@@ -3,6 +3,7 @@
 namespace Allypost\Lessons;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Slim\Slim;
 
@@ -87,18 +88,28 @@ class Lesson extends Eloquent {
      *
      * @return array The Lessons that the current user owns
      */
-    public function mine($withAttendees = FALSE) {
-        $app = $this->app();
+    public function mine(bool $withAttendees = FALSE) {
+        $lessons = $this->my($withAttendees);
 
-        if (!$app->auth)
-            return [];
+        return $lessons->get()->toArray();
+    }
+
+    /**
+     * Return all Lessons that belong to the user
+     *
+     * @param bool $withAttendees Whether to add attendees and owner relationships
+     *
+     * @return Builder The Lessons that the current user owns
+     */
+    private function my(bool $withAttendees = FALSE) {
+        $app = $this->app();
 
         $lessons = $this->where('owner', $app->auth->id);
 
         if ($withAttendees)
             $lessons = $lessons->with([ 'attendees', 'owner' ]);
 
-        return $lessons->get()->toArray();
+        return $lessons;
     }
 
     /**
