@@ -13,11 +13,17 @@
             <li><a href="{{ urlFor('lessons:home') }}"><i class="material-icons left">schedule</i>Lessons</a></li>
             <li class="divider"></li>
             <li>
-                <a href="javascript:void(0)" data-activates="notifications-dropdown"
-                   ref="dropdown" @click="dropdownToggle">
-                    <i class="material-icons">notifications</i>
-                    <span class="notification-count" :data-notifications="notificationCount > 0">{{ '{{' }} notificationCount{{ '}}' }}</span>
-                </a>
+                {% if app.auth.isTeacher() %}
+                    <a href="{{ urlFor('notifications:view') }}">
+                        <i class="material-icons">notifications</i>
+                    </a>
+                {% else %}
+                    <a href="javascript:void(0)" data-activates="notifications-dropdown"
+                       ref="dropdown" @click="dropdownToggle">
+                        <i class="material-icons">notifications</i>
+                        <span class="notification-count" :data-notifications="notificationCount > 0">{{ '{{' }} notificationCount{{ '}}' }}</span>
+                    </a>
+                {% endif %}
             </li>
             <li><a href="{{ urlFor('auth:logout') }}"><i class="material-icons">&#xE8AC;</i></a></li>
         </ul>
