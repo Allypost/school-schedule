@@ -10,10 +10,10 @@ window.notificationVM = new Vue(
         },
         filters: {
             date: function (val) {
-                return moment.utc(val).format('DD/MM/YYYY');
+                return moment.utc(val).format('L');
             },
             time: function (val) {
-                return moment.utc(val).format('DD/MM/YYYY h:mm a');
+                return moment.utc(val).format('L LT');
             }
         },
         methods: {
@@ -23,7 +23,7 @@ window.notificationVM = new Vue(
             fetchField         : function (url, cb) {
                 var vm = this;
 
-                var hash = url.split("").reduce(function (a, b) {
+                var hash = url.split('').reduce(function (a, b) {
                     a = ((a << 5) - a) + b.charCodeAt(0);
                     return a & a
                 }, 0);
@@ -221,6 +221,8 @@ window.notificationVM = new Vue(
             vm.isLoaded = true;
 
             setInterval(vm.fetchData, 2 * 60 * 1000);
+
+            moment.locale('en-gb');
         }
     }
 );
