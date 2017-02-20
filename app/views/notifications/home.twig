@@ -7,5 +7,7 @@
 {% block content %}
     {% if app.auth.isStudent() %}
         {% include '_parts/notifications/student.twig' %}
+    {% elseif app.auth.isTeacher() %}
+        {% include '_parts/notifications/teacher.twig' %}
     {% endif %}
 {% endblock %}
