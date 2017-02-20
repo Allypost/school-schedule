@@ -58,6 +58,7 @@
                                                          :class="{ 'red': notification.unseen }">
                                                         <span>{{ notification.message }}</span>
                                                         <span class="badge">[{{ notification.date | time }}]</span>
+                                                        <span class="new red badge" data-badge-caption="unseen" v-if="notification.unseen > 0">{{ notification.unseen }}</span>
                                                     </div>
                                                     <div class="collapsible-body">
                                                         <button class="btn btn-large btn-flat white-text lighten-2"
