@@ -48,14 +48,17 @@
                                     <li v-for="lesson in teaching">
                                         <div class="collapsible-header">
                                             <span class="bold">{{ lesson.name }}</span>
-                                            <span class="badge seen" :data-seen="lesson.unseen"></span>
+                                            <span class="new badge" :class="[ lesson.unseen ? 'red' : 'green' ]" data-badge-caption="unseen">{{ lesson.unseen }}</span>
                                             <span v-if="lesson.due" class="badge">[Due {{ lesson.due | date }}]</span>
                                         </div>
                                         <div class="collapsible-body">
                                             <ul class="collapsible popout" data-collapsible="expandable">
                                                 <li v-for="notification in notifications[lesson.id]">
                                                     <div class="collapsible-header lighten-4"
-                                                         :class="{ 'red': notification.unseen }">{{ notification.message }} <span class="badge">[{{ notification.date | time }}]</span></div>
+                                                         :class="{ 'red': notification.unseen }">
+                                                        <span>{{ notification.message }}</span>
+                                                        <span class="badge">[{{ notification.date | time }}]</span>
+                                                    </div>
                                                     <div class="collapsible-body">
                                                         <button class="btn btn-large btn-flat white-text lighten-2"
                                                                 :class="[ seen(notification, user) ? 'green' : 'red' ]"
@@ -82,26 +85,6 @@
         background : transparent;
         cursor     : default;
         margin     : 0 .3em;
-    }
-
-    span.badge.seen {
-        font-weight      : 300;
-        font-size        : 0.8rem;
-        color            : #fff;
-        background-color : #ef5350;
-        border-radius    : 2px;
-    }
-
-    span.badge.seen::before {
-        content : attr(data-seen);
-    }
-
-    span.badge.seen::after {
-        content : ' unseen';
-    }
-
-    span.badge.seen[data-seen="0"] {
-        background-color : #8bc34a;
     }
 
     .row.notifications-preloader,
