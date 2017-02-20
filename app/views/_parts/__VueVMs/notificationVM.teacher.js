@@ -23,10 +23,7 @@ window.notificationVM = new Vue(
             fetchField         : function (url, cb) {
                 var vm = this;
 
-                var hash = url.split('').reduce(function (a, b) {
-                    a = ((a << 5) - a) + b.charCodeAt(0);
-                    return a & a
-                }, 0);
+                var hash = url.hash();
 
                 vm.loading ^= hash;
 
