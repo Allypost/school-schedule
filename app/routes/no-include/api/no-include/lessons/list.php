@@ -9,7 +9,7 @@ $app->group('/list', function () use ($app, $loggedIn, $guest, $teacher, $studen
 
         $data = $u->attending()->orderBy('id', 'asc')->get()->toArray();
 
-        say('lessons attending', $data);
+        $app->o->say('lessons attending', $data);
     })->name('api:lessons:attending');
 
     $app->get('/teaching', $loggedIn(), function () use ($app) {
@@ -17,7 +17,7 @@ $app->group('/list', function () use ($app, $loggedIn, $guest, $teacher, $studen
 
         $data = $u->lessons()->get()->toArray();
 
-        say('lessons teaching', $data);
+        $app->o->say('lessons teaching', $data);
     })->name('api:lessons:teaching');
 
     $app->get('/schedule', $loggedIn(), function () use ($app) {
@@ -25,7 +25,7 @@ $app->group('/list', function () use ($app, $loggedIn, $guest, $teacher, $studen
 
         $data = $u->schedule()->get()->toArray();
 
-        say('lessons schedule', $data);
+        $app->o->say('lessons schedule', $data);
     })->name('api:lessons:schedule');
 
     $app->get('/schedule/:time', $loggedIn(), function ($time) use ($app) {
@@ -34,7 +34,7 @@ $app->group('/list', function () use ($app, $loggedIn, $guest, $teacher, $studen
 
         $data = $u->schedule()->where('schedule.updated_at', '>', $time)->get()->toArray();
 
-        say('lessons schedule', $data);
+        $app->o->say('lessons schedule', $data);
     })->name('api:lessons:schedule:recent');
 
 });

@@ -31,5 +31,5 @@ $app->get('/notifications', function () use ($app) {
         $return[ $user[ 'id' ] ] = array_except($user, 'id');
     }
 
-    say('user notifications', $return);
+    $app->o->say('user notifications', $return);
 })->name('api:users:notifications:seen');

@@ -13,7 +13,7 @@ $app->post('/modify', function () use ($app) {
     $id   = (int) $r->post('subject', 0);
 
     if (empty($name))
-        err('lessons modify', [ 'The name is required' ]);
+        $app->o->err('lessons modify', [ 'The name is required' ]);
 
     if (!$id)
         $lesson = $l;
@@ -21,10 +21,10 @@ $app->post('/modify', function () use ($app) {
         $lesson = $l->where('id', $id)->first();
 
     if (!$lesson)
-        err('lessons modify', [ 'That lesson doesn\'t exist' ]);
+        $app->o->err('lessons modify', [ 'That lesson doesn\'t exist' ]);
 
     if ($name != $lesson->name && $l->where('name', $name)->first())
-        err('lessons modify', [ 'That name is taken' ]);
+        $app->o->err('lessons modify', [ 'That name is taken' ]);
 
     $oldLesson = $lesson;
 
@@ -34,7 +34,7 @@ $app->post('/modify', function () use ($app) {
     if ($due) {
 
         if (!$lesson::checkDue($due))
-            err('lessons modify', [ 'That date is not valid' ]);
+            $app->o->err('lessons modify', [ 'That date is not valid' ]);
 
         if ($lesson->due != $due) {
             $lesson->due = $due;
@@ -58,5 +58,5 @@ $app->post('/modify', function () use ($app) {
 
     $data = $lesson->toArray();
 
-    say('lessons modify', $data);
+    $app->o->say('lessons modify', $data);
 })->name('api:lessons:modify');

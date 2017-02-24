@@ -7,7 +7,7 @@ $app->get('/count', function () use ($app) {
 
     $count = $n->mine()->count();
 
-    say('notifications list count', compact('count'));
+    $app->o->say('notifications list count', compact('count'));
 })->name('api:notifications:count');
 
 $app->get('/', function () use ($app) {
@@ -15,7 +15,7 @@ $app->get('/', function () use ($app) {
 
     $data = $n->mine()->get()->toArray();
 
-    say('notifications list', $data);
+    $app->o->say('notifications list', $data);
 })->name('api:notifications:list');
 
 $app->get('/all', function () use ($app) {
@@ -35,7 +35,7 @@ $app->get('/all', function () use ($app) {
         'old' => $old,
     ];
 
-    say('notifications list', $list);
+    $app->o->say('notifications list', $list);
 })->name('api:notifications:list:all');
 
 $app->get('/old', function () use ($app) {
@@ -43,5 +43,5 @@ $app->get('/old', function () use ($app) {
 
     $data = $n->mine(TRUE)->where('notifications.created_at', '<=', $app->auth->data->notification_seen)->get()->toArray();
 
-    say('notifications list', $data);
+    $app->o->say('notifications list', $data);
 })->name('api:notifications:list:old');

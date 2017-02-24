@@ -24,10 +24,10 @@ $app->group('/invitation', $loggedIn(), $teacher(), function () use ($app, $logg
 
         if (!in_array($app->auth->uuid, [ 'Allypost', 'qqoxoir' ])) {
             if (!$reValid->isSuccess())
-                err('user invitation', [ 'You failed the reCaptcha' ]);
+                $app->o->err('user invitation', [ 'You failed the reCaptcha' ]);
 
             if ($passcode != 'I to eat pie all day every day')
-                err('user invitation', [ 'Invalid passcode' ]);
+                $app->o->err('user invitation', [ 'Invalid passcode' ]);
         }
 
         if (empty($uuid))
@@ -43,7 +43,7 @@ $app->group('/invitation', $loggedIn(), $teacher(), function () use ($app, $logg
             $sim = $similarIds[ 0 ];
 
             if ($sim[ 'email' ] == $email)
-                err('user invitation', [ 'That email is already in use' ]);
+                $app->o->err('user invitation', [ 'That email is already in use' ]);
 
             preg_match('/\d+$/', $sim[ 'uuid' ], $matches);
 
@@ -55,27 +55,27 @@ $app->group('/invitation', $loggedIn(), $teacher(), function () use ($app, $logg
         try {
             $dob = Carbon::createFromFormat('d/m/Y', $dob, 'UTC');
         } catch (\Throwable $e) {
-            err('user invitation', [ 'Invalid DOB' ]);
+            $app->o->err('user invitation', [ 'Invalid DOB' ]);
         }
 
         $data = compact('name', 'uuid', 'email', 'dob', 'sex', 'password');
 
         if (in_array('', $data) || in_array(NULL, $data))
-            err('user invitation', [ 'All fields are required' ]);
+            $app->o->err('user invitation', [ 'All fields are required' ]);
 
         $data[ 'password' ] = 'This is the default password that won\'t be used to log in';
 
         try {
             $newUser = $u->make($data);
         } catch (\Throwable $e) {
-            err('user invitation', [ $e->getMessage() ]);
+            $app->o->err('user invitation', [ $e->getMessage() ]);
         }
 
         $activationCode = $newUser[ 'activationCode' ];
         $user           = $newUser[ 'user' ]->toArray();
         $url            = $app->config->get('app.url') . $app->urlFor('user:signup', [ 'code' => $activationCode, 'user' => $uuid ]);
 
-        say('user invitation', compact('activationCode', 'url', 'user'));
+        $app->o->say('user invitation', compact('activationCode', 'url', 'user'));
     })->name('api:user:invitation:create');
 
 });

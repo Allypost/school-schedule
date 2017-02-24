@@ -12,15 +12,15 @@ $app->post('/delete', function () use ($app) {
     $lesson = $l->where('id', $id)->first();
 
     if (!$lesson)
-        err('lessons delete', [ 'That lesson doesn\'t exist' ]);
+        $app->o->err('lessons delete', [ 'That lesson doesn\'t exist' ]);
 
     if ($lesson->owner != $u->id)
-        err('lessons delete', [ 'You don\'t teach that lesson' ]);
+        $app->o->err('lessons delete', [ 'You don\'t teach that lesson' ]);
 
     $lesson->schedule()->delete();
     $deleted = $lesson->delete();
 
     $app->log->log('lessons delete', [ 'old' => $lesson->toArray() ]);
 
-    say('lessons delete', compact('deleted'));
+    $app->o->say('lessons delete', compact('deleted'));
 })->name('api:lessons:delete');

@@ -14,7 +14,7 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
                      ->get()->toArray();
 
         if (empty($lessons))
-            err('lessons attendees', [ 'You don\'t have any lessons' ]);
+            $app->o->err('lessons attendees', [ 'You don\'t have any lessons' ]);
 
         $users = [];
 
@@ -32,7 +32,7 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
 
         }
 
-        say('lessons attendees', $users);
+        $app->o->say('lessons attendees', $users);
     })->name('api:lessons:attendees:all');
 
     $app->get('/:lesson', function ($id) use ($app) {
@@ -46,7 +46,7 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
                     ->get()->toArray();
 
         if (empty($lesson))
-            err('lessons attendees', [ 'The lesson doesn\'t exist' ]);
+            $app->o->err('lessons attendees', [ 'The lesson doesn\'t exist' ]);
 
         $users = array_column(array_column($lesson, 'attendees')[ 0 ], 'user');
 
@@ -55,7 +55,7 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
             $users[ $i ][ 'seen' ] = $user[ 'data' ][ 'notification_seen' ];
         }
 
-        say('lessons attendees', $users);
+        $app->o->say('lessons attendees', $users);
     })->name('api:lessons:attendees');
 
 });

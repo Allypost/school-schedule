@@ -21,7 +21,7 @@ $app->post('/', function () use ($app) {
     $old    = array_collapse([ $entry->toArray() ]);
 
     if ($entry->hasClass == '1' && $lesson->owner != $u->id)
-        err('lessons not owned', [ 'You don\'t teach that lesson' ]);
+        $app->o->err('lessons not owned', [ 'You don\'t teach that lesson' ]);
 
     $hasClass = $lessonID > 0;
 
@@ -40,7 +40,7 @@ $app->post('/', function () use ($app) {
     $data = compact('old', 'new');
     $app->log->log('lessons ' . (($lessonID < 1) ? 'delete' : 'update'), $data);
 
-    say('lessons update', $data);
+    $app->o->say('lessons update', $data);
 })->name('api:lessons:update');
 
 $app->post('/status', function () use ($app) {
@@ -59,16 +59,16 @@ $app->post('/status', function () use ($app) {
     $old   = $entry->toArray();
 
     if (!$entry)
-        err('lessons status not found', [ 'The lesson does not exist' ]);
+        $app->o->err('lessons status not found', [ 'The lesson does not exist' ]);
 
     $lesson = $entry->lesson;
 
     if ($lesson->owner != $u->id)
-        err('lessons status not owned', [ 'You don\'t teach that lesson' ]);
+        $app->o->err('lessons status not owned', [ 'You don\'t teach that lesson' ]);
 
     if ($entry->status == $status) {
         $new = $entry->toArray();
-        say('lessons update', compact('old', 'new'));
+        $app->o->say('lessons update', compact('old', 'new'));
     }
 
     $entry->status = $status;
@@ -84,7 +84,7 @@ $app->post('/status', function () use ($app) {
     $data = compact('old', 'new');
     $app->log->log('lessons status update', $data);
 
-    say('lessons status update', $data);
+    $app->o->say('lessons status update', $data);
 })->name('api:lessons:update:status');
 
 $app->any('/attending', function () use ($app) {
@@ -96,7 +96,7 @@ $app->any('/attending', function () use ($app) {
     $valid = Attendee::checkData($lessons);
 
     if (!$valid)
-        err('lessons attending update', [ 'Something went wrong while updating your preferences' ]);
+        $app->o->err('lessons attending update', [ 'Something went wrong while updating your preferences' ]);
 
     foreach ($lessons as $lesson) {
         $id        = (int) $lesson[ 'id' ];
@@ -115,5 +115,5 @@ $app->any('/attending', function () use ($app) {
 
     }
 
-    say('lessons attending update', [ 'new' => $u->attending()->get()->toArray() ]);
+    $app->o->say('lessons attending update', [ 'new' => $u->attending()->get()->toArray() ]);
 })->name('api:lessons:update:attending');
