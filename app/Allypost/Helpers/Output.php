@@ -127,10 +127,10 @@ class Output {
      *
      * @return array The response array
      */
-    private function response(bool $isError, string $reason, $data = [], string $action = ''): array {
+    private static function response(bool $isError, string $reason, $data = [], string $action = ''): array {
         $return = [
             'error'        => $isError,
-            'responseCode' => $this::getErrorCode($reason),
+            'responseCode' => self::getErrorCode($reason),
             'reason'       => $reason,
             'data'         => [],
             'actions'      => $action,
