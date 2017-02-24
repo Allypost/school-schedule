@@ -95,8 +95,13 @@ class Output {
 
         $errors = (array) $errors;
 
-        $response[ 'errors' ] = $errors;
-        $response[ 'data' ]   = [];
+        if (isset($errors[ 'errors' ])) {
+            $response[ 'errors' ] = array_pull($errors, 'errors');;
+            $response[ 'data' ] = $errors;
+        } else {
+            $response[ 'errors' ] = $errors;
+            $response[ 'data' ]   = [];
+        }
 
         return $response;
     }
