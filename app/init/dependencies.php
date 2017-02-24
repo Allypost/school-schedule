@@ -2,6 +2,7 @@
 
 use Allypost\Helpers\Files;
 use Allypost\Helpers\Hash;
+use Allypost\Helpers\Output;
 use Allypost\Helpers\SiteSettings;
 use Allypost\Security\Log;
 use Allypost\Security\LoginAttempts;
@@ -66,6 +67,10 @@ $app->container->set('log', function () {
 
 $app->container->set('recaptcha', function () use ($app) {
     return new ReCaptcha($app->config->get('google.recaptcha.secret_key'));
+});
+
+$app->container->set('o', function () use ($app) {
+    return new Output();
 });
 
 $app->notFound(function () use ($app) {
