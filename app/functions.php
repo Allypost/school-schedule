@@ -659,7 +659,8 @@ function smart_resize_image($file, $string = NULL, $width = 0, $height = 0, $pro
  * @param array|object $array
  */
 function sdj($array) {
-    global $app;
+    $app = \Slim\Slim::getInstance();
+
     $app->contentType('application/json');
     $app->halt($app->response->getStatus(), json_encode($array));
 }
