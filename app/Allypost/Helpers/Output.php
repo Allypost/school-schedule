@@ -30,6 +30,9 @@ class Output {
      * @return void
      */
     public function err(string $reason, $errors = [], $action = '', int $status = 400): void {
+        $app = Slim::getInstance();
+        $app->response->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+        $app->response->header('Pragma', 'no-cache');
         self::output(self::errResponse($reason, $errors, $action), $status);
     }
 
