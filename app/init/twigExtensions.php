@@ -59,6 +59,15 @@ $functionTrimText = new Twig_SimpleFunction('trim_text', function ($text, $lengt
     return trim_text($text, $length, $ellipses, $strip_html);
 });
 
+$functionStaticAsset = new Twig_SimpleFunction('static', function ($path) use ($app) {
+    $ds       = DIRECTORY_SEPARATOR;
+    $basePath = INC_ROOT . $ds . 'app' . $ds . 'static' . $ds;
+
+    $filePath = $basePath . trim($path, " \t\n\r\0\x0B\\/");
+
+    return (string) $filePath ? file_get_contents($filePath) : '';
+}, [ 'is_safe' => [ 'html' ] ]);
+
 /* ####################### */
 /* #    </FUNCTIONS>     # */
 /* ####################### */
@@ -71,5 +80,6 @@ $twigInstance->addFilter($filterAgo);
 $twigInstance->addFilter($filterISO8601);
 
 $twigInstance->addFunction($functionTrimText);
+$twigInstance->addFunction($functionStaticAsset);
 
 $twigInstance->addExtension(new Twig_Extension_Debug());
