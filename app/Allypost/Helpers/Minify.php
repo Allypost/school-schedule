@@ -6,7 +6,9 @@ use Allypost\Helpers\Minifiers\MinifierInterface;
 
 class Minify implements MinifierInterface {
 
-    const MINIFIERS = [];
+    const MINIFIERS = [
+        'js' => 'Allypost\Helpers\Minifiers\JS',
+    ];
 
     private $minifier;
 
