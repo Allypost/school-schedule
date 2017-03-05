@@ -32,14 +32,14 @@
 <!-- </Meta> -->
 
 <!--    <Inlined-Javascript>    -->
-<script>{{ source('_parts/__head/isFunction.min.js') }}</script>
-<script>{{ source('_parts/__head/hash.min.js') }}</script>
-<script>{{ source('_parts/__head/get_csrf.min.js') }}</script>
-<script>{{ source('_parts/__head/add_onLoad.min.js') }}</script>
-<script>{{ source('_parts/__head/add_CSS.min.js') }}</script>
-<script>{{ source('_parts/__head/add_JS.min.js') }}</script>
-<script>{{ source('_parts/__head/string_format.min.js') }}</script>
-<script>{{ source('_parts/__head/convert_case.min.js') }}</script>
+<script>{{ static('js/standalone/isFunction.min.js') }}</script>
+<script>{{ static('js/standalone/hash.min.js') }}</script>
+<script>{{ static('js/standalone/get_csrf.min.js') }}</script>
+<script>{{ static('js/standalone/add_onLoad.min.js') }}</script>
+<script>{{ static('js/standalone/add_CSS.min.js') }}</script>
+<script>{{ static('js/standalone/add_JS.min.js') }}</script>
+<script>{{ static('js/standalone/string_format.min.js') }}</script>
+<script>{{ static('js/standalone/convert_case.min.js') }}</script>
 <!--    </Inlined-Javascript>    -->
 
 
@@ -60,8 +60,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 
 <!--    <Inlined-DEPENDANT-Javascript>    -->
-<script>{{ source('_parts/__head/jquery_debounce.min.js') }}</script>
-<script>{{ source('_parts/__head/jquery_serializeObject.min.js') }}</script>
+<script>{{ static('js/standalone/jquery_debounce.min.js') }}</script>
+<script>{{ static('js/standalone/jquery_serializeObject.min.js') }}</script>
 <!--    </Inlined-DEPENDANT-Javascript>    -->
 
 <!--    </Javascript>    -->
