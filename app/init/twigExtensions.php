@@ -61,7 +61,7 @@ $functionTrimText = new Twig_SimpleFunction('trim_text', function ($text, $lengt
 
 $functionStaticAsset = new Twig_SimpleFunction('static', function ($path) use ($app) {
     $ds       = DIRECTORY_SEPARATOR;
-    $basePath = INC_ROOT . $ds . 'app' . $ds . 'static' . $ds;
+    $basePath = INC_ROOT . $ds . 'static' . $ds;
 
     $filePath = $basePath . trim($path, " \t\n\r\0\x0B\\/");
 
