@@ -139,7 +139,7 @@ class Output {
             'reason'       => $reason,
             'data'         => [],
             'actions'      => $action,
-            'timestamp'    => microtime(),
+            'timestamp'    => time(),
         ];
 
         if ($isError)

@@ -460,8 +460,7 @@ function res(bool $isError, string $reason, array $data = [], string $action = '
         }
     }
 
-    $c                     = new Carbon();
-    $return[ 'timestamp' ] = $c->timestamp;
+    $return[ 'timestamp' ] = time();
 
     sdj($return);
 }
