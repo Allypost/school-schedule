@@ -33,3 +33,7 @@ $app->group('/user', function () use ($app, $loggedIn, $guest, $teacher, $studen
 $app->group('/users', $loggedIn(), function () use ($app, $loggedIn, $guest, $teacher, $student) {
     require_once 'no-include/users/notifications.php';
 });
+
+$app->group('/static', function () use ($app, $loggedIn, $guest, $teacher, $student) {
+    require_once 'no-include/static/container.php';
+});
