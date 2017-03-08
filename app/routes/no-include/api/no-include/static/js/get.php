@@ -2,7 +2,7 @@
 
 use Allypost\Helpers\Asset;
 
-$app->get('/:filename.js', function ($file) use ($app) {
+$fn = function ($file) use ($app) {
     $asset = new Asset('js');
     $file  = $file . '.js';
 
@@ -16,4 +16,6 @@ $app->get('/:filename.js', function ($file) use ($app) {
 
     $app->response->header('Content-Type', 'application/javascript; charset=utf-8');
     $app->response->setBody($compiled[ 'code' ]);
-});
+};
+
+$app->get('/:filename.js', $fn);
