@@ -19,7 +19,6 @@ $app->container->singleton('cache', function () {
     $cache = new Memcache();
 
     $cache->addserver('127.0.0.1', 11211, TRUE, 1);
-    $cache->addserver('185.157.232.144', 11211, TRUE, 10);
 
     return $cache;
 });
