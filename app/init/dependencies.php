@@ -12,13 +12,13 @@ use Carbon\Carbon as Carbon;
 use RandomLib\Factory as RandomLib;
 use ReCaptcha\ReCaptcha;
 
-$app->auth = FALSE;
+$app->auth = false;
 
 
 $app->container->singleton('cache', function () {
     $cache = new Memcache();
 
-    $cache->addserver('127.0.0.1', 11211, TRUE, 1);
+    $cache->addserver('127.0.0.1', 11211, true, 1);
 
     return $cache;
 });
@@ -54,7 +54,7 @@ $app->container->set('loginAttempts', function () {
 });
 
 $app->container->set('user', function () {
-    $user          = new User();
+    $user = new User();
     $loginAttempts = new LoginAttempts();
 
     return $user->_addLogins($loginAttempts);

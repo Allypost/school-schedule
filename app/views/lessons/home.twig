@@ -9,7 +9,7 @@
             <div class="row lessons-attending">
                 <p class="col s6"
                    v-for="lesson in lessons">
-                    <input type="checkbox" :id=" 'lesson-' + lesson.id " :checked="lesson.attending" @change="lesson.attending = $event.target.checked"/>
+                    <input type="checkbox" :id=" 'lesson-' + lesson.id " :checked="lesson.attending" @change="lesson.attending = $event.target.checked" />
                     <label :for=" 'lesson-' + lesson.id ">{{ '{{' }}lesson.name{{ '}}' }}</label>
                 </p>
             </div>
@@ -22,7 +22,7 @@
         </form>
     </div>
     <script>
-        addLoadEvent(function () {
+        addLoadEvent(function() {
             {{ static('js/vue/lessonsVM.home.min.js') }}
         });
     </script>

@@ -9,9 +9,9 @@ $app->get('/notifications', function () use ($app) {
     $u = new User();
 
     $attendeesTable = (new Attendee())->getTable();
-    $userTable      = (new User())->getTable();
-    $userDataTable  = (new UserData())->getTable();
-    $lessonTable    = (new Lesson())->getTable();
+    $userTable = (new User())->getTable();
+    $userDataTable = (new UserData())->getTable();
+    $lessonTable = (new Lesson())->getTable();
 
     $users = $u
         ->distinct()

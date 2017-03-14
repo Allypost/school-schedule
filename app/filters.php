@@ -1,13 +1,13 @@
 <?php
 
 if (!defined('FILTERS_AUTHENTICATION_REDIRECT')) {
-    define('FILTERS_AUTHENTICATION_REDIRECT', TRUE);
+    define('FILTERS_AUTHENTICATION_REDIRECT', true);
 }
 if (!defined('FILTERS_AUTHENTICATION_ADD_BACK')) {
-    define('FILTERS_AUTHENTICATION_ADD_BACK', TRUE);
+    define('FILTERS_AUTHENTICATION_ADD_BACK', true);
 }
 
-function Filter_isType($redirect = NULL, $redirectTo = '/', callable $validator) {
+function Filter_isType($redirect = null, $redirectTo = '/', callable $validator) {
     global $app;
     global $loggedIn;
 
@@ -23,7 +23,7 @@ function Filter_isType($redirect = NULL, $redirectTo = '/', callable $validator)
     };
 }
 
-$authenticationCheck = function ($required, $redirect = NULL, $redirectTo = '/', $flash = TRUE) use ($app) {
+$authenticationCheck = function ($required, $redirect = null, $redirectTo = '/', $flash = true) use ($app) {
     return function () use ($required, $redirect, $redirectTo, $app, $flash) {
         if ((!$app->auth && $required) || ($app->auth && !$required)) {
 
@@ -39,10 +39,10 @@ $authenticationCheck = function ($required, $redirect = NULL, $redirectTo = '/',
 
             if ($required) {
                 $message = 'You can\'t access this page if you\'re not logged in.';
-                $action  = 'do:login';
+                $action = 'do:login';
             } else {
                 $message = 'You can\'t access this page if you\'re logged in.';
-                $action  = 'do:logout';
+                $action = 'do:logout';
             }
 
             if (is_null($redirect) && defined('FILTERS_AUTHENTICATION_REDIRECT')) {
@@ -54,7 +54,7 @@ $authenticationCheck = function ($required, $redirect = NULL, $redirectTo = '/',
     };
 };
 
-$loggedIn = function ($redirect = NULL, $redirectTo = '', $addBack = NULL, $flash = TRUE) use ($authenticationCheck, $app) {
+$loggedIn = function ($redirect = null, $redirectTo = '', $addBack = null, $flash = true) use ($authenticationCheck, $app) {
     $e = $app->hash;
 
     if (empty($redirectTo))
@@ -67,37 +67,37 @@ $loggedIn = function ($redirect = NULL, $redirectTo = '', $addBack = NULL, $flas
     if ($addBack && $e) {
         $separator = '&';
 
-        if (strpos('?', $redirectTo) === FALSE) {
+        if (strpos('?', $redirectTo) === false) {
             $separator = '?';
         }
 
         $redirectTo .= $separator . 'b=' . $e->encrypt($app->request->getUrl() . $app->request->getPath(), 'login');
     }
 
-    return $authenticationCheck(TRUE, $redirect, $redirectTo, $flash);
+    return $authenticationCheck(true, $redirect, $redirectTo, $flash);
 };
 
-$guest = function ($redirect = NULL, $redirectTo = '/', $flash = TRUE) use ($authenticationCheck, $app) {
-    $e       = $app->hash;
+$guest = function ($redirect = null, $redirectTo = '/', $flash = true) use ($authenticationCheck, $app) {
+    $e = $app->hash;
     $backUrl = $app->request->get('b');
 
     if ($redirectTo === '/' && $backUrl && $e) {
 
         if (is_null($redirect)) {
-            $redirect = TRUE;
-            $flash    = FALSE;
+            $redirect = true;
+            $flash = false;
         }
 
         $redirectTo = $e->decrypt($backUrl, 'login');
     }
 
-    return $authenticationCheck(FALSE, $redirect, $redirectTo, $flash);
+    return $authenticationCheck(false, $redirect, $redirectTo, $flash);
 };
 
-$teacher = Filter_isType($redirect = NULL, $redirectTo = '/', function () use ($app) {
+$teacher = Filter_isType($redirect = null, $redirectTo = '/', function () use ($app) {
     return $app->auth && $app->auth->isTeacher();
 });
 
-$student = Filter_isType($redirect = NULL, $redirectTo = '/', function () use ($app) {
+$student = Filter_isType($redirect = null, $redirectTo = '/', function () use ($app) {
     return $app->auth && $app->auth->isStudent();
 });

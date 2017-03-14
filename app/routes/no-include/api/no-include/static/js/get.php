@@ -4,9 +4,9 @@ use Allypost\Helpers\Asset;
 
 $fn = function ($file) use ($app) {
     $asset = new Asset('js');
-    $file  = $file . '.js';
+    $file = $file . '.js';
 
-    $cache    = $app->cache;
+    $cache = $app->cache;
     $cacheKey = $app->config->get('auth.domain') . ':' . $file;
     $cacheFor = 60;
 

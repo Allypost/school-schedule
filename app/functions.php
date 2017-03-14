@@ -1,7 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-
 /**
  * Convert hexdec color string to rgb(a) string
  *
@@ -10,7 +8,7 @@ use Carbon\Carbon;
  *
  * @return string RGB or RGBA code
  */
-function hex2rgba($color, $opacity = FALSE) {
+function hex2rgba($color, $opacity = false) {
 
     $default = 'rgb(0,0,0)';
 
@@ -56,8 +54,8 @@ function hex2rgba($color, $opacity = FALSE) {
  */
 function swapVariables(&$x, &$y) {
     $tmp = $x;
-    $x   = $y;
-    $y   = $tmp;
+    $x = $y;
+    $y = $tmp;
 }
 
 /**
@@ -80,7 +78,7 @@ function adjustBrightness($hex, $steps) {
 
     // Split into three parts: R, G and B
     $color_parts = str_split($hex, 2);
-    $return      = '#';
+    $return = '#';
 
     foreach ($color_parts as $color) {
         $color = hexdec($color); // Convert to decimal
@@ -99,7 +97,7 @@ function adjustBrightness($hex, $steps) {
  *
  * @return mixed The fascinating remark(s)
  */
-function randomErrorRemark($modifier = '', $value = NULL) {
+function randomErrorRemark($modifier = '', $value = null) {
     $errorRemarks = [
         'Oops',
         'That\'s strange',
@@ -153,16 +151,16 @@ function randomErrorRemark($modifier = '', $value = NULL) {
             break;
         case 'seed':
             if (is_array($value)) {
-                $value   = array_values($value);
+                $value = array_values($value);
                 $remarks = randomErrorRemark('array', count($value));
                 foreach ($value as $i => $val) {
-                    $remark      = $remarks[ $i ];
-                    $value[ $i ] = "<b class='error-remark'>{$remark}</b> {$val}";
+                    $remark = $remarks[ $i ];
+                    $value[ $i ] = "<b class=\"error-remark\">{$remark}</b> {$val}";
                 }
                 $return = $value;
             } else {
                 $remark = randomErrorRemark();
-                $return = "<b class='error-remark'>{$remark}</b> {$value}";
+                $return = "<b class=\"error-remark\">{$remark}</b> {$value}";
             }
             break;
     }
@@ -181,7 +179,7 @@ function randomErrorRemark($modifier = '', $value = NULL) {
  *
  * @return string Text trimmed to the last word.
  */
-function trim_text($input, $length, $ellipses = TRUE, $strip_html = TRUE) {
+function trim_text($input, $length, $ellipses = true, $strip_html = true) {
     if ($strip_html)
         $input = strip_tags($input);
     if (strlen($input) <= $length)
@@ -205,10 +203,11 @@ function trim_text($input, $length, $ellipses = TRUE, $strip_html = TRUE) {
  * @return string Globally unique identifier
  */
 function GUID() {
-    if (function_exists('com_create_guid') === TRUE)
+    if (function_exists('com_create_guid') === true)
         $return = trim(com_create_guid(), '{}');
     else
-        $return = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+        $return = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535),
+                          mt_rand(0, 65535));
 
     return strtolower($return);
 }
@@ -218,7 +217,7 @@ function GUID() {
  *
  * @param string $str       The string that will be converted to a slug
  * @param array  $replace   List of characters on which to add a delimiter
- * @param string $delimiter The delimiter used to seperate the words
+ * @param string $delimiter The delimiter used to separate the words
  *
  * @return string Returns the slug
  */
@@ -357,7 +356,7 @@ function getErrorCode(string $error): int {
  * @return array The converted array
  */
 function toArray($object): array {
-    return json_decode(json_encode($object), TRUE);
+    return json_decode(json_encode($object), true);
 }
 
 /**
@@ -374,7 +373,7 @@ function toArray($object): array {
 function err(string $reason, array $data = [], string $action = '', array $actions = [], int $status = 400): void {
     global $app;
     $app->status($status);
-    res(TRUE, $reason, $data, $action, $actions);
+    res(true, $reason, $data, $action, $actions);
 }
 
 /**
@@ -388,7 +387,7 @@ function err(string $reason, array $data = [], string $action = '', array $actio
  * @return void
  */
 function say(string $reason, array $data = [], string $action = '', array $actions = []): void {
-    res(FALSE, $reason, $data, $action, $actions);
+    res(false, $reason, $data, $action, $actions);
 }
 
 /**
@@ -411,7 +410,7 @@ function res(bool $isError, string $reason, array $data = [], string $action = '
     }
 
     if ($isError) {
-        $continue = FALSE;
+        $continue = false;
 
         if (isset($data[ 'data' ])) {
             $return[ 'data' ] = $data[ 'data' ];
@@ -423,7 +422,7 @@ function res(bool $isError, string $reason, array $data = [], string $action = '
             unset($data[ 'errors' ]);
             $return[ 'data' ] = array_merge($return[ 'data' ], $data);
 
-            $continue = TRUE;
+            $continue = true;
         }
 
         if (isset($data[ 'error' ])) {
@@ -439,7 +438,7 @@ function res(bool $isError, string $reason, array $data = [], string $action = '
 
         if (!$continue) {
             $return[ 'errors' ] = $data;
-            $return[ 'data' ]   = [];
+            $return[ 'data' ] = [];
         }
     } else {
         $return[ 'data' ] = $data;
@@ -456,7 +455,7 @@ function res(bool $isError, string $reason, array $data = [], string $action = '
         $return[ 'actions' ] = $actions;
         if ($action !== '*') {
             $return[ 'actions' ][] = $action;
-            $return[ 'action' ]    = '*';
+            $return[ 'action' ] = '*';
         }
     }
 
@@ -501,7 +500,7 @@ function uuid(string $randomOrTime = 'random'): string {
  */
 function startsWith(string $haystack, string $needle): bool {
     // Search backwards starting from haystack length characters from the end
-    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
 }
 
 /**
@@ -514,7 +513,7 @@ function startsWith(string $haystack, string $needle): bool {
  */
 function endsWith(string $haystack, string $needle): bool {
     // Search forward starting from end minus needle length characters
-    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
 }
 
 
@@ -535,15 +534,15 @@ function endsWith(string $haystack, string $needle): bool {
  *
  * @return boolean|resource
  */
-function smart_resize_image($file, $string = NULL, $width = 0, $height = 0, $proportional = FALSE, $output = 'file', $delete_original = TRUE, $use_linux_commands = FALSE, $quality = 100) {
+function smart_resize_image($file, $string = null, $width = 0, $height = 0, $proportional = false, $output = 'file', $delete_original = true, $use_linux_commands = false, $quality = 100) {
 
     if ($height <= 0 && $width <= 0)
-        return FALSE;
-    if ($file === NULL && $string === NULL)
-        return FALSE;
+        return false;
+    if ($file === null && $string === null)
+        return false;
 
     # Setting defaults and meta
-    $info = $file !== NULL ? getimagesize($file) : getimagesizefromstring($string);
+    $info = $file !== null ? getimagesize($file) : getimagesizefromstring($string);
     list($width_old, $height_old) = $info;
     $cropHeight = $cropWidth = 0;
 
@@ -556,32 +555,32 @@ function smart_resize_image($file, $string = NULL, $width = 0, $height = 0, $pro
         else
             $factor = min($width / $width_old, $height / $height_old);
 
-        $final_width  = round($width_old * $factor);
+        $final_width = round($width_old * $factor);
         $final_height = round($height_old * $factor);
     } else {
-        $final_width  = ($width <= 0) ? $width_old : $width;
+        $final_width = ($width <= 0) ? $width_old : $width;
         $final_height = ($height <= 0) ? $height_old : $height;
-        $widthX       = $width_old / $width;
-        $heightX      = $height_old / $height;
+        $widthX = $width_old / $width;
+        $heightX = $height_old / $height;
 
-        $x          = min($widthX, $heightX);
-        $cropWidth  = ($width_old - $width * $x) / 2;
+        $x = min($widthX, $heightX);
+        $cropWidth = ($width_old - $width * $x) / 2;
         $cropHeight = ($height_old - $height * $x) / 2;
     }
 
     # Loading image to memory according to type
     switch ($info[ 2 ]) {
         case IMAGETYPE_JPEG:
-            $file !== NULL ? $image = imagecreatefromjpeg($file) : $image = imagecreatefromstring($string);
+            $file !== null ? $image = imagecreatefromjpeg($file) : $image = imagecreatefromstring($string);
             break;
         case IMAGETYPE_GIF:
-            $file !== NULL ? $image = imagecreatefromgif($file) : $image = imagecreatefromstring($string);
+            $file !== null ? $image = imagecreatefromgif($file) : $image = imagecreatefromstring($string);
             break;
         case IMAGETYPE_PNG:
-            $file !== NULL ? $image = imagecreatefrompng($file) : $image = imagecreatefromstring($string);
+            $file !== null ? $image = imagecreatefrompng($file) : $image = imagecreatefromstring($string);
             break;
         default:
-            return FALSE;
+            return false;
     }
 
 
@@ -589,18 +588,18 @@ function smart_resize_image($file, $string = NULL, $width = 0, $height = 0, $pro
     $image_resized = imagecreatetruecolor($final_width, $final_height);
     if (($info[ 2 ] == IMAGETYPE_GIF) || ($info[ 2 ] == IMAGETYPE_PNG)) {
         $transparency = imagecolortransparent($image);
-        $palletsize   = imagecolorstotal($image);
+        $palletsize = imagecolorstotal($image);
 
         if ($transparency >= 0 && $transparency < $palletsize) {
             $transparent_color = imagecolorsforindex($image, $transparency);
-            $transparency      = imagecolorallocate($image_resized, $transparent_color[ 'red' ], $transparent_color[ 'green' ], $transparent_color[ 'blue' ]);
+            $transparency = imagecolorallocate($image_resized, $transparent_color[ 'red' ], $transparent_color[ 'green' ], $transparent_color[ 'blue' ]);
             imagefill($image_resized, 0, 0, $transparency);
             imagecolortransparent($image_resized, $transparency);
         } elseif ($info[ 2 ] == IMAGETYPE_PNG) {
-            imagealphablending($image_resized, FALSE);
+            imagealphablending($image_resized, false);
             $color = imagecolorallocatealpha($image_resized, 0, 0, 0, 127);
             imagefill($image_resized, 0, 0, $color);
-            imagesavealpha($image_resized, TRUE);
+            imagesavealpha($image_resized, true);
         }
     }
     imagecopyresampled($image_resized, $image, 0, 0, $cropWidth, $cropHeight, $final_width, $final_height, $width_old - 2 * $cropWidth, $height_old - 2 * $cropHeight);
@@ -619,7 +618,7 @@ function smart_resize_image($file, $string = NULL, $width = 0, $height = 0, $pro
         case 'browser':
             $mime = image_type_to_mime_type($info[ 2 ]);
             header("Content-type: $mime");
-            $output = NULL;
+            $output = null;
             break;
         case 'file':
             $output = $file;
@@ -644,10 +643,10 @@ function smart_resize_image($file, $string = NULL, $width = 0, $height = 0, $pro
             imagepng($image_resized, $output, $quality);
             break;
         default:
-            return FALSE;
+            return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /**

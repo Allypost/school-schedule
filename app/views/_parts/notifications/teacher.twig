@@ -83,23 +83,23 @@
 <style>
     /* HIDE HOVER EFFECT */
     button.btn.btn-flat {
-        background : transparent;
-        cursor     : default;
-        margin     : 0 .3em;
+        background: transparent;
+        cursor: default;
+        margin: 0 .3em;
     }
 
     .row.notifications-preloader,
     .row.notifications-row[data-loaded] {
-        display : initial;
+        display: initial;
     }
 
     .row.notifications-preloader[data-loaded],
     .row.notifications-row {
-        display : none;
+        display: none;
     }
 </style>
 <script>
-    addLoadEvent(function () {
+    addLoadEvent(function() {
         {{ static('js/vue/notificationVM.teacher.min.js') }}
     });
 </script>

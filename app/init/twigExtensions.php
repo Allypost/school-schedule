@@ -6,8 +6,8 @@ use Slim\Views\TwigExtension;
 /**
  * Get and setup View handler
  */
-$view                   = $app->view;
-$view->parserOptions    = [
+$view = $app->view;
+$view->parserOptions = [
     'debug' => $app->config->get('twig.debug'),
 ];
 $view->parserExtensions = [
@@ -55,12 +55,12 @@ $filterISO8601 = new Twig_SimpleFilter('ISO8601', function ($datetime) {
 /* #    <FUNCTIONS>     # */
 /* ###################### */
 
-$functionTrimText = new Twig_SimpleFunction('trim_text', function ($text, $length, $ellipses = TRUE, $strip_html = TRUE) {
+$functionTrimText = new Twig_SimpleFunction('trim_text', function ($text, $length, $ellipses = true, $strip_html = true) {
     return trim_text($text, $length, $ellipses, $strip_html);
 });
 
 $functionStaticAsset = new Twig_SimpleFunction('static', function ($path) use ($app) {
-    $ds       = DIRECTORY_SEPARATOR;
+    $ds = DIRECTORY_SEPARATOR;
     $basePath = INC_ROOT . $ds . 'static' . $ds;
 
     $filePath = $basePath . trim($path, " \t\n\r\0\x0B\\/");

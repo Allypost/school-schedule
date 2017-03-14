@@ -3,7 +3,7 @@ function request(url) {
 
     function getContentType(contentTypeHeader) {
         var startIndex = contentTypeHeader.indexOf('/') + 1;
-        var endIndex   = contentTypeHeader.indexOf(';');
+        var endIndex = contentTypeHeader.indexOf(';');
 
         if (endIndex <= 0)
             endIndex = contentTypeHeader.length;
@@ -30,12 +30,12 @@ function request(url) {
                 alw(httpRequest);
         }
 
-        return function () {
+        return function() {
             if (httpRequest.readyState !== XMLHttpRequest.DONE)
                 return;
 
             var contentTypeHeader = httpRequest.getResponseHeader('Content-Type');
-            var contentType       = getContentType(contentTypeHeader);
+            var contentType = getContentType(contentTypeHeader);
 
             if (contentType === 'json')
                 httpRequest.responseJSON = JSON.parse(httpRequest.responseText);
@@ -43,21 +43,21 @@ function request(url) {
             handleCallbacks(httpRequest, success, error);
 
             return this;
-        }
+        };
 
     }
 
     function paramify(object) {
-        var str = "";
-        object  = object || {};
+        var str = '';
+        object = object || {};
         for (var key in object) {
             if (!object.hasOwnProperty(key))
                 continue;
 
-            if (str != "")
-                str += "&";
+            if (str != '')
+                str += '&';
 
-            str += key + "=" + encodeURIComponent(object[ key ]);
+            str += key + '=' + encodeURIComponent(object[ key ]);
         }
 
         return str;
@@ -69,7 +69,7 @@ function request(url) {
 
     var alw = new Function();
 
-    this.make = function (type, data, success, error) {
+    this.make = function(type, data, success, error) {
         var httpRequest = new XMLHttpRequest();
 
         if (!httpRequest) {
@@ -87,20 +87,20 @@ function request(url) {
         return this;
     };
 
-    this.post = function (data, success, error) {
+    this.post = function(data, success, error) {
         return this.make('POST', data, success, error);
     };
 
-    this.get = function (success, error) {
+    this.get = function(success, error) {
         return this.make('GET', [], success, error);
     };
 
-    this.makeAPI = function (type, data, success, error) {
+    this.makeAPI = function(type, data, success, error) {
 
         return this.make(
             type,
             data,
-            function (req) {
+            function(req) {
                 var json = req.responseJSON || {};
                 var data = json.data || [];
 
@@ -109,9 +109,9 @@ function request(url) {
 
                 success(data, req, json);
             },
-            function (req) {
+            function(req) {
                 var json = req.responseJSON || {};
-                var data = json.errors || [ "Something went wrong" ];
+                var data = json.errors || [ 'Something went wrong' ];
 
                 if (!isFunction(error))
                     error = new Function();
@@ -122,11 +122,11 @@ function request(url) {
 
     };
 
-    this.getAPI = function (success, error) {
+    this.getAPI = function(success, error) {
         return this.makeAPI('GET', [], success, error);
     };
 
-    this.postAPI = function (data, success, error) {
+    this.postAPI = function(data, success, error) {
         var csrf = getCsrf();
 
         data[ csrf.key ] = csrf.value;
@@ -134,21 +134,21 @@ function request(url) {
         return this.makeAPI('POST', data, success, error);
     };
 
-    this.error = function (cb) {
+    this.error = function(cb) {
         if (!isFunction(cb))
             cb = new Function();
 
         err = cb;
     };
 
-    this.success = function (cb) {
+    this.success = function(cb) {
         if (!isFunction(cb))
             cb = new Function();
 
         suc = cb;
     };
 
-    this.always = function (cb) {
+    this.always = function(cb) {
         if (!isFunction(cb))
             cb = new Function();
 

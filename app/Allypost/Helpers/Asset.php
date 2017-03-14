@@ -5,16 +5,16 @@ namespace Allypost\Helpers;
 class Asset {
 
     const BASE_PATH = INC_ROOT . DIRECTORY_SEPARATOR . 'static';
-    const JS_PATH   = self::BASE_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'standalone';
-    const CSS_PATH  = self::BASE_PATH . DIRECTORY_SEPARATOR . 'css';
-    const PATHS     = [
-        'js'  => self::JS_PATH,
+    const JS_PATH = self::BASE_PATH . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'standalone';
+    const CSS_PATH = self::BASE_PATH . DIRECTORY_SEPARATOR . 'css';
+    const PATHS = [
+        'js' => self::JS_PATH,
         'css' => self::CSS_PATH,
     ];
-    const TYPES     = [ 'js', 'css' ];
+    const TYPES = [ 'js', 'css' ];
 
-    private $type       = '';
-    private $dir        = '';
+    private $type = '';
+    private $dir = '';
     private $acceptable = [];
 
     function __construct($type) {
@@ -44,17 +44,17 @@ class Asset {
 
     public function outputFile($file) {
         $filePath = $this->getPathToFile($file);
-        $data     = file_get_contents($filePath);
-        $return   = [
-            'error'  => TRUE,
-            'code'   => $data,
+        $data = file_get_contents($filePath);
+        $return = [
+            'error' => true,
+            'code' => $data,
             'errors' => [
                 'Couldn\'t read from file',
             ],
         ];
 
         if ($data) {
-            $return[ 'error' ]  = FALSE;
+            $return[ 'error' ] = false;
             $return[ 'errors' ] = [];
         } else {
             $return[ 'code' ] = '';
@@ -110,8 +110,8 @@ class Asset {
     }
 
     private function clear(): self {
-        $this->type       = '';
-        $this->dir        = '';
+        $this->type = '';
+        $this->dir = '';
         $this->acceptable = '';
 
         return $this;

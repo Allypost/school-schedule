@@ -16,7 +16,7 @@ class Hash {
             'dec',
         ],
     ];
-    protected     $config;
+    protected $config;
 
     public function __construct($config = []) {
         if (empty($config))
@@ -33,8 +33,8 @@ class Hash {
      */
     public function password(string $password): string {
         $algorithm = $this->getAlgorithm();
-        $cost      = $this->getCost();
-        $settings  = [
+        $cost = $this->getCost();
+        $settings = [
             'cost' => $cost,
         ];
 
@@ -59,7 +59,7 @@ class Hash {
      *
      * @return int The cost for the encrypt function
      */
-    protected function getCost(int $cost = NULL): int {
+    protected function getCost(int $cost = null): int {
         if (empty($cost) || !is_int($cost))
             $cost = $this->config->get('app.hash.cost');
 
@@ -123,7 +123,7 @@ class Hash {
      *
      * @return string The hash encrypted with the $secret_key as 'password'
      */
-    protected function encrypt_decrypt(string $string = "", string $action = 'enc', string $secret_key = NULL): string {
+    protected function encrypt_decrypt(string $string = "", string $action = 'enc', string $secret_key = null): string {
         $string = $this->fixValue($string);
 
         $encrypt_method = 'AES-256-CBC';
@@ -182,7 +182,7 @@ class Hash {
      * @return string Either the hash or the decrypted string
      */
     private function doEncryptDecrypt($action, $value, $cryptMethod, $password): string {
-        $kw              = $this::$keywords;
+        $kw = $this::$keywords;
         $decryptKeywords = $kw[ 'decrypt' ];
 
         if (in_array($action, $decryptKeywords)) {
@@ -211,7 +211,7 @@ class Hash {
     private function doDecrypt(string $value, string $cryptMethod, string $password): string {
         $iv = $this->getIV();
 
-        return (string) openssl_decrypt($value, $cryptMethod, $password, FALSE, $iv);
+        return (string) openssl_decrypt($value, $cryptMethod, $password, false, $iv);
     }
 
     /**
@@ -226,7 +226,7 @@ class Hash {
     private function doEncrypt(string $value, string $cryptMethod, string $password): string {
         $iv = $this->getIV();
 
-        return (string) openssl_encrypt($value, $cryptMethod, $password, FALSE, $iv);
+        return (string) openssl_encrypt($value, $cryptMethod, $password, false, $iv);
     }
 
     /**
@@ -237,7 +237,7 @@ class Hash {
      * @return string Returns the hash
      */
     public function hash($input): string {
-        return hash('sha256', $input, FALSE);
+        return hash('sha256', $input, false);
     }
 
     /**
@@ -248,8 +248,8 @@ class Hash {
      * @return string Random string of length $length
      */
     public function random(int $length): string {
-        $chars  = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        $max    = mb_strlen($chars, '8bit') - 1;
+        $chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $max = mb_strlen($chars, '8bit') - 1;
         $return = '';
 
         for ($i = 0; $i < $length; ++$i)

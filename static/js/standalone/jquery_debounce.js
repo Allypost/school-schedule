@@ -60,7 +60,7 @@
 // the `Cowboy` namespace. Usage will be exactly the same, but instead of
 // $.method() or jQuery.method(), you'll need to use Cowboy.method().
 
-(function (window, undefined) {
+(function(window, undefined) {
     '$:nomunge'; // Used by YUI compressor.
 
     // Since jQuery really isn't required for this plugin, use `jQuery` as the
@@ -119,7 +119,7 @@
     // 
     //  (Function) A new, throttled, function.
 
-    $.throttle = jq_throttle = function (delay, no_trailing, callback, debounce_mode) {
+    $.throttle = jq_throttle = function(delay, no_trailing, callback, debounce_mode) {
         // After wrapper has stopped being called, this timeout ensures that
         // `callback` is executed at the proper times in `throttle` and `end`
         // debounce modes.
@@ -131,17 +131,17 @@
         // `no_trailing` defaults to falsy.
         if (typeof no_trailing !== 'boolean') {
             debounce_mode = callback;
-            callback      = no_trailing;
-            no_trailing   = undefined;
+            callback = no_trailing;
+            no_trailing = undefined;
         }
 
         // The `wrapper` function encapsulates all of the throttling / debouncing
         // functionality and when executed will limit the rate at which `callback`
         // is executed.
         function wrapper() {
-            var that    = this,
+            var that = this,
                 elapsed = +new Date() - last_exec,
-                args    = arguments;
+                args = arguments;
 
             // Execute `callback` and update the `last_exec` timestamp.
             function exec() {
@@ -243,7 +243,7 @@
     // 
     //  (Function) A new, debounced, function.
 
-    $.debounce = function (delay, at_begin, callback) {
+    $.debounce = function(delay, at_begin, callback) {
         return callback === undefined ? jq_throttle(delay, at_begin, false) : jq_throttle(delay, callback, at_begin !== false);
     };
 

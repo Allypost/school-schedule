@@ -17,7 +17,7 @@ $app->post('/login', $guest(), function () use ($app) {
     if (!$u->loginValidateData($username, $password))
         $app->o->err('authentication credentials missing', [ 'Username and password must be filled in!' ]);
 
-    $login = $u->login($username, $password, TRUE);
+    $login = $u->login($username, $password, true);
 
     if (!$login[ 'passed' ])
         $app->o->err('authentication login', [ 'errors' => $login[ 'reasons' ], 'remaining' => $login[ 'loginsRemaining' ] ?? 0 ]);

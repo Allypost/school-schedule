@@ -1,38 +1,38 @@
 @import "components/mixins";
 
 #schedule {
-    padding : 1em;
+    padding: 1em;
 
     .schedule-header {
 
         .schedule-day {
-            font-weight : bold;
-            text-align  : center;
-            font-size   : 1.5em;
-            border-top  : 0 transparent;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.5em;
+            border-top: 0 transparent;
         }
 
     }
 
     .schedule-day {
-        border        : 1px solid #dddddd;
-        border-bottom : 0 transparent;
+        border: 1px solid #dddddd;
+        border-bottom: 0 transparent;
     }
     #loader {
-        padding : 2em;
+        padding: 2em;
 
         &:not([data-loaded]) {
-            display : inherit;
+            display: inherit;
         }
 
         &[data-loaded] {
-            display : none;
+            display: none;
         }
 
     }
 
     .row.schedule-week {
-        margin : 1em 0;
+        margin: 1em 0;
 
         @extend #loader[data-loaded];
 
@@ -41,127 +41,127 @@
         }
 
         &:first-child {
-            margin-top : 0;
+            margin-top: 0;
         }
 
         &:last-child {
-            margin-bottom : 0;
+            margin-bottom: 0;
         }
 
         &::before {
-            display     : table-cell;
-            position    : absolute;
-            content     : attr(data-week);
-            left        : 0;
-            height      : 100%;
-            line-height : 2.5em;
-            font-size   : 4em;
-            font-weight : 100;
-            opacity     : .2;
+            display: table-cell;
+            position: absolute;
+            content: attr(data-week);
+            left: 0;
+            height: 100%;
+            line-height: 2.5em;
+            font-size: 4em;
+            font-weight: 100;
+            opacity: .2;
         }
 
         .schedule-hour {
-            border-bottom : 1px solid #dddddd;
-            text-align    : center;
-            position      : relative;
+            border-bottom: 1px solid #dddddd;
+            text-align: center;
+            position: relative;
 
             &.schedule-hour-highlight {
-                -webkit-animation : highlight .8s;
-                -o-animation      : highlight .8s;
-                animation         : highlight .8s;
+                -webkit-animation: highlight .8s;
+                -o-animation: highlight .8s;
+                animation: highlight .8s;
             }
 
             .schedule-status {
-                position      : absolute;
-                top           : 50%;
-                margin-top    : -.57em;
-                right         : .1em;
-                height        : 1.2em;
-                width         : 1.2em;
-                padding       : .29em;
-                border-radius : 50%;
-                line-height   : .65em;
-                font-weight   : bold;
-                font-family   : monospace;
-                cursor        : pointer;
+                position: absolute;
+                top: 50%;
+                margin-top: -.57em;
+                right: .1em;
+                height: 1.2em;
+                width: 1.2em;
+                padding: .29em;
+                border-radius: 50%;
+                line-height: .65em;
+                font-weight: bold;
+                font-family: monospace;
+                cursor: pointer;
             }
 
             .status-cancelled {
-                background : #424242 !important;
-                color      : #ffeb3b !important;
+                background: #424242 !important;
+                color: #ffeb3b !important;
             }
 
             a.status-cancelled:hover {
-                background : #212121 !important;
+                background: #212121 !important;
             }
 
             .status-normal {
-                background : #00bcd4 !important;
-                color      : #ffffff !important;
+                background: #00bcd4 !important;
+                color: #ffffff !important;
             }
 
             a.status-normal:hover {
-                background : #0097a7 !important;
+                background: #0097a7 !important;
             }
 
             & > span {
 
                 &[data-status]::after {
-                    content    : attr(data-status);
-                    display    : block;
-                    position   : absolute;
-                    top        : 50%;
-                    margin-top : -.75em;
-                    right      : -.8em;
-                    font-size  : .8em;
-                    color      : #ffeb3b;
-                    background : #424242;
-                    padding    : 0 .5em;
+                    content: attr(data-status);
+                    display: block;
+                    position: absolute;
+                    top: 50%;
+                    margin-top: -.75em;
+                    right: -.8em;
+                    font-size: .8em;
+                    color: #ffeb3b;
+                    background: #424242;
+                    padding: 0 .5em;
                 }
 
                 & > select {
-                    margin          : 0 auto;
-                    border          : none;
-                    height          : initial;
-                    width           : auto;
-                    padding         : 1px 0;
-                    text-align-last : center;
-                    cursor          : pointer;
+                    margin: 0 auto;
+                    border: none;
+                    height: initial;
+                    width: auto;
+                    padding: 1px 0;
+                    text-align-last: center;
+                    cursor: pointer;
                 }
 
             }
 
             .schedule-hour-loading {
                 @include animation(spinAround .5s infinite linear);
-                content             : '';
-                display             : block;
-                position            : absolute;
-                right               : .2em;
-                top                 : 50%;
-                margin-top          : -.5em;
-                height              : 1em;
-                width               : 1em;
-                border              : 2px solid;
-                border-radius       : 100%;
-                border-right-color  : transparent;
-                border-bottom-color : transparent;
+                content: '';
+                display: block;
+                position: absolute;
+                right: .2em;
+                top: 50%;
+                margin-top: -.5em;
+                height: 1em;
+                width: 1em;
+                border: 2px solid;
+                border-radius: 100%;
+                border-right-color: transparent;
+                border-bottom-color: transparent;
             }
 
             &:last-child {
-                border-bottom : 0 transparent;
+                border-bottom: 0 transparent;
             }
 
             &::before {
-                content       : attr(data-period);
-                display       : inline-block;
-                position      : absolute;
-                left          : 0;
-                top           : .2em;
-                border-right  : 1px solid;
-                padding       : 0 .5em;
-                line-height   : .9em;
-                border-radius : 2px;
-                opacity       : .4;
+                content: attr(data-period);
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                top: .2em;
+                border-right: 1px solid;
+                padding: 0 .5em;
+                line-height: .9em;
+                border-radius: 2px;
+                opacity: .4;
             }
         }
 
@@ -170,16 +170,16 @@
     .schedule-header,
     .schedule-days,
     .schedule-week {
-        position : relative;
-        margin   : 0;
+        position: relative;
+        margin: 0;
     }
 }
 
 @keyframes highlight {
     0% {
-        background : #fff59d;
+        background: #fff59d;
     }
     100% {
-        background : inherit;
+        background: inherit;
     }
 }

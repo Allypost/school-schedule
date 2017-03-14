@@ -7,5 +7,5 @@ $app->post('/seen', function () use ($app) {
 
     $u->data->update([ 'notification_seen' => Carbon::now() ]);
 
-    $app->o->say('notifications seen', [ 'done' => TRUE ]);
+    $app->o->say('notifications seen', [ 'done' => true ]);
 })->name('api:notifications:seen');

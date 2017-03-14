@@ -32,7 +32,7 @@ class BeforeMiddleware extends Middleware {
         $id = @$_SESSION[ $sessionKey ];
 
         if (!$id) {
-            $id = FALSE;
+            $id = false;
         }
 
         return $id;
@@ -76,7 +76,7 @@ class BeforeMiddleware extends Middleware {
         $cacheHit = $userData = $cache->get($cacheKey);
 
         if (!$cacheHit) {
-            $userData = $this->app->user->fetch($id, TRUE);
+            $userData = $this->app->user->fetch($id, true);
 
             $cache->set($cacheKey, $userData, MEMCACHE_COMPRESSED, $cacheFor);
         }
@@ -91,7 +91,7 @@ class BeforeMiddleware extends Middleware {
         $rememberName = $this->app->config->get('auth.remember');
         if ($this->app->getCookie($rememberName) && !$this->app->auth) {
 
-            $data        = $this->app->getCookie($rememberName);
+            $data = $this->app->getCookie($rememberName);
             $credentials = explode('..', $data);
 
             //dd($credentials);
@@ -108,9 +108,9 @@ class BeforeMiddleware extends Middleware {
      * Add misc data to all views
      */
     protected function addDataToView() {
-        $app      = $this->app;
-        $auth     = $app->auth;
-        $baseUrl  = $app->config->get('app.url');
+        $app = $this->app;
+        $auth = $app->auth;
+        $baseUrl = $app->config->get('app.url');
         $viewsDir = $app->view->getTemplatesDirectory();
         $settings = $app->siteSettings;
 
@@ -121,7 +121,7 @@ class BeforeMiddleware extends Middleware {
      * Add route name to all views (after router assignment)
      */
     public function addRouteNameToView() {
-        $app       = $this->app;
+        $app = $this->app;
         $routeName = $app->router->getCurrentRoute()->getName();
 
         $this->app->view()->appendData(compact('routeName'));

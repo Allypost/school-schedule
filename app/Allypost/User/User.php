@@ -14,8 +14,8 @@ class User extends Eloquent {
 
     const TYPES = UserPermission::TYPES;
 
-    protected $table  = 'users';
-    protected $logins = NULL;
+    protected $table = 'users';
+    protected $logins = null;
 
     protected $fillable = [
         'uuid',
@@ -54,7 +54,7 @@ class User extends Eloquent {
         ],
     ];
 
-    public $app = NULL;
+    public $app = null;
 
     /* ######################################### */
     /* # <Wrappers for Eloquent relationships> # */
@@ -112,7 +112,7 @@ class User extends Eloquent {
      *
      * @return array Login success data
      */
-    public function login(string $identifier, string $password, bool $remember = FALSE) {
+    public function login(string $identifier, string $password, bool $remember = false) {
         $validation = $this->loginValidate($identifier, $password);
 
         if (!$validation[ 'tries' ])
@@ -134,7 +134,7 @@ class User extends Eloquent {
      */
     public function loginValidate(string $identifier, string $password): array {
         $tries = $this->loginValidateTries();
-        $data  = $this->loginValidateData($identifier, $password);
+        $data = $this->loginValidateData($identifier, $password);
 
         return compact('tries', 'data');
     }
@@ -162,15 +162,17 @@ class User extends Eloquent {
      */
     public function loginValidateData(string $identifier, string $password): bool {
         $app = $this->app();
-        $v   = $app->validation;
+        $v = $app->validation;
 
         $v->validate(
             [
                 'identifier|ID' => [
-                    $identifier, 'required',
+                    $identifier,
+                    'required',
                 ],
-                'password'      => [
-                    $password, 'required',
+                'password' => [
+                    $password,
+                    'required',
                 ],
             ]
         );
@@ -190,15 +192,15 @@ class User extends Eloquent {
      */
     protected function loginPropagate(string $identifier, string $password, bool $remember): array {
         $app = $this->app();
-        $h   = $app->hash;
-        $l   = $this->logins;
+        $h = $app->hash;
+        $l = $this->logins;
 
         $return = [
-            'passed'  => FALSE,
+            'passed' => false,
             'reasons' => [],
         ];
 
-        $user = $this->exists($identifier, TRUE, TRUE);
+        $user = $this->exists($identifier, true, true);
 
         if (!$user)
             return $this->_error("Wrong ID or password", $identifier);
@@ -214,7 +216,7 @@ class User extends Eloquent {
         $final = $this->loginFinalise($user, $remember);
 
         if ($final)
-            $return[ 'passed' ] = TRUE;
+            $return[ 'passed' ] = true;
         else
             $return[ 'reasons' ][] = 'Something went wrong';
 
@@ -244,12 +246,12 @@ class User extends Eloquent {
         $u = is_int($u);
 
         if (!$u || !isset($_SESSION[ $sessionName ]) || !is_int($_SESSION[ $sessionName ]))
-            return FALSE;
+            return false;
 
         if ($remember)
             $r = $this->loginRemember($user);
         else
-            $r = TRUE;
+            $r = true;
 
         return $u && $r;
     }
@@ -266,15 +268,15 @@ class User extends Eloquent {
 
 
         $rememberIdentifier = $app->randomlib->generateString(128);
-        $rememberToken      = $app->randomlib->generateString(128);
-        $domain             = $app->config->get('auth.domain');
+        $rememberToken = $app->randomlib->generateString(128);
+        $domain = $app->config->get('auth.domain');
 
-        $name     = $app->config->get('auth.remember');
-        $value    = "{$rememberIdentifier}..{$rememberToken}";
-        $expires  = Carbon::parse($app->config->get('auth.remember_for'))->timestamp;
-        $path     = '/';
-        $secure   = TRUE;
-        $httpOnly = TRUE;
+        $name = $app->config->get('auth.remember');
+        $value = "{$rememberIdentifier}..{$rememberToken}";
+        $expires = Carbon::parse($app->config->get('auth.remember_for'))->timestamp;
+        $path = '/';
+        $secure = true;
+        $httpOnly = true;
 
         $u = $user->updateRememberCredentials(
             $rememberIdentifier,
@@ -294,14 +296,14 @@ class User extends Eloquent {
      *
      * @return bool Whether everything was successful
      */
-    public function logout(string $redirect = '', bool $flash = FALSE): bool {
+    public function logout(string $redirect = '', bool $flash = false): bool {
         $app = $this->app();
         unset($_SESSION[ $app->config->get('auth.session') ]);
 
         $user = $app->auth;
 
         if (!$user)
-            return TRUE;
+            return true;
 
         if ($app->getCookie($app->config->get('auth.remember'))) {
             $app->auth->removeRememberCredentials();
@@ -316,7 +318,7 @@ class User extends Eloquent {
 
         $app->log->log('user logout', toArray($user), 200, $user->uuid);
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -328,15 +330,15 @@ class User extends Eloquent {
      */
     public function refresh(array $credentials) {
         $app = $this->app();
-        $h   = $app->hash;
+        $h = $app->hash;
 
         $identifier = $credentials[ 0 ];
-        $token      = $h->hash($credentials[ 1 ]);
+        $token = $h->hash($credentials[ 1 ]);
 
         $user = $this->where('remember_identifier', $identifier)->first();
 
         if (!$user)
-            return NULL;
+            return null;
 
         if ($h->hashCheck($token, $user->remember_token)) {
             $_SESSION[ $app->config->get('auth.session') ] = $user->id;
@@ -347,7 +349,7 @@ class User extends Eloquent {
         } else
             $this->removeRememberCredentials();
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -365,8 +367,8 @@ class User extends Eloquent {
     public function activateAccount($password) {
         $data = $this->data->update(
             [
-                'active'          => TRUE,
-                'activation_code' => NULL,
+                'active' => true,
+                'activation_code' => null,
             ]
         );
 
@@ -390,7 +392,7 @@ class User extends Eloquent {
     public function activate(self $user, string $password): bool {
         $app = $this->app();
 
-        $app->log->log('user activate', json_decode(json_encode($user), TRUE), 200, $user->uuid);
+        $app->log->log('user activate', json_decode(json_encode($user), true), 200, $user->uuid);
 
         return (bool) $user->activateAccount($app->hash->password($password));
     }
@@ -404,17 +406,17 @@ class User extends Eloquent {
      *
      * @return User|bool True or User for valid activation check, false or null for invalid code
      */
-    public function activateCheck(string $identifier, string $activationCode, bool $returnRaw = FALSE) {
-        $user = $this->fetch($identifier, TRUE);
-        $app  = $this->app();
+    public function activateCheck(string $identifier, string $activationCode, bool $returnRaw = false) {
+        $user = $this->fetch($identifier, true);
+        $app = $this->app();
 
         if (!$user)
-            return FALSE;
+            return false;
 
         $vaild = (bool) ($user->data->activation_code == $app->hash->hash($activationCode));
 
         if ($returnRaw) {
-            return $vaild ? $user : FALSE;
+            return $vaild ? $user : false;
         }
 
         return $vaild;
@@ -429,16 +431,16 @@ class User extends Eloquent {
      *
      * @return array<Bool> Array of tests and whether they've been passed (test name => bool)
      */
-    public function passwordCheck(string $password, string $passwordRepeat, self $user = NULL): array {
-        $match  = $password == $passwordRepeat;
+    public function passwordCheck(string $password, string $passwordRepeat, self $user = null): array {
+        $match = $password == $passwordRepeat;
         $length = strlen($password) > 5;
-        $id     = TRUE;
-        $name   = TRUE;
-        $email  = TRUE;
+        $id = true;
+        $name = true;
+        $email = true;
 
         if (!empty($password) && $user) {
-            $id    = levenshteinRatio($user->uuid, $password) < 0.72;
-            $name  = levenshteinRatio($user->name, $password) < 0.72;
+            $id = levenshteinRatio($user->uuid, $password) < 0.72;
+            $name = levenshteinRatio($user->name, $password) < 0.72;
             $email = levenshteinRatio($user->email, $password) < 0.72;
         }
 
@@ -453,10 +455,10 @@ class User extends Eloquent {
      * @return string The activation code
      */
     public function createActivationCode(string $identifier): string {
-        $user = ($identifier == '-') ? $this : $this->fetch($identifier, TRUE);
+        $user = ($identifier == '-') ? $this : $this->fetch($identifier, true);
 
         if (!$user)
-            return FALSE;
+            return false;
 
         $code = $this->generateActivationCode();
 
@@ -477,7 +479,7 @@ class User extends Eloquent {
      * @return array Array of [{code}, {hash}]
      */
     public function generateActivationCode(int $length = 128): array {
-        $app  = $this->app();
+        $app = $this->app();
         $hash = $app->hash;
 
         $code = $hash->random($length);
@@ -498,7 +500,7 @@ class User extends Eloquent {
         return $this->update(
             [
                 'remember_identifier' => $identifier,
-                'remember_token'      => $token,
+                'remember_token' => $token,
             ]
         );
     }
@@ -507,7 +509,7 @@ class User extends Eloquent {
      * Remove the remember (auth) credentials for the current User
      */
     public function removeRememberCredentials() {
-        $this->updateRememberCredentials(NULL, NULL);
+        $this->updateRememberCredentials(null, null);
     }
 
     /**
@@ -561,7 +563,7 @@ class User extends Eloquent {
      * @return bool
      */
     public function isType(string $type): bool {
-        $typeInt = $this::TYPES[ $type ] ?? NULL;
+        $typeInt = $this::TYPES[ $type ] ?? null;
 
         return $this->getType() === $typeInt;
     }
@@ -574,7 +576,7 @@ class User extends Eloquent {
      *
      * @return User The user that matches the identifier or NULL if none match
      */
-    public function fetch(string $identifier, bool $withData = FALSE) {
+    public function fetch(string $identifier, bool $withData = false) {
         $d = $this->orWhere('email', $identifier)
                   ->orWhere('uuid', $identifier)
                   ->orWhere('id', $identifier);
@@ -600,18 +602,18 @@ class User extends Eloquent {
 
         $data = $this->fixMakeData($data);
 
-        if (($data[ 0 ] ?? TRUE) == FALSE)
+        if (($data[ 0 ] ?? true) == false)
             throw new \Exception("Data is invalid");
 
         $permissionsData = UserPermission::$$type;
-        $dataData        = UserData::$default;
+        $dataData = UserData::$default;
 
-        $dataData[ 'dob' ] = $data[ 'dob' ] ?? NULL;
-        $dataData[ 'sex' ] = $data[ 'sex' ] ?? NULL;
+        $dataData[ 'dob' ] = $data[ 'dob' ] ?? null;
+        $dataData[ 'sex' ] = $data[ 'sex' ] ?? null;
 
-        $user           = $this->create($data);
-        $permissions    = $user->permissions()->create($permissionsData);
-        $data           = $user->data()->create($dataData);
+        $user = $this->create($data);
+        $permissions = $user->permissions()->create($permissionsData);
+        $data = $user->data()->create($dataData);
         $activationCode = $user->createActivationCode('-');
 
         $app->log->log('user create', toArray($user), 200, $user->uuid);
@@ -658,7 +660,7 @@ class User extends Eloquent {
         $vMDA = array_not($validateMakeDataArray);
 
         if ($vMDA[ 'uuid' ] || $vMDA[ 'password' ])
-            return [ FALSE ];
+            return [ false ];
 
         $app = $this->app();
 
@@ -676,14 +678,14 @@ class User extends Eloquent {
      *
      * @return User|bool User object or true if the user exists or null or false if it doesn't
      */
-    public function exists(string $identifier = '', bool $returnObject = FALSE, bool $withData = FALSE) {
+    public function exists(string $identifier = '', bool $returnObject = false, bool $withData = false) {
         if (empty($identifier))
-            return FALSE;
+            return false;
 
         $user = $this->fetch($identifier, $withData);
         $pass = !is_null($user);
 
-        return $pass ? ($returnObject ? $user : $pass) : FALSE;
+        return $pass ? ($returnObject ? $user : $pass) : false;
     }
 
     /**
@@ -707,10 +709,10 @@ class User extends Eloquent {
      *
      * @return array The current user's info
      */
-    public function getBasicInfo(bool $withPermission = FALSE, bool $withData = FALSE): array {
+    public function getBasicInfo(bool $withPermission = false, bool $withData = false): array {
         $return = [
-            'uuid'  => $this->uuid,
-            'name'  => $this->name,
+            'uuid' => $this->uuid,
+            'name' => $this->name,
             'email' => $this->email,
         ];
 
@@ -764,7 +766,7 @@ class User extends Eloquent {
      *
      * @return array The error array
      */
-    protected function _error(string $message, string $identifier = '', $data = NULL): array {
+    protected function _error(string $message, string $identifier = '', $data = null): array {
         return $this->_errors([ $message ], $identifier, $data);
     }
 
@@ -777,19 +779,19 @@ class User extends Eloquent {
      *
      * @return array The error array
      */
-    protected function _errors(array $messages, string $identifier = '', $data = NULL): array {
-        $l   = $this->logins;
+    protected function _errors(array $messages, string $identifier = '', $data = null): array {
+        $l = $this->logins;
         $app = $this->app();
 
         if (!empty($identifier) && $identifier !== '-') {
-            $remaining = $l->max - $l->add('', $identifier, current($messages), FALSE);
+            $remaining = $l->max - $l->add('', $identifier, current($messages), false);
             $app->log->log('login attempt', [ 'messages' => $messages, 'data' => $data ], 400, $data->uuid ?? '');
         } else
             $remaining = $l->remaining();
 
         return [
-            'passed'          => FALSE,
-            'reasons'         => $messages,
+            'passed' => false,
+            'reasons' => $messages,
             'loginsRemaining' => $remaining,
         ];
     }

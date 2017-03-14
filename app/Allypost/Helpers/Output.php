@@ -46,7 +46,7 @@ class Output {
      * @return array
      */
     public static function sayResponse(string $reason, $data = [], $action = ''): array {
-        return self::response(FALSE, $reason, $data, $action);
+        return self::response(false, $reason, $data, $action);
     }
 
     /**
@@ -59,7 +59,7 @@ class Output {
      * @return array The response object
      */
     public static function errResponse(string $reason, $errors = [], $action = ''): array {
-        return self::response(TRUE, $reason, $errors, $action);
+        return self::response(true, $reason, $errors, $action);
     }
 
     /**
@@ -103,7 +103,7 @@ class Output {
             $response[ 'data' ] = $errors;
         } else {
             $response[ 'errors' ] = $errors;
-            $response[ 'data' ]   = [];
+            $response[ 'data' ] = [];
         }
 
         return $response;
@@ -137,12 +137,12 @@ class Output {
      */
     private static function response(bool $isError, string $reason, $data = [], string $action = ''): array {
         $return = [
-            'error'        => $isError,
+            'error' => $isError,
             'responseCode' => self::getErrorCode($reason),
-            'reason'       => $reason,
-            'data'         => [],
-            'actions'      => $action,
-            'timestamp'    => time(),
+            'reason' => $reason,
+            'data' => [],
+            'actions' => $action,
+            'timestamp' => time(),
         ];
 
         if ($isError)

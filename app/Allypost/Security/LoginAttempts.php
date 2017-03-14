@@ -8,7 +8,7 @@ use Slim\Slim;
 
 class LoginAttempts extends Eloquent {
 
-    public $app = NULL;
+    public $app = null;
 
     public $config;
 
@@ -40,8 +40,8 @@ class LoginAttempts extends Eloquent {
     ];
 
     public function __construct() {
-        $this->config  = Slim::getInstance()->config;
-        $this->max     = $this->config->get('auth.login.attemptsMax');
+        $this->config = Slim::getInstance()->config;
+        $this->max = $this->config->get('auth.login.attemptsMax');
         $this->expires = $this->config->get('auth.login.attemptsExpire');
     }
 
@@ -65,15 +65,15 @@ class LoginAttempts extends Eloquent {
      *
      * @return int The number of tries the user has done
      */
-    public function add(string $ip = '', string $user = '', string $message = '', bool $log = TRUE): int {
-        $ip  = $this->getIP($ip);
-        $u   = $this->fetch($ip);
+    public function add(string $ip = '', string $user = '', string $message = '', bool $log = true): int {
+        $ip = $this->getIP($ip);
+        $u = $this->fetch($ip);
         $app = $this->app();
 
         $new = ($u === $this);
 
-        $u->ip      = $ip;
-        $u->user    = $user;
+        $u->ip = $ip;
+        $u->user = $user;
         $u->message = $message;
 
         if ($new)
@@ -101,7 +101,7 @@ class LoginAttempts extends Eloquent {
      */
     public function tries(string $ip = ''): int {
         $ip = $this->getIP($ip);
-        $u  = $this->fetch($ip, TRUE);
+        $u = $this->fetch($ip, true);
 
         return (int) (!$u ? 0 : $u->tries);
     }
@@ -125,7 +125,7 @@ class LoginAttempts extends Eloquent {
      *
      * @return self The LoginAttempt
      */
-    public function fetch(string $ip, bool $raw = FALSE) {
+    public function fetch(string $ip, bool $raw = false) {
         $return = $this->where('ip', $ip)->first();
 
         if ($return) {
@@ -164,7 +164,7 @@ class LoginAttempts extends Eloquent {
     public function clean(string $ip = ''): bool {
         $ip = $this->getIP($ip);
 
-        $u = $this->fetch($ip, TRUE);
+        $u = $this->fetch($ip, true);
 
         return $u && $u->delete();
     }

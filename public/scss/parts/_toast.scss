@@ -1,23 +1,23 @@
 .toast {
 
     &.status {
-        font-weight : bold;
-        text-shadow : 0 0 3px rgba(255, 255, 255, .1);
+        font-weight: bold;
+        text-shadow: 0 0 3px rgba(255, 255, 255, .1);
     }
 
     &.success {
         @extend .status;
-        color : #4caf50;
+        color: #4caf50;
     }
 
     &.error {
         @extend .status;
-        color : #f44336;
+        color: #f44336;
     }
 
     &.warning {
         @extend .status;
-        color : #ffeb3b;
+        color: #ffeb3b;
     }
 
 }

@@ -4,8 +4,8 @@ function addCss(fileName) {
     var link = document.createElement('link');
 
     link.type = 'text/css';
-    link.rel  = 'stylesheet';
+    link.rel = 'stylesheet';
     link.href = fileName;
 
-    head.appendChild(link)
+    head.appendChild(link);
 }

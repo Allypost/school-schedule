@@ -18,10 +18,10 @@ class UserData extends Eloquent {
         'notification_seen',
     ];
 
-    protected $casts  = [
-        'active'            => 'boolean',
-        'banned'            => 'boolean',
-        'banned_until'      => 'datetime',
+    protected $casts = [
+        'active' => 'boolean',
+        'banned' => 'boolean',
+        'banned_until' => 'datetime',
         'notification_seen' => 'datetime',
     ];
     protected $hidden = [
@@ -34,8 +34,8 @@ class UserData extends Eloquent {
     /*  <PRESETS>    */
 
     public static $default = [
-        'active' => FALSE,
-        'banned' => FALSE,
+        'active' => false,
+        'banned' => false,
     ];
 
 

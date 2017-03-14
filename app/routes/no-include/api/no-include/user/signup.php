@@ -6,12 +6,12 @@ $app->post('/signup', $guest(), function () use ($app) {
     $u = new User();
     $r = $app->request;
 
-    $uuid    = $r->post('user');
-    $code    = $r->post('code');
-    $pass    = $r->post('password');
+    $uuid = $r->post('user');
+    $code = $r->post('code');
+    $pass = $r->post('password');
     $passRep = $r->post('repeat-password');
 
-    $validCode = $u->activateCheck($uuid, $code, TRUE);
+    $validCode = $u->activateCheck($uuid, $code, true);
 
     if (!$validCode)
         $app->o->err('user signup', [ 'Invitation is not valid' ]);

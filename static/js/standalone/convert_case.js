@@ -6,11 +6,11 @@ function toSpinalCase(str) {
 
 function toCamelCase(str) {
     str = str || this;
-    return str.replace(/^([A-Z])|\s(\w)/g, function (match, p1, p2) {
+    return str.replace(/^([A-Z])|\s(\w)/g, function(match, p1, p2) {
         if (p2) return p2.toUpperCase();
         return p1.toLowerCase();
     });
 }
 
 String.prototype.toSpinalCase = toSpinalCase;
-String.prototype.toCamelCase  = toCamelCase;
+String.prototype.toCamelCase = toCamelCase;

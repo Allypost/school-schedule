@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class UserPermission extends Eloquent {
 
-    const TYPES         = [
+    const TYPES = [
         'student' => 1,
         'teacher' => 2,
     ];

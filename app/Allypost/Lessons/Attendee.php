@@ -66,11 +66,12 @@ class Attendee extends Eloquent {
     public static function checkData(array $data): bool {
         foreach ($data as $datum)
             if (
-                !isset($datum[ 'attending' ], $datum[ 'id' ]) ||
-                empty($datum[ 'attending' ]) || empty($datum[ 'id' ])
+                !isset($datum[ 'attending' ], $datum[ 'id' ])
+                || empty($datum[ 'attending' ])
+                || empty($datum[ 'id' ])
             )
-                return FALSE;
+                return false;
 
-        return TRUE;
+        return true;
     }
 }

@@ -3,6 +3,7 @@
 /**/
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
+
 /**/
 
 use Allypost\Middleware\BeforeMiddleware;
@@ -14,7 +15,7 @@ use Slim\Views\Twig;
 /**
  * Initialise session
  */
-session_cache_limiter(FALSE);
+session_cache_limiter(false);
 session_start();
 
 /**
@@ -32,10 +33,10 @@ require_once INC_ROOT . '/vendor/autoload.php';
  */
 $app = new Slim(
     [
-        'mode'               => trim(file_get_contents(INC_ROOT . '/mode.php')),
-        'templates.path'     => INC_ROOT . '/app/views',
+        'mode' => trim(file_get_contents(INC_ROOT . '/mode.php')),
+        'templates.path' => INC_ROOT . '/app/views',
         'cookies.secret_key' => 'iLffqWuNNzVqqdwKzjrLUyq2Ez6gx05qagyp19Kp8rSU4PGmZZEYAQ43WtR0EZu1mHL1LCmk3VSo8qfX1wjGY0Wp0cciwYkM7x3zH9vpWWfX3t3Psa49Xpx1cwVVUCh2',
-        'view'               => new Twig(),
+        'view' => new Twig(),
     ]
 );
 

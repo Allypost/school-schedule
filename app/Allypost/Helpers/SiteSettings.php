@@ -8,17 +8,17 @@ use Slim\Slim;
 class SiteSettings extends Eloquent {
 
     const CACHE_PREFIX = 'ibrahim-is-useful';
-    const CACHE_KEY    = ':ibrahim-is-useful:settings:';
-    const CACHE_FOR    = 60 * 60 * 24 * 7;
-    protected $table    = 'settings';
+    const CACHE_KEY = ':ibrahim-is-useful:settings:';
+    const CACHE_FOR = 60 * 60 * 24 * 7;
+    protected $table = 'settings';
     protected $fillable = [
         'setting',
         'value',
         'created_at',
         'updated_at',
     ];
-    protected $casts    = [];
-    protected $hidden   = [
+    protected $casts = [];
+    protected $hidden = [
         'id',
         'created_at',
         'updated_at',
@@ -43,7 +43,7 @@ class SiteSettings extends Eloquent {
      */
     public function edit(array $data) {
         $oldSettings = $this->retrieve();
-        $updates     = array_diff_assoc($data, $oldSettings);
+        $updates = array_diff_assoc($data, $oldSettings);
 
         $success = $this->doEdit($updates, $oldSettings);
 
@@ -104,7 +104,7 @@ class SiteSettings extends Eloquent {
             if (isset($oldSettings[ $key ])) {
                 $updates[ $key ] = !!$this->where('setting', $key)->update(compact('value'));
             } else {
-                $updates[ $key ] = FALSE;
+                $updates[ $key ] = false;
             }
 
         }

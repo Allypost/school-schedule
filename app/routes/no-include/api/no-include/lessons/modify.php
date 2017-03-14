@@ -3,14 +3,14 @@
 use Allypost\Lessons\Lesson;
 
 $app->post('/modify', function () use ($app) {
-    $l       = new Lesson();
-    $r       = $app->request;
-    $u       = $app->auth;
+    $l = new Lesson();
+    $r = $app->request;
+    $u = $app->auth;
     $message = '';
 
     $name = $r->post('name');
-    $due  = $r->post('due');
-    $id   = (int) $r->post('subject', 0);
+    $due = $r->post('due');
+    $id = (int) $r->post('subject', 0);
 
     if (empty($name))
         $app->o->err('lessons modify', [ 'The name is required' ]);
@@ -29,7 +29,7 @@ $app->post('/modify', function () use ($app) {
     $oldLesson = $lesson;
 
     $lesson->owner = $u->id;
-    $lesson->name  = $name;
+    $lesson->name = $name;
 
     if ($due) {
 
@@ -38,12 +38,12 @@ $app->post('/modify', function () use ($app) {
 
         if ($lesson->due != $due) {
             $lesson->due = $due;
-            $message     = sprintf('Class `%s` is due on %s', $lesson->name, $lesson->formatDate());
+            $message = sprintf('Class `%s` is due on %s', $lesson->name, $lesson->formatDate());
         }
 
     } elseif ($lesson->due) {
-        $message     = sprintf('Class `%s` is no longer due', $lesson->name);
-        $lesson->due = NULL;
+        $message = sprintf('Class `%s` is no longer due', $lesson->name);
+        $lesson->due = null;
     }
 
     if (!$lesson->subject)

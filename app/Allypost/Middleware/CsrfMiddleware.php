@@ -25,7 +25,7 @@ class CsrfMiddleware extends Middleware {
      */
     public function check() {
 
-        $token = $this->setup(TRUE);
+        $token = $this->setup(true);
 
         if ($this->methodMatches()) {
             $submittedToken = $this->getSubmittedToken();
@@ -52,9 +52,9 @@ class CsrfMiddleware extends Middleware {
      *
      * @param bool $returnToken Whether to return the token
      *
-     * @return string The token or empty string (based on $returnTorken)
+     * @return string The token or empty string (based on $returnToken)
      */
-    protected function setup(bool $returnToken = TRUE): string {
+    protected function setup(bool $returnToken = true): string {
         if (!isset($_SESSION[ $this->key ]))
             $_SESSION[ $this->key ] = $this->generateToken();
 
@@ -124,7 +124,7 @@ class CsrfMiddleware extends Middleware {
     protected function addDataToView(string $token) {
         $this->app->view()->appendData(
             [
-                'csrf_key'   => $this->key,
+                'csrf_key' => $this->key,
                 'csrf_token' => $token,
             ]
         );

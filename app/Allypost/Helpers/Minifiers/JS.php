@@ -3,21 +3,21 @@
 namespace Allypost\Helpers\Minifiers;
 
 class JS implements MinifierInterface {
-    const URL          = 'https://closure-compiler.appspot.com/compile';
-    const BASE_PARAMS  = [
+    const URL = 'https://closure-compiler.appspot.com/compile';
+    const BASE_PARAMS = [
         'compilation_level' => 'SIMPLE_OPTIMIZATIONS',
-        'output_format'     => 'json',
-        'output_info'       => 'compiled_code',
-        'language_out'      => 'ECMASCRIPT5_STRICT',
+        'output_format' => 'json',
+        'output_info' => 'compiled_code',
+        'language_out' => 'ECMASCRIPT5_STRICT',
     ];
     const BASE_HEADERS = [
         'cache-control' => 'no-cache',
-        'content-type'  => 'application/x-www-form-urlencoded',
+        'content-type' => 'application/x-www-form-urlencoded',
     ];
 
     private $filePaths = [];
-    private $fileUrls  = [];
-    private $assets    = [];
+    private $fileUrls = [];
+    private $assets = [];
 
     public function minify(): array {
         return $this->getCompiled();
@@ -38,7 +38,7 @@ class JS implements MinifierInterface {
     }
 
     public function getFiles(): array {
-        $files    = $this->filePaths;
+        $files = $this->filePaths;
         $contents = [];
 
         foreach ($files as $file) {
@@ -82,7 +82,7 @@ class JS implements MinifierInterface {
 
     private function getLocalCode() {
         $assets = $this->getAssets();
-        $files  = $this->getFiles();
+        $files = $this->getFiles();
 
         return implode(';', $assets) . ';' . implode(';', $files);
     }
@@ -91,56 +91,56 @@ class JS implements MinifierInterface {
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL            => self::getUrl(),
-            CURLOPT_RETURNTRANSFER => TRUE,
-            CURLOPT_ENCODING       => "",
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_TIMEOUT        => 30,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST  => "POST",
-            CURLOPT_HTTPHEADER     => self::BASE_HEADERS,
+            CURLOPT_URL => self::getUrl(),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_HTTPHEADER => self::BASE_HEADERS,
         ]);
 
         return $curl;
     }
 
-    private function encodeData($data = NULL): string {
+    private function encodeData($data = null): string {
         if (!$data) {
             $data = self::BASE_PARAMS;
 
-            $data[ 'js_code' ]  = $this->getLocalCode();
+            $data[ 'js_code' ] = $this->getLocalCode();
             $data[ 'code_url' ] = $this->getRemoteFiles();
         }
 
-        $encoded = http_build_query($data, NULL, ini_get('arg_separator.output'), PHP_QUERY_RFC3986);
+        $encoded = http_build_query($data, null, ini_get('arg_separator.output'), PHP_QUERY_RFC3986);
 
         return preg_replace('/%5B[0-9]+%5D/simU', '', $encoded);
     }
 
     private function fetchCompiled() {
         $request = $this->initCompiled();
-        $data    = $this->encodeData();
+        $data = $this->encodeData();
 
         curl_setopt($request, CURLOPT_POSTFIELDS, $data);
 
         $response = curl_exec($request);
-        $err      = curl_error($request);
+        $err = curl_error($request);
 
         curl_close($request);
 
-        return $err ? FALSE : $response;
+        return $err ? false : $response;
     }
 
     private static function parseCompiled($result): array {
-        $arr = json_decode($result, TRUE);
+        $arr = json_decode($result, true);
 
         $data = [
-            'error'  => TRUE,
-            'code'   => '',
+            'error' => true,
+            'code' => '',
             'errors' => [],
         ];
 
-        if ($result === FALSE) {
+        if ($result === false) {
             $data[ 'errors' ][] = 'Compiler offline';
         } elseif (is_null($arr)) {
             $data[ 'errors' ][] = 'Compile error';
@@ -148,8 +148,8 @@ class JS implements MinifierInterface {
             $data[ 'errors' ][] = 'Compiler error';
             $data[ 'errors' ][] = $arr[ 'serverErrors' ][ 0 ][ 'error' ];
         } else {
-            $data[ 'code' ]  = $arr[ 'compiledCode' ];
-            $data[ 'error' ] = FALSE;
+            $data[ 'code' ] = $arr[ 'compiledCode' ];
+            $data[ 'error' ] = false;
         }
 
         return $data;

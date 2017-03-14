@@ -29,7 +29,7 @@ $app->group('/list', function () use ($app, $loggedIn, $guest, $teacher, $studen
     })->name('api:lessons:schedule');
 
     $app->get('/schedule/:time', $loggedIn(), function ($time) use ($app) {
-        $u    = $app->auth;
+        $u = $app->auth;
         $time = Carbon::createFromTimestampUTC($time);
 
         $data = $u->schedule()->where('schedule.updated_at', '>', $time)->get()->toArray();

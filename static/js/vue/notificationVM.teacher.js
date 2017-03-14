@@ -1,26 +1,26 @@
 window.notificationVM = new Vue(
     {
-        el     : '#notifications',
-        data   : {
-            users        : {},
+        el: '#notifications',
+        data: {
+            users: {},
             notifications: {},
-            teaching     : {},
-            loading      : 0,
-            isLoaded     : false
+            teaching: {},
+            loading: 0,
+            isLoaded: false,
         },
         filters: {
-            date: function (val) {
+            date: function(val) {
                 return moment.utc(val).format('L');
             },
-            time: function (val) {
+            time: function(val) {
                 return moment.utc(val).format('L LT');
-            }
+            },
         },
         methods: {
-            getUsersUrl        : function () {
+            getUsersUrl: function() {
                 return $(this.$el).attr('data-users');
             },
-            fetchField         : function (url, cb) {
+            fetchField: function(url, cb) {
                 var vm = this;
 
                 var hash = url.hash();
@@ -31,26 +31,26 @@ window.notificationVM = new Vue(
                     cb = new Function;
 
                 return $.get(url)
-                        .done(function (d) {
+                        .done(function(d) {
                             var data = d.data;
 
                             cb(true, data);
                             $('.collapsible').collapsible();
                         })
-                        .fail(function (d) {
+                        .fail(function(d) {
                             var data = d.errors;
 
                             cb(false, data);
                         })
-                        .always(function () {
+                        .always(function() {
                             vm.loading ^= hash;
                         });
             },
-            fetchUsers         : function (cb) {
-                var vm  = this;
+            fetchUsers: function(cb) {
+                var vm = this;
                 var url = vm.getUsersUrl();
 
-                return vm.fetchField(url, function (success, data) {
+                return vm.fetchField(url, function(success, data) {
                     if (success)
                         vm.setUsers(data);
 
@@ -59,17 +59,17 @@ window.notificationVM = new Vue(
                     cb();
                 });
             },
-            setUsers           : function (data) {
+            setUsers: function(data) {
                 this.$set(this, 'users', data);
             },
-            getTeachingUrl     : function () {
+            getTeachingUrl: function() {
                 return $(this.$el).attr('data-teaching');
             },
-            fetchTeaching      : function (cb) {
-                var vm  = this;
+            fetchTeaching: function(cb) {
+                var vm = this;
                 var url = this.getTeachingUrl();
 
-                return vm.fetchField(url, function (success, data) {
+                return vm.fetchField(url, function(success, data) {
                     if (success)
                         vm.setTeaching(data);
 
@@ -79,7 +79,7 @@ window.notificationVM = new Vue(
                     cb();
                 });
             },
-            setTeaching        : function (data) {
+            setTeaching: function(data) {
                 var d = {};
 
                 for (var i in data) {
@@ -95,14 +95,14 @@ window.notificationVM = new Vue(
 
                 this.$set(this, 'teaching', d);
             },
-            getNotificationsUrl: function () {
+            getNotificationsUrl: function() {
                 return $(this.$el).attr('data-notifications');
             },
-            fetchNotifications : function (cb) {
-                var vm  = this;
+            fetchNotifications: function(cb) {
+                var vm = this;
                 var url = this.getNotificationsUrl();
 
-                return vm.fetchField(url, function (success, data) {
+                return vm.fetchField(url, function(success, data) {
                     if (success)
                         vm.setNotifications(data);
 
@@ -111,7 +111,7 @@ window.notificationVM = new Vue(
                     cb();
                 });
             },
-            setNotifications   : function (data) {
+            setNotifications: function(data) {
                 var d = {};
 
                 for (var i in data) {
@@ -130,14 +130,14 @@ window.notificationVM = new Vue(
 
                 this.$set(this, 'notifications', d);
             },
-            fetchData          : function (cb) {
+            fetchData: function(cb) {
                 var vm = this;
 
                 if (!isFunction(cb))
                     cb = new Function;
 
-                var onComplete = function () {
-                    return vm.$nextTick(function () {
+                var onComplete = function() {
+                    return vm.$nextTick(function() {
 
                         if (vm.loading === 0) {
 
@@ -154,17 +154,17 @@ window.notificationVM = new Vue(
                 vm.fetchTeaching(onComplete);
                 vm.fetchNotifications(onComplete);
             },
-            seen               : function (notification, user) {
+            seen: function(notification, user) {
                 var notif = moment.utc(notification.date);
-                var usr   = moment.utc(user.seen);
+                var usr = moment.utc(user.seen);
 
                 return notif.isBefore(usr);
             },
-            hydrateUnseen      : function () {
-                var vm               = this;
+            hydrateUnseen: function() {
+                var vm = this;
                 var notificationList = vm.notifications;
-                var lessons          = vm.teaching;
-                var usersList        = vm.users;
+                var lessons = vm.teaching;
+                var usersList = vm.users;
 
                 var list = {};
 
@@ -208,9 +208,9 @@ window.notificationVM = new Vue(
                     vm.$set(lessons[ lessonID ], 'unseen', list[ lessonID ]);
 
                 return list;
-            }
+            },
         },
-        mounted: function () {
+        mounted: function() {
             var vm = this;
 
             vm.fetchData();
@@ -220,6 +220,6 @@ window.notificationVM = new Vue(
             setInterval(vm.fetchData, 2 * 60 * 1000);
 
             moment.locale('en-gb');
-        }
+        },
     }
 );

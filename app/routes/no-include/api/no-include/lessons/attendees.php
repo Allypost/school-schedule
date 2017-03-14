@@ -22,7 +22,7 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
             $attendees = $lesson[ 'attendees' ];
 
             foreach ($attendees as $attendee) {
-                $user     = $attendee[ 'user' ];
+                $user = $attendee[ 'user' ];
                 $userData = array_pull($user, 'data');
 
                 $user[ 'seen' ] = $userData[ 'notification_seen' ];
@@ -51,7 +51,7 @@ $app->group('/attendees', $loggedIn(), $teacher(), function () use ($app, $logge
         $users = array_column(array_column($lesson, 'attendees')[ 0 ], 'user');
 
         foreach ($users as $i => $user) {
-            $users[ $i ]           = array_except($user, 'data');
+            $users[ $i ] = array_except($user, 'data');
             $users[ $i ][ 'seen' ] = $user[ 'data' ][ 'notification_seen' ];
         }
 

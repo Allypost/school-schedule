@@ -1,4 +1,4 @@
-$.fn.serializeObject = function () {
+$.fn.serializeObject = function() {
     var o = {};
     var a = this.serializeArray();
 
@@ -10,7 +10,7 @@ $.fn.serializeObject = function () {
         } else {
             if (!o[ item.name ].push)
                 o[ item.name ] = [ o[ item.name ] ];
-            o[ item.name ].push(item.value || null)
+            o[ item.name ].push(item.value || null);
         }
     }
 

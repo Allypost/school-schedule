@@ -1,15 +1,15 @@
 <html>
-<head>
-    {% include '_parts/head.twig' %}
-    {% block head %}{% endblock %}
-</head>
-<body>
-{% if app.auth %}
-    {% include '_parts/topbar.twig' %}
-{% endif %}
-<main class="container">
-    {% block content %}<h1 class="center-align">404 - Page Not Found</h1>{% endblock %}
-</main>
-{% include '_parts/foot.twig' %}
-</body>
+    <head>
+        {% include '_parts/head.twig' %}
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% if app.auth %}
+            {% include '_parts/topbar.twig' %}
+        {% endif %}
+        <main class="container">
+            {% block content %}<h1 class="center-align">404 - Page Not Found</h1>{% endblock %}
+        </main>
+        {% include '_parts/foot.twig' %}
+    </body>
 </html>

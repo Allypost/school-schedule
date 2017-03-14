@@ -8,17 +8,17 @@ use ReCaptcha\ReCaptcha;
 $app->group('/invitation', $loggedIn(), $teacher(), function () use ($app, $loggedIn, $guest, $teacher, $student) {
 
     $app->post('/', function () use ($app) {
-        $r  = $app->request();
-        $u  = new User();
+        $r = $app->request();
+        $u = new User();
         $re = new ReCaptcha($app->config->get('google.recaptcha.secret_key'));
 
-        $name     = $r->post('full-name');
-        $uuid     = $r->post('user-identifier');
-        $email    = $r->post('email');
-        $dob      = $r->post('dob');
-        $sex      = $r->post('sex');
+        $name = $r->post('full-name');
+        $uuid = $r->post('user-identifier');
+        $email = $r->post('email');
+        $dob = $r->post('dob');
+        $sex = $r->post('sex');
         $passcode = $r->post('passcode');
-        $resp     = $r->post('g-recaptcha-response');
+        $resp = $r->post('g-recaptcha-response');
 
         $reValid = $re->verify($resp, $r->getIp());
 
@@ -60,7 +60,7 @@ $app->group('/invitation', $loggedIn(), $teacher(), function () use ($app, $logg
 
         $data = compact('name', 'uuid', 'email', 'dob', 'sex', 'password');
 
-        if (in_array('', $data) || in_array(NULL, $data))
+        if (in_array('', $data) || in_array(null, $data))
             $app->o->err('user invitation', [ 'All fields are required' ]);
 
         $data[ 'password' ] = 'This is the default password that won\'t be used to log in';
@@ -72,8 +72,8 @@ $app->group('/invitation', $loggedIn(), $teacher(), function () use ($app, $logg
         }
 
         $activationCode = $newUser[ 'activationCode' ];
-        $user           = $newUser[ 'user' ]->toArray();
-        $url            = $app->config->get('app.url') . $app->urlFor('user:signup', [ 'code' => $activationCode, 'user' => $uuid ]);
+        $user = $newUser[ 'user' ]->toArray();
+        $url = $app->config->get('app.url') . $app->urlFor('user:signup', [ 'code' => $activationCode, 'user' => $uuid ]);
 
         $app->o->say('user invitation', compact('activationCode', 'url', 'user'));
     })->name('api:user:invitation:create');

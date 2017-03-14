@@ -49,12 +49,12 @@ class Log extends Eloquent {
 
         $this->create(
             [
-                'code'    => getErrorCode((string) $message),
-                'type'    => $type,
-                'user'    => $forUser ?: ($app->auth->uuid ?? '00000000-0000-0000-0000-000000000000'),
+                'code' => getErrorCode((string) $message),
+                'type' => $type,
+                'user' => $forUser ?: ($app->auth->uuid ?? '00000000-0000-0000-0000-000000000000'),
                 'message' => $message,
-                'data'    => $data,
-                'ip'      => $app->request->getIp(),
+                'data' => $data,
+                'ip' => $app->request->getIp(),
             ]
         );
     }
@@ -82,8 +82,8 @@ class Log extends Eloquent {
      *
      * @return self|array The list
      */
-    public function list(bool $asArray = FALSE) {
-        $raw    = $this->listRaw();
+    public function list(bool $asArray = false) {
+        $raw = $this->listRaw();
         $return = $raw->get();
 
         if (!$asArray)

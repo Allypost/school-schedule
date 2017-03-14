@@ -21,7 +21,7 @@ $app->get('/', function () use ($app) {
 $app->get('/all', function () use ($app) {
     $n = new Notification();
 
-    $data = $n->mine(TRUE)->get()->toArray();
+    $data = $n->mine(true)->get()->toArray();
 
     $old = array_filter($data, function ($el) {
         return $el[ 'seen' ];
@@ -41,7 +41,7 @@ $app->get('/all', function () use ($app) {
 $app->get('/old', function () use ($app) {
     $n = new Notification();
 
-    $data = $n->mine(TRUE)->where('notifications.created_at', '<=', $app->auth->data->notification_seen)->get()->toArray();
+    $data = $n->mine(true)->where('notifications.created_at', '<=', $app->auth->data->notification_seen)->get()->toArray();
 
     $app->o->say('notifications list', $data);
 })->name('api:notifications:list:old');

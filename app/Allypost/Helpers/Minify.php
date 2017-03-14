@@ -13,7 +13,7 @@ class Minify implements MinifierInterface {
     private $minifier;
 
     function __construct(string $type) {
-        $minifier = self::MINIFIERS[ $type ] ?? FALSE;
+        $minifier = self::MINIFIERS[ $type ] ?? false;
 
         if (!$minifier)
             throw new \Exception(sprintf('No minifier for type `%s`', $type));

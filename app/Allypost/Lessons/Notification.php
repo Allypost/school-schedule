@@ -58,7 +58,7 @@ class Notification extends Eloquent {
      *
      * @return Builder The Query Builder object
      */
-    public function mine(bool $all = FALSE) {
+    public function mine(bool $all = false) {
         $u = $this->app()->auth;
 
         $query = $this

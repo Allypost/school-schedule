@@ -36,10 +36,10 @@ class Lesson extends Eloquent {
     ];
 
     protected $casts = [
-        'owned'     => 'boolean',
-        'hasClass'  => 'boolean',
+        'owned' => 'boolean',
+        'hasClass' => 'boolean',
         'attending' => 'boolean',
-        'dueToday'  => 'boolean',
+        'dueToday' => 'boolean',
     ];
 
     # </PRESETS>
@@ -50,7 +50,7 @@ class Lesson extends Eloquent {
         return $this->belongsTo('Allypost\User\User', 'owner');
     }
 
-    public function attendees($withUserData = FALSE) {
+    public function attendees($withUserData = false) {
         $attendees = $this->hasMany('Allypost\Lessons\Attendee')->with('user');
 
         if ($withUserData)
@@ -63,7 +63,7 @@ class Lesson extends Eloquent {
         return $this->hasMany('Allypost\Lessons\Schedule');
     }
 
-    public function notifications($all = FALSE) {
+    public function notifications($all = false) {
         $app = $this->app();
 
         $query = $this->hasMany('Allypost\Lessons\Notification');
@@ -93,7 +93,7 @@ class Lesson extends Eloquent {
      *
      * @return array The Lessons that the current user owns
      */
-    public function mine(bool $withAttendees = FALSE): array {
+    public function mine(bool $withAttendees = false): array {
         $lessons = $this->my($withAttendees);
 
         return $lessons->get()->toArray();
@@ -106,7 +106,7 @@ class Lesson extends Eloquent {
      *
      * @return Builder The Lessons that the current user owns
      */
-    private function my(bool $withAttendees = FALSE): Builder {
+    private function my(bool $withAttendees = false): Builder {
         $app = $this->app();
 
         $lessons = $this->where('owner', $app->auth->id);
@@ -123,7 +123,7 @@ class Lesson extends Eloquent {
      * @return array Array of notifications for lessons
      */
     public function allNotifications() {
-        $mine = $this->my(FALSE)->with([ 'notifications' ])->get()->toArray();
+        $mine = $this->my(false)->with([ 'notifications' ])->get()->toArray();
 
         $return = [];
 
@@ -133,7 +133,7 @@ class Lesson extends Eloquent {
 
                 $return[ $lesson[ 'id' ] ][] = [
                     'message' => $notification[ 'message' ],
-                    'date'    => $notification[ 'created_at' ],
+                    'date' => $notification[ 'created_at' ],
                 ];
 
             }
@@ -153,7 +153,7 @@ class Lesson extends Eloquent {
     public static function checkDue(string $due): bool {
         $date = Carbon::createFromFormat('Y-m-d', $due);
 
-        return Carbon::now()->diffInDays($date, TRUE) >= 3;
+        return Carbon::now()->diffInDays($date, true) >= 3;
     }
 
     /**
@@ -172,7 +172,7 @@ class Lesson extends Eloquent {
      *
      * @return string The formatted date
      */
-    public function formatDate($due = NULL): string {
+    public function formatDate($due = null): string {
         return Carbon::createFromFormat('Y-m-d', $due ?? $this->due)->format('dS M Y');
     }
 }

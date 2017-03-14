@@ -1,63 +1,63 @@
 .btn {
-    position : relative;
+    position: relative;
 
     &.btn-loading {
-        color          : transparent !important;
-        pointer-events : none;
+        color: transparent !important;
+        pointer-events: none;
 
         &::after {
             @include animation(spinAround 500ms infinite linear);
-            border             : 2px solid #ffffff;
-            border-radius      : 100%;
-            border-right-color : transparent;
-            border-top-color   : transparent;
-            content            : "";
-            display            : block;
-            height             : 20px;
-            width              : 20px;
-            left               : 50%;
-            margin-left        : -10px;
-            margin-top         : -10px;
-            top                : 50%;
-            position           : absolute !important;
+            border: 2px solid #ffffff;
+            border-radius: 100%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 20px;
+            width: 20px;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            top: 50%;
+            position: absolute !important;
         }
     }
 
     &.btn-success,
     &.btn-error {
-        color          : transparent !important;
-        pointer-events : none;
+        color: transparent !important;
+        pointer-events: none;
 
         &::after {
-            display     : block;
-            margin-top  : -15px;
-            margin-left : -15px;
-            top         : 50%;
-            left        : 50%;
-            position    : absolute;
-            width       : 20px;
-            height      : 20px;
-            font-family : 'Material Icons', sans-serif;
-            color       : #ffffff;
-            padding     : 0;
-            line-height : 30px;
-            font-size   : 30px;
+            display: block;
+            margin-top: -15px;
+            margin-left: -15px;
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            font-family: 'Material Icons', sans-serif;
+            color: #ffffff;
+            padding: 0;
+            line-height: 30px;
+            font-size: 30px;
         }
     }
 
     &.btn-success {
-        background : #4caf50;
+        background: #4caf50;
 
         &::after {
-            content : "\E876";
+            content: "\E876";
         }
     }
 
     &.btn-error {
-        background : #f44336;
+        background: #f44336;
 
         &::after {
-            content : "\E001";
+            content: "\E001";
         }
     }
 }
