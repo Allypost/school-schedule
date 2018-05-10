@@ -59,3 +59,6 @@ composer.phar
 /composer.lock
 
 /public/css/*
+
+app/config/*
+!app/config/example.php
